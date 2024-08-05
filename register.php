@@ -30,7 +30,7 @@ function addImportDataMenuPointTimeTable(array $menuStructure): array
  */
 function addProjectOverviewToPersonalMenuTimeTable(): string
 {
-    if (FrontcontrollerCore::getCurrentRoute() === 'ProjectOverview.projectOverview') {
+    if (FrontcontrollerCore::getCurrentRoute() === 'TimeTable.timetable) {
         return 'personal';
     }
     return '';
