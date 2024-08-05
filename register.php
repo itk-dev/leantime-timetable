@@ -12,12 +12,12 @@ function addImportDataMenuPointTimeTable(array $menuStructure): array
     // In the menu array, timesheets occupies spot 15 in the array list, which menupoints are sorted by. Timetable should be right after it.
     $menuStructure['personal'][16] = [
         'type' => 'item',
-        'module' => 'timetable',
         'title' => '<span class="fas fa-fw fa-table"></span> Timetable',
         'icon' => 'fa fa-fw fa-table',
         'tooltip' => 'View Timetable',
         'href' => '/TimeTable/timetable',
-        'active' => ['settings'],
+        'active' => ['timetable'],
+        'module' => 'tickets',
     ];
 
 
