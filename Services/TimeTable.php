@@ -36,7 +36,11 @@ class TimeTable
 
     public function uninstall(): void
     {
-        // Remove tables
+        foreach (self::getAssets() as $target) {
+            if (file_exists($target)) {
+                unlink($target);
+            }
+        }
     }
 
     /**
