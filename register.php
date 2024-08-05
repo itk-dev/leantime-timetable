@@ -25,8 +25,8 @@ function addImportDataMenuPointTimeTable(array $menuStructure): array
 }
 
 /**
- * Adds project overview to the personal menu
- * @return string - the string "personal" if the route is ProjectOverview.projectOverview.
+ * Adds Timetable to the personal menu
+ * @return string - the string "personal" if the route is TimeTable.timetable.
  */
 function addProjectOverviewToPersonalMenuTimeTable(): string
 {
