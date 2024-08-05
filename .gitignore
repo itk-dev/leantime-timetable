@@ -1,0 +1,11 @@
+composer.lock
+vendor
+node_modules
+dist
+.DS_Store
+
+*.cache
+
+# Release
+leantime-plugin-*.tar.gz
+checksum.txt
