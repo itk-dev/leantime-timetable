@@ -30,8 +30,14 @@ class TimeTable extends Controller
      */
     public function get(): Response
     {
-        $timeTableStyle = dirname(dirname($_SERVER["DOCUMENT_ROOT"])) . "dist/css/timeTable.css";
-        $timeTableScript = dirname(dirname($_SERVER["DOCUMENT_ROOT"])) . "dist/js/timeTable.js";
+        // Define assets base dist
+        $assetsBaseDist = dirname($_SERVER["DOCUMENT_ROOT"], 2) . DIRECTORY_SEPARATOR . 'dist';
+
+        // Define assets dist
+        $timeTableStyle = $assetsBaseDist . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'timeTable.css';
+        $timeTableScript = $assetsBaseDist . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'timeTable.js';
+
+        // Assign the styles and scripts to the template
         $this->tpl->assign("timeTableStyle", $timeTableStyle);
         $this->tpl->assign("timeTableScript", $timeTableScript);
 
