@@ -1,6 +1,7 @@
 <?php
 
 use Leantime\Core\Events;
+use Leantime\Core\Frontcontroller as FrontcontrollerCore;
 
 /**
  * Adds a menu point for adding fixture data.
@@ -16,10 +17,9 @@ function addImportDataMenuPointTimeTable(array $menuStructure): array
         'icon' => 'fa fa-fw fa-table',
         'tooltip' => 'View Timetable',
         'href' => '/TimeTable/timetable',
-        'active' => ['timetable'],
+        'active' => ['Timetable'],
         'module' => 'tickets',
     ];
-
 
     return $menuStructure;
 }
@@ -28,14 +28,12 @@ function addImportDataMenuPointTimeTable(array $menuStructure): array
  * Adds Timetable to the personal menu
  * @return string - the string "personal" if the route is TimeTable.timetable.
  */
-function addProjectOverviewToPersonalMenuTimeTable(): string
+function addProjectOverviewToPersonalMenuTimeTable(array $sections): array
 {
-    if (FrontcontrollerCore::getCurrentRoute() === 'TimeTable.timetable') {
-        return 'personal';
-    }
-    return '';
+    $sections['TimeTable.timetable'] = 'personal';
+    return $sections;
 }
 
 
 Events::add_filter_listener("leantime.domain.menu.repositories.menu.getMenuStructure.menuStructures", 'addImportDataMenuPointTimeTable');
-Events::add_filter_listener('leantime.domain.menu.repositories.menu.getSectionMenuType', 'addProjectOverviewToPersonalMenuTimeTable');
+Events::add_filter_listener('leantime.domain.menu.repositories.menu.getSectionMenuType.menuSections', 'addProjectOverviewToPersonalMenuTimeTable');
