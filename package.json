@@ -1,0 +1,9 @@
+{
+  "name": "timetable",
+  "version": "1.0.0",
+  "main": "assets/timeTable.js",
+  "license": "MIT",
+  "dependencies": {
+    "prettier": "^3.2.5"
+  }
+}

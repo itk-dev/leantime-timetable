@@ -1,0 +1,17 @@
+{
+    "name": "leantime/timetable",
+    "description": "Provides a timetable view for logging time",
+    "version": "1.0",
+    "authors": [
+        {
+            "name": "Jeppe Krogh",
+            "email": "kjej@aarhus.dk"
+        }
+    ],
+    "type": "plugin",
+    "license": "MIT",
+    "homepage": "https://github.com/ITK-Leantime/",
+    "require": {
+        "leantime/leantime": "2.3"
+    }
+}
