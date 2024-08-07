@@ -28,14 +28,4 @@ class Settings extends Controller
 
         return $this->tpl->display("TimeTable.settings");
     }
-
-    /**
-     * post
-     *
-     * @param array $params
-     * @return void
-     */
-    public function post(array $params): void
-    {
-    }
 }

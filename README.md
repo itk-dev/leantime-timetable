@@ -1,6 +1,36 @@
-# Temple for Leantime plugin
+# Time table plugin
 
-This is a sample plugin for Leantime version 3.x.
+A plugin for registrering time in Leantime.
 
-You can clone/download this example plugin into `app/Plugins/TimeTable` and then refactor the folder name and
-update the namespace to start creating you own plugin. 
+## Development
+
+Clone this repository into your Leantime plugins folder:
+
+``` shell
+git clone https://github.com/ITK-Leantime/leantime-timetable.git app/Plugins/TimeTable
+```
+
+### Coding standards
+
+``` shell
+docker run --tty --interactive --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer install
+docker run --tty --interactive --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer coding-standards-apply
+docker run --tty --interactive --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer coding-standards-check
+```
+
+```shell
+docker run --rm -v "$(pwd):/work" tmknom/prettier --write assets
+docker run --rm -v "$(pwd):/work" tmknom/prettier --check assets
+```
+
+```shell
+docker run --rm --volume $PWD:/md peterdavehello/markdownlint markdownlint --ignore vendor --ignore LICENSE.md '**/*.md' --fix
+docker run --rm --volume $PWD:/md peterdavehello/markdownlint markdownlint --ignore vendor --ignore LICENSE.md '**/*.md'
+```
+
+### Code analysis
+
+```shell
+docker run --tty --interactive --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer install
+docker run --tty --interactive --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer code-analysis
+```

@@ -5,7 +5,8 @@ use Leantime\Core\Frontcontroller as FrontcontrollerCore;
 
 /**
  * Adds a menu point for adding fixture data.
- * @param array<string, array<int, array<string, mixed>>> $menuStructure The existing menu structure to which the new item will be added.
+ *
+ * @param  array<string, array<int, array<string, mixed>>> $menuStructure The existing menu structure to which the new item will be added.
  * @return array<string, array<int, array<string, mixed>>> The modified menu structure with the new item added.
  */
 function addImportDataMenuPointTimeTable(array $menuStructure): array
@@ -26,9 +27,10 @@ function addImportDataMenuPointTimeTable(array $menuStructure): array
 
 /**
  * Adds Timetable to the personal menu
- * @return string - the string "personal" if the route is TimeTable.timetable.
+ * @param array<string, array<int, array<string, mixed>>> $sections The sections in the menu is to do with which menu is displayed on the current page.
+ * @return array<string, string> - the sections array, where TimeTable.timetable is in the "personal" menu.
  */
-function addProjectOverviewToPersonalMenuTimeTable(array $sections): array
+function addTimeTableToMenu(array $sections): array
 {
     $sections['TimeTable.timetable'] = 'personal';
     return $sections;
@@ -36,4 +38,4 @@ function addProjectOverviewToPersonalMenuTimeTable(array $sections): array
 
 
 Events::add_filter_listener("leantime.domain.menu.repositories.menu.getMenuStructure.menuStructures", 'addImportDataMenuPointTimeTable');
-Events::add_filter_listener('leantime.domain.menu.repositories.menu.getSectionMenuType.menuSections', 'addProjectOverviewToPersonalMenuTimeTable');
+Events::add_filter_listener('leantime.domain.menu.repositories.menu.getSectionMenuType.menuSections', 'addTimeTableToMenu');
