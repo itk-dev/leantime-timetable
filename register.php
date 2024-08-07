@@ -9,7 +9,7 @@ use Leantime\Core\Events;
  * @param  array<string, array<int, array<string, mixed>>> $menuStructure The existing menu structure to which the new item will be added.
  * @return array<string, array<int, array<string, mixed>>> The modified menu structure with the new item added.
  */
-function addImportDataMenuPointTimeTable(array $menuStructure): array
+function addTimeTableItemToMenu(array $menuStructure): array
 {
     // In the menu array, timesheets occupies spot 15 in the array list, which menupoints are sorted by. Timetable should be right after it.
     $menuStructure['personal'][16] = [
@@ -30,7 +30,7 @@ function addImportDataMenuPointTimeTable(array $menuStructure): array
  * @param array<string, array<int, array<string, mixed>>> $sections The sections in the menu is to do with which menu is displayed on the current page.
  * @return array<string, string> - the sections array, where TimeTable.timetable is in the "personal" menu.
  */
-function addTimeTableToMenu(array $sections): array
+function displayPersonalMenuOnEnteringTimeTable(array $sections): array
 {
     $sections['TimeTable.timetable'] = 'personal';
     return $sections;
@@ -43,5 +43,5 @@ Events::add_filter_listener(
     fn (array $middleware) => array_merge($middleware, [GetLanguageAssets::class]),
 );
 
-Events::add_filter_listener("leantime.domain.menu.repositories.menu.getMenuStructure.menuStructures", 'addImportDataMenuPointTimeTable');
-Events::add_filter_listener('leantime.domain.menu.repositories.menu.getSectionMenuType.menuSections', 'addTimeTableToMenu');
+Events::add_filter_listener("leantime.domain.menu.repositories.menu.getMenuStructure.menuStructures", 'addTimeTableItemToMenu');
+Events::add_filter_listener('leantime.domain.menu.repositories.menu.getSectionMenuType.menuSections', 'displayPersonalMenuOnEnteringTimeTable');
