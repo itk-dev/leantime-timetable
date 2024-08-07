@@ -7,6 +7,10 @@
     "license": "MIT",
     "authors": [
       {
+        "name": "Jeppe Krogh",
+        "email": "kjej@aarhus.dk"
+      },
+      {
         "name": "Sine Jespersen",
         "email": "sinejespersen@gmail.com"
       }
