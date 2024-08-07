@@ -1,11 +1,11 @@
 composer.lock
 vendor
-node_modules
 dist
 .DS_Store
-
 *.cache
+node_modules
 
-# Release
-leantime-plugin-*.tar.gz
+# Release artifacts
+release/
 checksum.txt
+*.tar.gz

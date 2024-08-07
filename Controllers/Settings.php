@@ -5,6 +5,12 @@ namespace Leantime\Plugins\TimeTable\Controllers;
 use Leantime\Core\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Settings Controller for Timetable plugin
+ *
+ * @package    leantime
+ * @subpackage plugins
+ */
 class Settings extends Controller
 {
     /**
@@ -26,16 +32,6 @@ class Settings extends Controller
     public function get(): Response
     {
 
-        return $this->tpl->display("TimeTable.settings");
-    }
-
-    /**
-     * post
-     *
-     * @param array $params
-     * @return void
-     */
-    public function post(array $params): void
-    {
+        return $this->tpl->display('TimeTable.settings');
     }
 }

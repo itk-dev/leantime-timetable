@@ -1,3 +1,3 @@
-document.addEventListener('DOMContentLoaded', function () {
-  console.log('timetable loaded');
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("timetable loaded");
 });
