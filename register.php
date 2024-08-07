@@ -43,5 +43,5 @@ Events::add_filter_listener(
     fn (array $middleware) => array_merge($middleware, [GetLanguageAssets::class]),
 );
 
-Events::add_filter_listener("leantime.domain.menu.repositories.menu.getMenuStructure.menuStructures", 'addTimeTableItemToMenu');
+Events::add_filter_listener('leantime.domain.menu.repositories.menu.getMenuStructure.menuStructures', 'addTimeTableItemToMenu');
 Events::add_filter_listener('leantime.domain.menu.repositories.menu.getSectionMenuType.menuSections', 'displayPersonalMenuOnEnteringTimeTable');
