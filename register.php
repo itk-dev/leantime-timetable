@@ -1,7 +1,7 @@
 <?php
 
+use Leantime\Plugins\TimeTable\Middleware\GetLanguageAssets;
 use Leantime\Core\Events;
-use Leantime\Core\Frontcontroller as FrontcontrollerCore;
 
 /**
  * Adds a menu point for adding fixture data.
@@ -36,6 +36,12 @@ function addTimeTableToMenu(array $sections): array
     return $sections;
 }
 
+// https://github.com/Leantime/plugin-template/blob/main/register.php#L43-L46
+// Register Language Assets
+Events::add_filter_listener(
+    'leantime.core.httpkernel.handle.plugins_middleware',
+    fn (array $middleware) => array_merge($middleware, [GetLanguageAssets::class]),
+);
 
 Events::add_filter_listener("leantime.domain.menu.repositories.menu.getMenuStructure.menuStructures", 'addImportDataMenuPointTimeTable');
 Events::add_filter_listener('leantime.domain.menu.repositories.menu.getSectionMenuType.menuSections', 'addTimeTableToMenu');
