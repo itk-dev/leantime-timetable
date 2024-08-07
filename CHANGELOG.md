@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [Unreleased]
 
 * [PR-2](https://github.com/ITK-Leantime/leantime-timetable/pull/2)
   * Setup code analysis
@@ -11,4 +11,3 @@
 
 * [PR-1](https://github.com/ITK-Leantime/leantime-timetable/pull/1)
   * Foundation for further development
-
