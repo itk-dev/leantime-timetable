@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+* [PR-3](https://github.com/ITK-leantime/leantime-timetable/pull/3)
+  * Added release script
+  * Added deploy script
+
 * [PR-2](https://github.com/ITK-Leantime/leantime-timetable/pull/2)
   * Setup code analysis
   * Setup translations
