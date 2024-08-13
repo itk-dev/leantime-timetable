@@ -30,37 +30,6 @@ class TimeTable
     /**
      * @return array<string, mixed>
      */
-    public function getTimesheets(?string $searchTerm, CarbonImmutable $dateFrom, CarbonImmutable $dateTo): array
-    {
-        $sql = 'SELECT
-        timesheet.id,
-        timesheet.ticketId,
-        timesheet.projectId,
-        CAST(timesheet.workDate AS DATE) as workDate,
-        timesheet.hours,
-        timesheet.description
-        FROM zp_timesheets AS timesheet
-        WHERE timesheet.userId = :userId AND (timesheet.workDate BETWEEN :dateFrom AND :dateTo)
-        ORDER BY timesheet.workDate ASC';
-        $stmn = $this->db->database->prepare($sql);
-
-        $userId = session('userdata.id');
-        if ($userId !== '') {
-            $stmn->bindValue(':userId', $userId, PDO::PARAM_INT);
-        }
-
-        $stmn->bindValue(':dateFrom', $dateFrom, PDO::PARAM_STR);
-        $stmn->bindValue(':dateTo', $dateTo, PDO::PARAM_STR);
-
-        $stmn->execute();
-        $values = $stmn->fetchAll();
-        $stmn->closeCursor();
-
-        return $values;
-    }
-    /**
-     * @return array<string, mixed>
-     */
     public function getUniqueTicketIds(CarbonImmutable $dateFrom, CarbonImmutable $dateTo): array
     {
         $sql = 'SELECT DISTINCT
@@ -86,21 +55,34 @@ class TimeTable
     /**
      * @return array<string, mixed>
      */
-    public function getTimesheetByTicketIdAndWorkDate(string $ticketId, CarbonImmutable $workDate): array
+    public function getTimesheetByTicketIdAndWorkDate(string $ticketId, CarbonImmutable $workDate, ?string $searchTerm): array
     {
+        $searchTermQuery = isset($searchTerm)
+            ? " AND
+        (zp_tickets.id LIKE CONCAT( '%', :searchTerm, '%') OR
+        zp_tickets.headline LIKE CONCAT( '%', :searchTerm, '%')) "
+            : '';
+
         $sql = 'SELECT
         timesheet.id,
         CAST(timesheet.workDate AS DATE) as workDate,
         timesheet.hours,
-        timesheet.description
+        timesheet.description,
+        timesheet.ticketId,
+        zp_tickets.headline,
+        zp_tickets.id as ticketId
         FROM zp_timesheets AS timesheet
-        WHERE timesheet.userId = :userId AND timesheet.ticketId = :ticketId AND (timesheet.workDate BETWEEN :dateFrom AND :dateTo)';
+        LEFT JOIN zp_tickets ON timesheet.ticketId = zp_tickets.id
+        WHERE timesheet.userId = :userId AND timesheet.ticketId = :ticketId AND (timesheet.workDate BETWEEN :dateFrom AND :dateTo)' . $searchTermQuery;
 
         $stmn = $this->db->database->prepare($sql);
 
         $userId = session('userdata.id');
         if ($userId !== '') {
             $stmn->bindValue(':userId', $userId, PDO::PARAM_INT);
+        }
+        if ($searchTerm !== NULL) {
+            $stmn->bindValue(':searchTerm', $searchTerm, PDO::PARAM_STR);
         }
 
         $stmn->bindValue(':ticketId', $ticketId, PDO::PARAM_INT);

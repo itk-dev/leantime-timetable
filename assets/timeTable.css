@@ -67,10 +67,10 @@ input::-webkit-inner-spin-button {
 .table td {
   position: relative;
 }
-.time-table-container .table td:nth-child(7){
+.time-table-container .table td:nth-child(8){
   background:#E2E8F0 !important;
 }
-.time-table-container .table td:nth-child(8){
+.time-table-container .table td:nth-child(9){
   background:#E2E8F0 !important;
 }
 

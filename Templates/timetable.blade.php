@@ -5,9 +5,9 @@
         <div class="flex-container">
             <h1 class="h1"><i class="fa fa-clock"></i> {{ __('timeTable.dashboard_title') }}</h1>
             <div>
-                <button type="button" onclick="changeWeek(-1)"><i class="fa fa-arrow-left"></i> Ugen før</button>
-                <button type="button" onclick="changeWeek(1)">Næste uge <i class="fa fa-arrow-right"></i></button>
-                <button class="new-button" type="button" onclick="openEditTimeLogModal()">Tilføj timeregistrering <i class="fa fa-plus"></i></button>
+                <button type="button" onclick="changeWeek(-1)"><i class="fa fa-arrow-left"></i> {{ __('timeTable.button_prev_week') }}</button>
+                <button type="button" onclick="changeWeek(1)">{{ __('timeTable.button_next_week') }} <i class="fa fa-arrow-right"></i></button>
+                <button class="new-button" type="button" onclick="openEditTimeLogModal()">{{ __('timeTable.button_add_time_log') }} <i class="fa fa-plus"></i></button>
             </div>
         </div>
         <div class="search-bar">
@@ -19,6 +19,7 @@
             <thead>
                 <tr>
                     <th scope="col">{{ __('timeTable.id_table_header') }}</th>
+                    <th scope="col">{{ __('timeTable.title_table_header') }}</th>
                     <?php
                     $i = 0;
                     foreach ($weekDays as $key => $day) { ?>
@@ -35,7 +36,8 @@
             <tbody>
                 @foreach ($timesheetsByTicket as $key => $timesheet)
                     <tr>
-                        <td scope="row">{{ $key }}</td>
+                        <td scope="row">{{ $timesheet['ticketId'] }}</td>
+                        <td scope="row">{{ $timesheet['ticketTitle']  }}</td>
                         @foreach ($weekDates as $weekDate)
                             <?php
                             $weekDateAccessor = $weekDate->format('Y-m-d');
@@ -71,8 +73,8 @@
                 <span class="fa fa-clock"></span>
                 <input type="text" id="modal-description" placeholder="Beskrivelse" onchange="changeDescription(this.value)" required />
                 <div class="buttons">
-                    <button class="cancel-button" onclick="closeEditTimeLogModal(event)">Luk dialog</button>
-                    <input type="submit" class="save-button" value="Gem" />
+                    <button class="cancel-button" onclick="closeEditTimeLogModal(event)">{{ __('timeTable.button_modal_close') }}</button>
+                    <input type="submit" class="save-button" value="{{ __('timeTable.button_modal_save') }}" />
                 </div>
             </form>
 

@@ -46,7 +46,11 @@ function openEditTimeLogModal(id, ticketId, hours, description, date, offset) {
     document.getElementsByName("timesheet-date")[0].setAttribute("value", date);
   }
 
-  document.getElementById("modal-description").value = description;
+  // fill out form with known values
+  if (description){
+    document.getElementById("modal-description").value = description;
+  }
+
   document.getElementById("modal-hours").value = hours;
 
   // Display modal
@@ -54,7 +58,7 @@ function openEditTimeLogModal(id, ticketId, hours, description, date, offset) {
 }
 
 
-function closeEditTimeLogModal(event) {
+function closeEditTimeLogModal() {
   // Reset modal
   document.getElementById("modal-description").value = "";
   document.getElementById("modal-hours").value = "";

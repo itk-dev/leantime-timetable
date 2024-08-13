@@ -75,14 +75,6 @@ class TimeTable
         /**
          * @return array<string, mixed>
          */
-    public function getTimesheets(?string $searchTerm, CarbonImmutable $dateFrom, CarbonImmutable $dateTo): array
-    {
-        return $this->timeTableRepo->getTimesheets($searchTerm, $dateFrom, $dateTo);
-    }
-
-        /**
-         * @return array<string, mixed>
-         */
     public function getUniqueTicketIds(CarbonImmutable $dateFrom, CarbonImmutable $dateTo): array
     {
         return $this->timeTableRepo->getUniqueTicketIds($dateFrom, $dateTo);
@@ -90,9 +82,9 @@ class TimeTable
         /**
          * @return array<string, mixed>
          */
-    public function getTimesheetByTicketIdAndWorkDate(string $ticketId, CarbonImmutable $workDate): array
+    public function getTimesheetByTicketIdAndWorkDate(string $ticketId, CarbonImmutable $workDate, ?string $searchTerm): array
     {
-        return $this->timeTableRepo->getTimesheetByTicketIdAndWorkDate($ticketId, $workDate);
+        return $this->timeTableRepo->getTimesheetByTicketIdAndWorkDate($ticketId, $workDate, $searchTerm);
     }
 
 

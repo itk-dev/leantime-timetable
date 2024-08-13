@@ -93,6 +93,9 @@ class TimeTable extends Controller
         $userIdForFilter = null;
         $searchTermForFilter = null;
         $now = CarbonImmutable::now();
+        if (isset($_GET['searchTerm'])) {
+            $searchTerm = $_GET['searchTerm'];
+        }
 
         if (isset($_GET['offset'])) {
             // Multiply offset by 7 days.
@@ -110,9 +113,6 @@ class TimeTable extends Controller
         $weekStartDate = $now->startOfWeek();
         $weekEndDate = $now->endOfWeek();
 
-        $this->tpl->assign('selectedDateFrom', $weekStartDate->toDateString());
-        $this->tpl->assign('dateFrom', $weekStartDate);
-        $this->tpl->assign('selectedDateTo', $weekEndDate->toDateString());
         $this->tpl->assign('currentSearchTerm', $searchTermForFilter);
 
         $days = explode(',', $this->language->__('language.dayNames'));
@@ -126,12 +126,17 @@ class TimeTable extends Controller
 
         $timesheetsByTicket = [];
         foreach ($relevantTicketIds as $ticket) {
-            $dada = [];
+            $timesheetsSortedByWeekdate = [];
             foreach ($weekDates as $weekDate) {
-                $dada[$weekDate->format('Y-m-d')] = $this->timeTableService->getTimesheetByTicketIdAndWorkDate($ticket['ticketId'], $weekDate);
+                $timesheetsByTicketAndDate = $this->timeTableService->getTimesheetByTicketIdAndWorkDate($ticket['ticketId'], $weekDate, $searchTermForFilter);
+                $timesheetsSortedByWeekdate[$weekDate->format('Y-m-d')] = $timesheetsByTicketAndDate;
+                if ($timesheetsByTicketAndDate !== null && count($timesheetsByTicketAndDate) > 0) {
+                    $timesheetsSortedByWeekdate['ticketTitle'] = $timesheetsByTicketAndDate[0]['headline'];
+                    $timesheetsSortedByWeekdate['ticketId'] = $timesheetsByTicketAndDate[0]['ticketId'];
+                }
             }
 
-            $timesheetsByTicket[$ticket['ticketId']] = $dada;
+            $timesheetsByTicket[$ticket['ticketId']] = $timesheetsSortedByWeekdate;
         }
 
         // All tickets assignet to the template
