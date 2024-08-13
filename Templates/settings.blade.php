@@ -8,7 +8,6 @@
 
 
 <div class="maincontent">
-<?php echo $tpl->displayNotification(); ?>
     <div class="maincontentinner">
         <h1>Hello World settings!</h1>
     </div>

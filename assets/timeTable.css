@@ -1,0 +1,186 @@
+.time-table-container {
+  position: relative;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+.time-table-container > h1 {
+  margin-bottom: 30px;
+}
+.time-table-container .fa-circle-exclamation {
+  position: absolute;
+  color: #b91c1c;
+  right: 20px;
+  top: 10px;
+}
+.time-table-container .flex-container {
+  justify-content: space-between;
+  width: 100%;
+  display: flex;
+}
+.time-table-container .flex-container button {
+  background: white;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  height: 28px;
+}
+.time-table-container .flex-container i {
+  color: #cbd5e1;
+}
+.time-table-container .flex-container .new-button {
+  height: 28px;
+  background: #0284c7;
+  color: white;
+  border: none;
+}
+.time-table-container .flex-container .new-button i {
+  color: white;
+}
+.time-table-container .search-bar {
+  display: flex;
+  position: relative;
+  width: 100%;
+  flex-direction: column;
+  margin-top: 10px;
+}
+.time-table-container .search-bar .search-input {
+  border-radius: 0;
+  height: 28px;
+  width: 50%;
+}
+
+.time-table-container td.spacious {
+  min-width: 130px;
+}
+.time-table-container input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.time-table-container input[type="number"] {
+  -moz-appearance: textfield;
+}
+.table td {
+  position: relative;
+}
+.time-table-container .table td:nth-child(7){
+  background:#E2E8F0 !important;
+}
+.time-table-container .table td:nth-child(8){
+  background:#E2E8F0 !important;
+}
+
+.table td select {
+  all: unset;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  border: none;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.table td input {
+  all: unset;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  border: none;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.time-table-container > input {
+  border-radius: 3px !important;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.edit-time-log-modal {
+  display: none;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  display: flex;
+  height: 150px;
+  flex-direction: column;
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 20%; /* Could be more or less, depending on screen size */
+  border-radius: 3px;
+  position: relative;
+}
+
+.modal-content input {
+  width: 100%;
+  border-radius: 3px;
+}
+.modal-content .buttons {
+  display: flex;
+  justify-content: end;
+}
+.modal-content .save-button {
+  border-radius: 3px;
+  border: none;
+  color: white;
+  background: #4f46e5;
+  border: 1px solid #4f46e5;
+  height: 28px;
+  max-width: 40px;
+  padding: 0;
+  margin: 0;
+  font-weight: 400;
+}
+.modal-content .cancel-button {
+  border-radius: 3px;
+  background: white;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  height: 28px;
+  margin-right: 5px;
+}
+.modal-content .fa-clock {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
