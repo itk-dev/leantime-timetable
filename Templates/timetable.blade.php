@@ -63,15 +63,43 @@
         {{-- Modal for editing work logs --}}
         <div id="edit-time-log-modal" class="nyroModalBg edit-time-log-modal">
             <form method="post" id="modal-form" class="modal-content">
+
+                {{-- Hidden properties for post --}}
                 <input type="hidden" name="timesheet-ticket-id" />
                 <input type="hidden" name="timesheet-date" />
                 <input type="hidden" name="timesheet-id" />
                 <input type="hidden" name="timesheet-description" />
                 <input type="hidden" name="timesheet-hours" />
                 <input type="hidden" name="timesheet-offset" />
+
+                {{-- todo obviously this wont do... --}}
+                <input type="date">
+
+                {{-- copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.css and timeTable.js --}}
+                <div class="dropdown">
+                    <button onclick="myFunction(event)" class="dropbtn">Dropdown</button>
+                    <div id="myDropdown" class="dropdown-content">
+                        {{-- todo create string for "search.." --}}
+                      <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction(event)">
+                      {{-- todo remove these obviouslu --}}
+                      <a href="#about">About</a>
+                      <a href="#base">Base</a>
+                      <a href="#blog">Blog</a>
+                      <a href="#contact">Contact</a>
+                      <a href="#custom">Custom</a>
+                      <a href="#support">Support</a>
+                      <a href="#tools">Tools</a>
+                    </div>
+                  </div>
+
+                {{-- Hours input --}}
                 <input type="number" onchange="changeHours(this.value)" step="0.01" id="modal-hours" placeholder="Timer" required />
                 <span class="fa fa-clock"></span>
+
+                {{-- Description input --}}
                 <input type="text" id="modal-description" placeholder="Beskrivelse" onchange="changeDescription(this.value)" required />
+
+                {{-- Save or cancel buttons --}}
                 <div class="buttons">
                     <button class="cancel-button" onclick="closeEditTimeLogModal(event)">{{ __('timeTable.button_modal_close') }}</button>
                     <input type="submit" class="save-button" value="{{ __('timeTable.button_modal_save') }}" />

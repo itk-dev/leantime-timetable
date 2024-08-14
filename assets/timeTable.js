@@ -26,6 +26,7 @@ function updateLocation(key, value) {
 }
 
 function openEditTimeLogModal(id, ticketId, hours, description, date, offset) {
+  let createNewTimeLog = false;
   // Set post parameters
   if (id) {
     document.getElementsByName("timesheet-id")[0].setAttribute("value", id);
@@ -46,6 +47,10 @@ function openEditTimeLogModal(id, ticketId, hours, description, date, offset) {
     document.getElementsByName("timesheet-date")[0].setAttribute("value", date);
   }
 
+  if (!date && !ticketId) {
+    createNewTimeLog = true;
+  }
+
   // fill out form with known values
   if (description){
     document.getElementById("modal-description").value = description;
@@ -55,6 +60,9 @@ function openEditTimeLogModal(id, ticketId, hours, description, date, offset) {
 
   // Display modal
   document.getElementById("edit-time-log-modal").style.display = "flex";
+  if (createNewTimeLog) {
+
+  }
 }
 
 
@@ -78,3 +86,27 @@ function changeDescription(description) {
   }
 }
 
+// todo rewrite these to be more readable
+// copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.css and timetable.blade.php
+function myFunction(e) {
+  e.preventDefault();
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Todo create a get request for tasks (api), and only get tasks on 3 inputs or something
+function filterFunction(e) {
+  e.preventDefault();
+  var input, filter, ul, li, a, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  div = document.getElementById("myDropdown");
+  a = div.getElementsByTagName("a");
+  for (i = 0; i < a.length; i++) {
+    txtValue = a[i].textContent || a[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      a[i].style.display = "";
+    } else {
+      a[i].style.display = "none";
+    }
+  }
+}

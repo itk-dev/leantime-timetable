@@ -1,3 +1,6 @@
+/* Todo scope css better so it doesnt "ruin" leantime again */
+/* Todo streamline kebab case / camelcase stuff */
+
 .time-table-container {
   position: relative;
   background-color: white;
@@ -122,10 +125,11 @@ input::-webkit-inner-spin-button {
   display: none;
 }
 
+
 /* Modal Content/Box */
 .modal-content {
   display: flex;
-  height: 150px;
+  height: 270px;
   flex-direction: column;
   background-color: #fefefe;
   margin: 15% auto; /* 15% from the top and centered */
@@ -184,3 +188,65 @@ input::-webkit-inner-spin-button {
   text-decoration: none;
   cursor: pointer;
 }
+
+
+/* copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.js and timetable.blade.php */
+ /* Dropdown Button */
+ .dropbtn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #3e8e41;
+}
+
+/* The search field */
+#myInput {
+  box-sizing: border-box;
+  background-image: url('searchicon.png');
+  background-position: 14px 12px;
+  background-repeat: no-repeat;
+  font-size: 16px;
+  padding: 14px 20px 12px 45px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+}
+
+/* The search field when it gets focus/clicked on */
+#myInput:focus {outline: 3px solid #ddd;}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  min-width: 230px;
+  border: 1px solid #ddd;
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
