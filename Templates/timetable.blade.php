@@ -20,8 +20,10 @@
                 <tr>
                     <th scope="col">{{ __('timeTable.id_table_header') }}</th>
                     <th scope="col">{{ __('timeTable.title_table_header') }}</th>
+
                     <?php
                     $i = 0;
+                    if (isset($weekDays) && isset($weekDates)){
                     foreach ($weekDays as $key => $day) { ?>
                     <th>
                         {{ $day }}
@@ -30,7 +32,9 @@
                         $i++;
                         ?>
                     </th>
-                    <?php } ?>
+
+                    <?php }} ?>
+
                 </tr>
             </thead>
             <tbody>
@@ -38,12 +42,13 @@
                     <tr>
                         <td scope="row">{{ $timesheet['ticketId'] }}</td>
                         <td scope="row">{{ $timesheet['ticketTitle']  }}</td>
+                        @if (isset($weekDates))
                         @foreach ($weekDates as $weekDate)
                             <?php
-                            $weekDateAccessor = $weekDate->format('Y-m-d');
-                            $hours = $timesheet[$weekDateAccessor][0]['hours'];
-                            $id = $timesheet[$weekDateAccessor][0]['id'];
-                            $description = $timesheet[$weekDateAccessor][0]['description'];
+                                $weekDateAccessor = isset($weekDate) ? $weekDate->format('Y-m-d') : null;
+                                $hours = isset($timesheet) ? $timesheet[$weekDateAccessor][0]['hours'] : null;
+                                $id = isset($timesheet) ? $timesheet[$weekDateAccessor][0]['id'] : null;
+                                $description = isset($timesheet) ? $timesheet[$weekDateAccessor][0]['description'] : null;
                             ?>
                             <td scope="row">
                                 <input
@@ -55,11 +60,11 @@
 
                             </td>
                         @endforeach
+                        @endif
                     </tr>
                 @endforeach
             </tbody>
         </table>
-
         {{-- Modal for editing work logs --}}
         <div id="edit-time-log-modal" class="nyroModalBg edit-time-log-modal">
             <form method="post" id="modal-form" class="modal-content">

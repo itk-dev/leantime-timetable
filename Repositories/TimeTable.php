@@ -28,7 +28,7 @@ class TimeTable
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<array<string, string>>
      */
     public function getUniqueTicketIds(CarbonImmutable $dateFrom, CarbonImmutable $dateTo): array
     {
@@ -53,7 +53,7 @@ class TimeTable
         return $values;
     }
     /**
-     * @return array<string, mixed>
+     * @return array<array<string, string>>
      */
     public function getTimesheetByTicketIdAndWorkDate(string $ticketId, CarbonImmutable $workDate, ?string $searchTerm): array
     {
@@ -86,8 +86,8 @@ class TimeTable
         }
 
         $stmn->bindValue(':ticketId', $ticketId, PDO::PARAM_INT);
-        $stmn->bindValue(':dateFrom', $workDate->setToDbTimezone()->startOfDay(), PDO::PARAM_STR);
-        $stmn->bindValue(':dateTo', $workDate->setToDbTimezone()->endOfDay(), PDO::PARAM_STR);
+        $stmn->bindValue(':dateFrom', $workDate->startOfDay(), PDO::PARAM_STR);
+        $stmn->bindValue(':dateTo', $workDate->endOfDay(), PDO::PARAM_STR);
 
         $stmn->execute();
         $values = $stmn->fetchAll();
@@ -98,7 +98,7 @@ class TimeTable
     /**
      * updateTime - update specific time entry
      *
-     * @param array $values
+     * @param array<string, mixed> $values
      *
      * @return void
      */
@@ -124,7 +124,7 @@ class TimeTable
     /**
      * updateTime - update specific time entry
      *
-     * @param array $values
+     * @param array<string, mixed> $values
      *
      * @return void
      */

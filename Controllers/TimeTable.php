@@ -7,7 +7,6 @@ use Leantime\Core\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Leantime\Plugins\TimeTable\Services\TimeTable as TimeTableService;
-use Leantime\Core\Support\DateTimeHelper;
 use Leantime\Core\Language as LanguageCore;
 use Leantime\Core\Frontcontroller as FrontcontrollerCore;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -22,7 +21,6 @@ use Carbon\Carbon;
 class TimeTable extends Controller
 {
     private TimeTableService $timeTableService;
-    private DateTimeHelper $dateTimeHelper;
     protected LanguageCore $language;
 
     /**
@@ -30,14 +28,12 @@ class TimeTable extends Controller
      *
      * @param TimeTableService $timeTableService
      * @param LanguageCore     $language
-     * @param DateTimeHelper   $dateTimeHelper
      * @return void
      */
-    public function init(TimeTableService $timeTableService, LanguageCore $language, DateTimeHelper $dateTimeHelper): void
+    public function init(TimeTableService $timeTableService, LanguageCore $language): void
     {
         $this->timeTableService = $timeTableService;
         $this->language = $language;
-        $this->dateTimeHelper = $dateTimeHelper;
     }
 
     /**
@@ -110,8 +106,8 @@ class TimeTable extends Controller
             $searchTermForFilter = $_GET['searchTerm'];
         }
 
-        $weekStartDate = $now->startOfWeek();
-        $weekEndDate = $now->endOfWeek();
+        $weekStartDate = $now->startOfWeek()->setToDbTimezone();
+        $weekEndDate = $now->endOfWeek()->setToDbTimezone();
 
         $this->tpl->assign('currentSearchTerm', $searchTermForFilter);
 
@@ -143,7 +139,6 @@ class TimeTable extends Controller
         $this->tpl->assign('timesheetsByTicket', $timesheetsByTicket);
         $this->tpl->assign('weekDays', $days);
         $this->tpl->assign('weekDates', $weekDates);
-        $this->tpl->assign('offset', $offset);
 
         return $this->tpl->display('TimeTable.timetable');
     }

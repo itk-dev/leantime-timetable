@@ -71,27 +71,24 @@ class TimeTable
         return self::$assets;
     }
 
-
-        /**
-         * @return array<string, mixed>
-         */
+    /**
+     * @return array<array<string, string>>
+     */
     public function getUniqueTicketIds(CarbonImmutable $dateFrom, CarbonImmutable $dateTo): array
     {
         return $this->timeTableRepo->getUniqueTicketIds($dateFrom, $dateTo);
     }
-        /**
-         * @return array<string, mixed>
-         */
+
+    /**
+     * @return array<array<string, string>>
+     */
     public function getTimesheetByTicketIdAndWorkDate(string $ticketId, CarbonImmutable $workDate, ?string $searchTerm): array
     {
         return $this->timeTableRepo->getTimesheetByTicketIdAndWorkDate($ticketId, $workDate, $searchTerm);
     }
 
-
      /**
      * updateTime - update specific time entry
-     *
-     * @param array $values
      *
      * @return void
      */
@@ -100,11 +97,8 @@ class TimeTable
         $this->timeTableRepo->logTimeOnTicket($values);
     }
 
-
-        /**
+    /**
      * updateTime - update specific time entry
-     *
-     * @param array $values
      *
      * @return void
      */
