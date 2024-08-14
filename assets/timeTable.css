@@ -131,14 +131,25 @@ input::-webkit-inner-spin-button {
   height: 270px;
   flex-direction: column;
   background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
+  margin: 15% auto;
+  padding: 30px 20px 20px 20px;
   border: 1px solid #888;
   width: 20%; /* Could be more or less, depending on screen size */
   border-radius: 3px;
   position: relative;
 }
-
+.modal-content .modal-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    display: flex;
+}
+.modal-content .modal-close span {
+    margin: auto;
+}
 .modal-content input {
   width: 100%;
   border-radius: 3px;

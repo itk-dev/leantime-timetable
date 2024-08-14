@@ -66,9 +66,12 @@
             </tbody>
         </table>
         {{-- Modal for editing work logs --}}
+
         <div id="edit-time-log-modal" class="nyroModalBg edit-time-log-modal">
             <form method="post" id="modal-form" class="modal-content">
-
+                <div class="modal-close">
+                    <span>×</span>
+                </div>
                 {{-- Hidden properties for post --}}
                 <input type="hidden" name="timesheet-ticket-id" />
                 <input type="hidden" name="timesheet-date" />

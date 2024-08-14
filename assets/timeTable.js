@@ -26,6 +26,8 @@ function updateLocation(key, value) {
 }
 
 function openEditTimeLogModal(id, ticketId, hours, description, date, offset) {
+  modalEventHandler();
+
   let createNewTimeLog = false;
   // Set post parameters
   if (id) {
@@ -68,8 +70,10 @@ function openEditTimeLogModal(id, ticketId, hours, description, date, offset) {
 
   // Display modal
   document.getElementById("edit-time-log-modal").style.display = "flex";
+  document.getElementById("edit-time-log-modal").classList.add('hest');
   if (createNewTimeLog) {
   }
+
 }
 
 function closeEditTimeLogModal() {
@@ -119,4 +123,43 @@ function filterFunction(e) {
       a[i].style.display = "none";
     }
   }
+}
+
+function modalEventHandler() {
+  const modal = document.getElementById('edit-time-log-modal');
+  const newButton = document.querySelector('.new-button');
+  const modalContent = document.querySelector('.modal-content');
+  const modalCloseButton = document.querySelector('.modal-content .modal-close');
+  // Add a close event when clicking outside the modal
+  const handleClickOutsideModal = event => {
+    const target = event.target;
+
+    if (newButton.contains(target) || modalContent.contains(target)) {
+      return;
+    }
+    removeOnClickOutsideListener();
+    closeEditTimeLogModal();
+  };
+
+  const removeOnClickOutsideListener = () => {
+    document.removeEventListener('click', handleClickOutsideModal);
+  };
+
+  // Add a close event when pressing 'escape'
+  const handleEscapeKeyPress = event => {
+    const isModalDisplayed = window.getComputedStyle(modal).display !== 'none';
+    const isEscapeKeyPressed = event.key === 'Escape';
+    if (isModalDisplayed && isEscapeKeyPressed) {
+      closeEditTimeLogModal();
+    }
+  };
+
+  // Add a close event when pressing the 'x' button in corner of modal
+  const handleCloseButtonPress = event => {
+    closeEditTimeLogModal();
+  };
+
+  document.addEventListener('click', handleClickOutsideModal);
+  document.addEventListener('keydown', handleEscapeKeyPress, {once: true});
+  modalCloseButton.addEventListener('click', handleCloseButtonPress, {once: true});
 }
