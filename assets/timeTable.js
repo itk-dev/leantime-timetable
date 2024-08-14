@@ -32,16 +32,24 @@ function openEditTimeLogModal(id, ticketId, hours, description, date, offset) {
     document.getElementsByName("timesheet-id")[0].setAttribute("value", id);
   }
   if (ticketId) {
-    document.getElementsByName("timesheet-ticket-id")[0].setAttribute("value", ticketId);
+    document
+      .getElementsByName("timesheet-ticket-id")[0]
+      .setAttribute("value", ticketId);
   }
   if (offset) {
-    document.getElementsByName("timesheet-offset")[0].setAttribute("value", offset);
+    document
+      .getElementsByName("timesheet-offset")[0]
+      .setAttribute("value", offset);
   }
   if (description) {
-    document.getElementsByName("timesheet-description")[0].setAttribute("value", description);
+    document
+      .getElementsByName("timesheet-description")[0]
+      .setAttribute("value", description);
   }
   if (hours) {
-    document.getElementsByName("timesheet-hours")[0].setAttribute("value", hours);
+    document
+      .getElementsByName("timesheet-hours")[0]
+      .setAttribute("value", hours);
   }
   if (date) {
     document.getElementsByName("timesheet-date")[0].setAttribute("value", date);
@@ -52,7 +60,7 @@ function openEditTimeLogModal(id, ticketId, hours, description, date, offset) {
   }
 
   // fill out form with known values
-  if (description){
+  if (description) {
     document.getElementById("modal-description").value = description;
   }
 
@@ -61,10 +69,8 @@ function openEditTimeLogModal(id, ticketId, hours, description, date, offset) {
   // Display modal
   document.getElementById("edit-time-log-modal").style.display = "flex";
   if (createNewTimeLog) {
-
   }
 }
-
 
 function closeEditTimeLogModal() {
   // Reset modal
@@ -76,13 +82,17 @@ function closeEditTimeLogModal() {
 
 function changeHours(hours) {
   if (hours) {
-    document.getElementsByName("timesheet-hours")[0].setAttribute("value", hours);
+    document
+      .getElementsByName("timesheet-hours")[0]
+      .setAttribute("value", hours);
   }
 }
 
 function changeDescription(description) {
   if (description) {
-    document.getElementsByName("timesheet-description")[0].setAttribute("value", description);
+    document
+      .getElementsByName("timesheet-description")[0]
+      .setAttribute("value", description);
   }
 }
 

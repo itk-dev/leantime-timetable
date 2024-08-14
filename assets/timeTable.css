@@ -70,11 +70,11 @@ input::-webkit-inner-spin-button {
 .table td {
   position: relative;
 }
-.time-table-container .table td:nth-child(8){
-  background:#E2E8F0 !important;
+.time-table-container .table td:nth-child(8) {
+  background: #e2e8f0 !important;
 }
-.time-table-container .table td:nth-child(9){
-  background:#E2E8F0 !important;
+.time-table-container .table td:nth-child(9) {
+  background: #e2e8f0 !important;
 }
 
 .table td select {
@@ -124,7 +124,6 @@ input::-webkit-inner-spin-button {
 .edit-time-log-modal {
   display: none;
 }
-
 
 /* Modal Content/Box */
 .modal-content {
@@ -189,11 +188,10 @@ input::-webkit-inner-spin-button {
   cursor: pointer;
 }
 
-
 /* copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.js and timetable.blade.php */
- /* Dropdown Button */
- .dropbtn {
-  background-color: #04AA6D;
+/* Dropdown Button */
+.dropbtn {
+  background-color: #04aa6d;
   color: white;
   padding: 16px;
   font-size: 16px;
@@ -202,14 +200,15 @@ input::-webkit-inner-spin-button {
 }
 
 /* Dropdown button on hover & focus */
-.dropbtn:hover, .dropbtn:focus {
+.dropbtn:hover,
+.dropbtn:focus {
   background-color: #3e8e41;
 }
 
 /* The search field */
 #myInput {
   box-sizing: border-box;
-  background-image: url('searchicon.png');
+  background-image: url("searchicon.png");
   background-position: 14px 12px;
   background-repeat: no-repeat;
   font-size: 16px;
@@ -219,7 +218,9 @@ input::-webkit-inner-spin-button {
 }
 
 /* The search field when it gets focus/clicked on */
-#myInput:focus {outline: 3px solid #ddd;}
+#myInput:focus {
+  outline: 3px solid #ddd;
+}
 
 /* The container <div> - needed to position the dropdown content */
 .dropdown {
@@ -246,7 +247,11 @@ input::-webkit-inner-spin-button {
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #f1f1f1}
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
-.show {display:block;}
+.show {
+  display: block;
+}
