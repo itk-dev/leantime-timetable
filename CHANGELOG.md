@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-* [PR-3](https://github.com/ITK-leantime/leantime-timetable/pull/3)
+* [PR-3](https://github.com/ITK-Leantime/leantime-timetable/pull/5)
   * Added build release script
   * Added deploy script
   * Add `%%VERSION%%`, that is replaced by create-release script, to make [leantime load new script/css files](https://www.keycdn.com/support/what-is-cache-busting)
