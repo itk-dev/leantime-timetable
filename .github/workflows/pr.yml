@@ -29,6 +29,19 @@ jobs:
         run: |
           docker run --rm -v "$(pwd):/work" tmknom/prettier --check assets
 
+  shellcheck:
+    runs-on: ubuntu-latest
+    name: Shellcheck
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Shellcheck
+        run: |
+          docker run --rm --tty --volume "$(pwd):/app" peterdavehello/shellcheck shellcheck /app/bin/deploy
+
   markdown-coding-standards:
     name: Markdown coding standards
     runs-on: ubuntu-latest
