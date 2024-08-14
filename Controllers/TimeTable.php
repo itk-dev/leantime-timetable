@@ -28,9 +28,9 @@ class TimeTable extends Controller
     /**
      * constructor
      *
-     * @param TimeTableService     $timeTableService
-     * @param LanguageCore          $language
-     * @param DateTimeHelper        $dateTimeHelper
+     * @param TimeTableService $timeTableService
+     * @param LanguageCore     $language
+     * @param DateTimeHelper   $dateTimeHelper
      * @return void
      */
     public function init(TimeTableService $timeTableService, LanguageCore $language, DateTimeHelper $dateTimeHelper): void
@@ -50,7 +50,7 @@ class TimeTable extends Controller
             return $this->tpl->displayJson(['Error' => 'Not Authorized'], 403);
         }
 
-        if (isset($_POST['timesheet-id']) && $_POST['timesheet-id'] !== "") {
+        if (isset($_POST['timesheet-id']) && $_POST['timesheet-id'] !== '') {
             $values = [
                 'hours' => $_POST['timesheet-hours'],
                 'description' => $_POST['timesheet-description'],
@@ -74,7 +74,7 @@ class TimeTable extends Controller
 
         $redirectUrl = BASE_URL . '/TimeTable/timetable';
         if (isset($_GET['offset'])) {
-            $redirectUrl = $redirectUrl .'?offset=' . $_GET['offset'];
+            $redirectUrl = $redirectUrl . '?offset=' . $_GET['offset'];
         }
 
         return FrontcontrollerCore::redirect($redirectUrl);

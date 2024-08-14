@@ -81,7 +81,7 @@ class TimeTable
         if ($userId !== '') {
             $stmn->bindValue(':userId', $userId, PDO::PARAM_INT);
         }
-        if ($searchTerm !== NULL) {
+        if ($searchTerm !== null) {
             $stmn->bindValue(':searchTerm', $searchTerm, PDO::PARAM_STR);
         }
 
@@ -104,13 +104,13 @@ class TimeTable
      */
     public function updateTime(array $values): void
     {
-        $sql = "UPDATE
+        $sql = 'UPDATE
             zp_timesheets
         SET
             hours = :hours,
             description =:description
         WHERE
-            id = :id";
+            id = :id';
         $stmn = $this->db->database->prepare($sql);
         $stmn->bindValue(':hours', $values['hours']);
         $stmn->bindValue(':description', $values['description']);
@@ -130,7 +130,7 @@ class TimeTable
      */
     public function logTimeOnTicket(array $values): void
     {
-        $sql = "INSERT INTO zp_timesheets (
+        $sql = 'INSERT INTO zp_timesheets (
             userId,
             ticketId,
             workDate,
@@ -144,7 +144,7 @@ class TimeTable
             :hours,
             :description,
             :kind
-        )";
+        )';
 
         $stmn = $this->db->database->prepare($sql);
 
