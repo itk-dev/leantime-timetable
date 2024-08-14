@@ -59,6 +59,7 @@
 
     <exclude-pattern>assets/</exclude-pattern>
     <exclude-pattern>vendor*/</exclude-pattern>
+    <exclude-pattern>node_modules*/</exclude-pattern>
 
     <!-- Not (yet) a part of the Leantime coding standards
          (https://github.com/Leantime/leantime/blob/master/phpcs.xml) -->
