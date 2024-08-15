@@ -103,8 +103,17 @@ function changeDescription(description) {
 // todo rewrite these to be more readable
 // copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.css and timetable.blade.php
 function myFunction(e) {
+  const target = e.target;
   e.preventDefault();
-  document.getElementById("myDropdown").classList.toggle("show");
+  if (!target.nextElementSibling.classList.contains('show')) {
+    document.getElementById("myDropdown").classList.toggle("show");
+  }
+  // Close dropdown when clicked outside input
+  document.querySelector('#edit-time-log-modal .modal-content').addEventListener('click', (e) => {
+    if (e.target.id !== 'myInput') {
+      document.getElementById("myDropdown").classList.remove("show");
+    }
+  })
 }
 
 // Todo create a get request for tasks (api), and only get tasks on 3 inputs or something

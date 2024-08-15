@@ -83,12 +83,11 @@
                 {{-- todo obviously this wont do... --}}
                 <input type="date">
 
+
                 {{-- copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.css and timeTable.js --}}
                 <div class="dropdown">
-                    <button onclick="myFunction(event)" class="dropbtn">Dropdown</button>
+                    <input onclick="myFunction(event)"  type="text" placeholder="Search todo.." id="myInput" onkeyup="filterFunction(event)" />
                     <div id="myDropdown" class="dropdown-content">
-                        {{-- todo create string for "search.." --}}
-                      <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction(event)">
                       {{-- todo remove these obviouslu --}}
                       <a href="#about">About</a>
                       <a href="#base">Base</a>

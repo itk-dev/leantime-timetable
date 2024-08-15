@@ -202,36 +202,38 @@ input::-webkit-inner-spin-button {
 /* copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.js and timetable.blade.php */
 /* Dropdown Button */
 .dropbtn {
-  background-color: #04aa6d;
+  /*background-color: #04aa6d;
   color: white;
   padding: 16px;
   font-size: 16px;
   border: none;
-  cursor: pointer;
-}
-
-/* Dropdown button on hover & focus */
-.dropbtn:hover,
-.dropbtn:focus {
-  background-color: #3e8e41;
+  cursor: pointer;*/
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: transparent;
+    border: none;
+    height: 31px;
 }
 
 /* The search field */
-#myInput {
+/*#myInput {
   box-sizing: border-box;
   background-image: url("searchicon.png");
   background-position: 14px 12px;
   background-repeat: no-repeat;
   font-size: 16px;
-  padding: 14px 20px 12px 45px;
   border: none;
   border-bottom: 1px solid #ddd;
+    height: 31px;
 }
 
-/* The search field when it gets focus/clicked on */
+!* The search field when it gets focus/clicked on *!
 #myInput:focus {
   outline: 3px solid #ddd;
-}
+}*/
 
 /* The container <div> - needed to position the dropdown content */
 .dropdown {
@@ -245,14 +247,16 @@ input::-webkit-inner-spin-button {
   position: absolute;
   background-color: #f6f6f6;
   min-width: 230px;
+    width: 100%;
   border: 1px solid #ddd;
   z-index: 1;
+    top: calc(100% - 11px);
 }
 
 /* Links inside the dropdown */
 .dropdown-content a {
   color: black;
-  padding: 12px 16px;
+  padding: 5px 15px;
   text-decoration: none;
   display: block;
 }
