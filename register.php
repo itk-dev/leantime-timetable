@@ -45,3 +45,14 @@ Events::add_filter_listener(
 
 Events::add_filter_listener('leantime.domain.menu.repositories.menu.getMenuStructure.menuStructures', 'addTimeTableItemToMenu');
 Events::add_filter_listener('leantime.domain.menu.repositories.menu.getSectionMenuType.menuSections', 'displayPersonalMenuOnEnteringTimeTable');
+
+Events::add_event_listener(
+    'leantime.core.template.tpl.*.afterScriptLibTags',
+    function () {
+        if (null !== (session('userdata.id'))) {
+            echo '<script src="/assets/plugin-timeTable.v' . urlencode('%%VERSION%%') . '.js"></script>';
+            echo '<link rel="stylesheet" href="/assets/plugin-timeTable.v' . urlencode('%%VERSION%%') . '.css"></link>';
+        }
+    },
+    5
+);
