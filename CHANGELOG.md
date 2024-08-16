@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+* [PR-4](https://github.com/ITK-Leantime/leantime-timetable/pull/4)
+  * Adds get/posts in the controller. post for saving, get for getting/sorting/organizing data
+  * sql in repository, as the sql in the code base did not cover our use case
+  * Create a basic table in blade-file
+
 * [PR-3](https://github.com/ITK-Leantime/leantime-timetable/pull/5)
   * Added build release script
   * Added deploy script

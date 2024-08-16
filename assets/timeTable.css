@@ -1,0 +1,272 @@
+/* Todo scope css better so it doesnt "ruin" leantime again */
+/* Todo streamline kebab case / camelcase stuff */
+
+.time-table-container {
+  position: relative;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+.time-table-container > h1 {
+  margin-bottom: 30px;
+}
+.time-table-container .fa-circle-exclamation {
+  position: absolute;
+  color: #b91c1c;
+  right: 20px;
+  top: 10px;
+}
+.time-table-container .flex-container {
+  justify-content: space-between;
+  width: 100%;
+  display: flex;
+}
+.time-table-container .flex-container button {
+  background: white;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  height: 28px;
+}
+.time-table-container .flex-container i {
+  color: #cbd5e1;
+}
+.time-table-container .flex-container .new-button {
+  height: 28px;
+  background: #0284c7;
+  color: white;
+  border: none;
+}
+.time-table-container .flex-container .new-button i {
+  color: white;
+}
+.time-table-container .search-bar {
+  display: flex;
+  position: relative;
+  width: 100%;
+  flex-direction: column;
+  margin-top: 10px;
+}
+.time-table-container .search-bar .search-input {
+  border-radius: 0;
+  height: 28px;
+  width: 50%;
+}
+
+.time-table-container td.spacious {
+  min-width: 130px;
+}
+.time-table-container input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.time-table-container input[type="number"] {
+  -moz-appearance: textfield;
+}
+.table td {
+  position: relative;
+}
+.time-table-container .table td:nth-child(8) {
+  background: #e2e8f0 !important;
+}
+.time-table-container .table td:nth-child(9) {
+  background: #e2e8f0 !important;
+}
+
+.table td select {
+  all: unset;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  border: none;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.table td input {
+  all: unset;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  border: none;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.time-table-container > input {
+  border-radius: 3px !important;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.edit-time-log-modal {
+  display: none;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  display: flex;
+  height: 270px;
+  flex-direction: column;
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 30px 20px 20px 20px;
+  border: 1px solid #888;
+  width: 20%; /* Could be more or less, depending on screen size */
+  border-radius: 3px;
+  position: relative;
+}
+.modal-content .modal-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    display: flex;
+}
+.modal-content .modal-close span {
+    margin: auto;
+}
+.modal-content input {
+  width: 100%;
+  border-radius: 3px;
+}
+.modal-content .buttons {
+  display: flex;
+  justify-content: end;
+}
+.modal-content .save-button {
+  border-radius: 3px;
+  border: none;
+  color: white;
+  background: #4f46e5;
+  border: 1px solid #4f46e5;
+  height: 28px;
+  max-width: 40px;
+  padding: 0;
+  margin: 0;
+  font-weight: 400;
+}
+.modal-content .cancel-button {
+  border-radius: 3px;
+  background: white;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  height: 28px;
+  margin-right: 5px;
+}
+.modal-content .fa-clock {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.js and timetable.blade.php */
+/* Dropdown Button */
+.dropbtn {
+  /*background-color: #04aa6d;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;*/
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: transparent;
+    border: none;
+    height: 31px;
+}
+
+/* The search field */
+/*#myInput {
+  box-sizing: border-box;
+  background-image: url("searchicon.png");
+  background-position: 14px 12px;
+  background-repeat: no-repeat;
+  font-size: 16px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+    height: 31px;
+}
+
+!* The search field when it gets focus/clicked on *!
+#myInput:focus {
+  outline: 3px solid #ddd;
+}*/
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  min-width: 230px;
+    width: 100%;
+  border: 1px solid #ddd;
+  z-index: 1;
+    top: calc(100% - 11px);
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 5px 15px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {
+  display: block;
+}
