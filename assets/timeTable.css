@@ -383,31 +383,29 @@ input::-webkit-inner-spin-button {
   color: #000;
 }
 
-
-
 .ticket-title span {
   color: #666;
   cursor: default;
 }
 
 .timetable-ticket-search.ticket-loading {
-    pointer-events: none;
-    user-select: none;
+  pointer-events: none;
+  user-select: none;
 }
 .timetable-ticket-search.ticket-loading::after {
-    content: "";
-    border-radius: 50%;
-    border: 1px solid #000;
-    position: absolute;
-    animation: spin 1s  infinite;
-    right: 15px;
-    top: 10px;
-    width: 15px;
-    height: 10px;
+  content: "";
+  border-radius: 50%;
+  border: 1px solid #000;
+  position: absolute;
+  animation: spin 1s infinite;
+  right: 15px;
+  top: 10px;
+  width: 15px;
+  height: 10px;
 }
 
 @keyframes spin {
-    100% {
-        transform: rotate(360deg);
-    }
+  100% {
+    transform: rotate(360deg);
+  }
 }

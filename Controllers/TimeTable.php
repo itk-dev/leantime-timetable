@@ -147,7 +147,7 @@ class TimeTable extends Controller
                 $timesheetsSortedByWeekdate[$weekDate->format('Y-m-d')] = $timesheetsByTicketAndDate;
                 if (count($timesheetsByTicketAndDate) > 0) {
                     $timesheetsSortedByWeekdate['ticketTitle'] = $timesheetsByTicketAndDate[0]['headline'];
-                    $timesheetsSortedByWeekdate['ticketLink'] = '?showTicketModal='.$timesheetsByTicketAndDate[0]['ticketId'].'#/tickets/showTicket/'.$timesheetsByTicketAndDate[0]['ticketId'];
+                    $timesheetsSortedByWeekdate['ticketLink'] = '?showTicketModal=' . $timesheetsByTicketAndDate[0]['ticketId'] . '#/tickets/showTicket/' . $timesheetsByTicketAndDate[0]['ticketId'];
                     $timesheetsSortedByWeekdate['projectName'] = $timesheetsByTicketAndDate[0]['name'];
                     $timesheetsSortedByWeekdate['ticketId'] = $timesheetsByTicketAndDate[0]['ticketId'];
                 }

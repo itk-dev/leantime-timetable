@@ -124,18 +124,22 @@ jQuery(document).ready(function ($) {
         selectedDateTimestamp + diffToMonday + 6 * 24 * 60 * 60 * 1000,
       );
 
-      $(this.modalTicketInput).val('').attr('placeholder', () => {
-        return $(this.modalTicketInput).attr('data-loading');
-      });
-      $(this.modalTicketSearch).addClass('ticket-loading');
+      $(this.modalTicketInput)
+        .val("")
+        .attr("placeholder", () => {
+          return $(this.modalTicketInput).attr("data-loading");
+        });
+      $(this.modalTicketSearch).addClass("ticket-loading");
       TimeTableApiHandler.getActiveTicketIdsOfPeriod(monday, sunday).then(
         (activeTicketIds) => {
           activeTicketIds = JSON.parse(activeTicketIds);
           this.activeTicketIds = new Set(activeTicketIds);
-          $(this.modalTicketSearch).removeClass('ticket-loading');
-          $(this.modalTicketInput).val('').attr('placeholder', () => {
-            return $(this.modalTicketInput).attr('data-placeholder');
-          });
+          $(this.modalTicketSearch).removeClass("ticket-loading");
+          $(this.modalTicketInput)
+            .val("")
+            .attr("placeholder", () => {
+              return $(this.modalTicketInput).attr("data-placeholder");
+            });
         },
       );
     }
