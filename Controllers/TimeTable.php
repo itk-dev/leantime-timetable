@@ -45,28 +45,24 @@ class TimeTable extends Controller
         if (!AuthService::userIsAtLeast(Roles::$editor)) {
             return $this->tpl->displayJson(['Error' => 'Not Authorized'], 403);
         }
-
         if (isset($_POST['timesheet-id']) && $_POST['timesheet-id'] !== '') {
             $values = [
                 'hours' => $_POST['timesheet-hours'],
                 'description' => $_POST['timesheet-description'],
                 'id' => $_POST['timesheet-id'],
             ];
-
             $this->timeTableService->updateTime($values);
         } else {
             $values = [
                 'userId' => session('userdata.id'),
                 'hours' => $_POST['timesheet-hours'],
-                'workDate' => (new Carbon($_POST['timesheet-date'], session('usersettings.timezone')))->setTimezone('UTC'),
+                'workDate' => (new Carbon($_POST['timesheet-date'], session('usersettings.timezone'))),
                 'ticketId' => $_POST['timesheet-ticket-id'],
                 'description' => $_POST['timesheet-description'],
                 'kind' => 'GENERAL_BILLABLE',
             ];
-
             $this->timeTableService->logTimeOnTicket($values);
         }
-
 
         $redirectUrl = BASE_URL . '/TimeTable/timetable';
         if (isset($_GET['offset'])) {
@@ -85,10 +81,28 @@ class TimeTable extends Controller
      */
     public function get(): Response
     {
+        if (isset($_GET['getActiveTicketIdsOfPeriod'])) {
+            $startDate = filter_input(INPUT_GET, 'start', FILTER_SANITIZE_STRING);
+            $endDate = filter_input(INPUT_GET, 'end', FILTER_SANITIZE_STRING);
+            if (!$startDate || !$endDate) {
+                die(json_encode([]));
+            }
+
+            $startDate = (new CarbonImmutable($startDate, session('usersettings.timezone')))->setToDbTimezone();
+            $endDate = (new CarbonImmutable($endDate, session('usersettings.timezone')))->setToDbTimezone();
+
+            $data = $this->timeTableService->getUniqueTicketIds($startDate, $endDate);
+
+            $ticketIds = $data ? array_column($data, 'ticketId') : [];
+
+            die(json_encode($ticketIds));
+        }
+
         // Filters for the sql select
         $userIdForFilter = null;
         $searchTermForFilter = null;
         $now = CarbonImmutable::now();
+
         if (isset($_GET['searchTerm'])) {
             $searchTerm = $_GET['searchTerm'];
         }
@@ -101,13 +115,12 @@ class TimeTable extends Controller
                 $now = $now->subDays(abs((int) $_GET['offset']) * 7);
             }
         }
-
         if (isset($_GET['searchTerm']) && $_GET['searchTerm'] !== '') {
             $searchTermForFilter = $_GET['searchTerm'];
         }
 
-        $weekStartDate = $now->startOfWeek()->setToDbTimezone();
-        $weekEndDate = $now->endOfWeek()->setToDbTimezone();
+        $weekStartDate = $now->startOfWeek()->setToUserTimezone();
+        $weekEndDate = $now->endOfWeek()->setToUserTimezone();
 
         $this->tpl->assign('currentSearchTerm', $searchTermForFilter);
 
@@ -121,21 +134,29 @@ class TimeTable extends Controller
         $relevantTicketIds = $this->timeTableService->getUniqueTicketIds($weekStartDate, $weekEndDate);
 
         $timesheetsByTicket = [];
+        $ticketIds = [];
         foreach ($relevantTicketIds as $ticket) {
+            if (!$ticket['ticketId']) {
+                continue;
+            }
+            $ticketIds[] = intval($ticket['ticketId']);
             $timesheetsSortedByWeekdate = [];
             foreach ($weekDates as $weekDate) {
                 $timesheetsByTicketAndDate = $this->timeTableService->getTimesheetByTicketIdAndWorkDate($ticket['ticketId'], $weekDate, $searchTermForFilter);
+
                 $timesheetsSortedByWeekdate[$weekDate->format('Y-m-d')] = $timesheetsByTicketAndDate;
-                if ($timesheetsByTicketAndDate !== null && count($timesheetsByTicketAndDate) > 0) {
+                if (count($timesheetsByTicketAndDate) > 0) {
                     $timesheetsSortedByWeekdate['ticketTitle'] = $timesheetsByTicketAndDate[0]['headline'];
+                    $timesheetsSortedByWeekdate['ticketLink'] = '?showTicketModal='.$timesheetsByTicketAndDate[0]['ticketId'].'#/tickets/showTicket/'.$timesheetsByTicketAndDate[0]['ticketId'];
+                    $timesheetsSortedByWeekdate['projectName'] = $timesheetsByTicketAndDate[0]['name'];
                     $timesheetsSortedByWeekdate['ticketId'] = $timesheetsByTicketAndDate[0]['ticketId'];
                 }
             }
 
             $timesheetsByTicket[$ticket['ticketId']] = $timesheetsSortedByWeekdate;
         }
-
         // All tickets assignet to the template
+        $this->tpl->assign('ticketIds', implode(',', $ticketIds));
         $this->tpl->assign('timesheetsByTicket', $timesheetsByTicket);
         $this->tpl->assign('weekDays', $days);
         $this->tpl->assign('weekDates', $weekDates);
