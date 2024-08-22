@@ -50,8 +50,9 @@ Events::add_event_listener(
     'leantime.core.template.tpl.*.afterScriptLibTags',
     function () {
         if (null !== (session('userdata.id'))) {
-            echo '<script src="/assets/plugin-timeTable.v' . urlencode('%%VERSION%%') . '.js"></script>';
-            echo '<link rel="stylesheet" href="/assets/plugin-timeTable.v' . urlencode('%%VERSION%%') . '.css"></link>';
+            echo '<script type="module" src="/dist/js/plugin-timeTableApiHandler.v' . urlencode('%%VERSION%%') . '.js"></script>';
+            echo '<script type="module" src="/dist/js/plugin-timeTable.v' . urlencode('%%VERSION%%') . '.js"></script>';
+            echo '<link rel="stylesheet" href="/dist/css/plugin-timeTable.v' . urlencode('%%VERSION%%') . '.css"></link>';
         }
     },
     5
