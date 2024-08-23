@@ -90,7 +90,7 @@ class TimeTable
 
      /**
      * updateTime - update specific time entry
-     *
+     * @param array<string, mixed> $values
      * @return void
      */
     public function logTimeOnTicket(array $values): void
@@ -100,6 +100,7 @@ class TimeTable
 
     /**
      * updateTime - update specific time entry
+     * @param array<string, mixed> $values
      *
      * @return void
      */
