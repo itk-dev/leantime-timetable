@@ -2,7 +2,6 @@
 
 ## [Unreleased]
 
-
 * [PR-6](https://github.com/ITK-Leantime/leantime-timetable/pull/6)
   * Added styling throughout plugin
   * Rewritten timeTable.js into a class, overhauled methods and added doccomments
