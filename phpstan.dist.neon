@@ -10,6 +10,10 @@ parameters:
     ignoreErrors:
         - '#Constant (APP_ROOT|BASE_URL) not found.#'
         # - identifier: missingType.generics
+        - '#^Function session not found\.$#'
+        - '#^Call to an undefined method Carbon\\CarbonImmutable::setToDbTimezone\(\).$#'
+        - '#^Call to an undefined method Carbon\\CarbonImmutable::setToUserTimezone\(\).$#'
+        - '#^Offset mixed on array\{\} in isset\(\) does not exist\.$#'
 
 # Local Variables:
 # mode: yaml
