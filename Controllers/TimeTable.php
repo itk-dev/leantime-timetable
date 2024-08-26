@@ -85,7 +85,8 @@ class TimeTable extends Controller
             $startDate = filter_input(INPUT_GET, 'start', FILTER_SANITIZE_STRING);
             $endDate = filter_input(INPUT_GET, 'end', FILTER_SANITIZE_STRING);
             if (!$startDate || !$endDate) {
-                die(json_encode([]));
+                echo json_encode([]);
+                exit();
             }
 
             $startDate = (new CarbonImmutable($startDate, session('usersettings.timezone')))->setToDbTimezone();
@@ -95,7 +96,8 @@ class TimeTable extends Controller
 
             $ticketIds = $data ? array_column($data, 'ticketId') : [];
 
-            die(json_encode($ticketIds));
+            echo json_encode($ticketIds);
+            exit();
         }
 
         // Filters for the sql select
