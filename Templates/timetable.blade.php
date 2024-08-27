@@ -10,11 +10,6 @@
                 <button class="timetable-new-entry" type="button">{{ __('timeTable.button_add_time_log') }} <i class="fa fa-plus"></i></button>
             </div>
         </div>
-        {{--<div class="search-bar">
-            <label class="sr-only">{{ __('timeTable.search_label') }}</label>
-            <input value="{!! $currentSearchTerm !!}" type="text" class="timetable-search"
-                placeholder="{{ __('timeTable.empty_search_label') }}" />
-        </div>--}}
         <table id="timetable" class="table">
             <thead>
                 <tr>
