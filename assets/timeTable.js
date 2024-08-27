@@ -45,7 +45,9 @@ jQuery(document).ready(function ($) {
       this.modalCancelButton = this.timeEditModal.find(
         ".timetable-modal-cancel",
       );
-      this.modalSubmitButton = this.timeEditModal.find(".timetable-modal-submit");
+      this.modalSubmitButton = this.timeEditModal.find(
+        ".timetable-modal-submit",
+      );
       this.modalInputDate = this.timeEditModal.find(
         'input[name="timesheet-date"]',
       );
@@ -135,8 +137,8 @@ jQuery(document).ready(function ($) {
         this.getActiveTicketsOfWeek(e.target.value),
       );
 
-      $('#modal-form').on('submit', (e) => {
-        this.modalSubmitButton.attr('disabled', 'disabled');
+      $("#modal-form").on("submit", (e) => {
+        this.modalSubmitButton.attr("disabled", "disabled");
       });
     }
 

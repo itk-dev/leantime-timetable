@@ -75,10 +75,10 @@ input::-webkit-inner-spin-button {
   position: relative;
 }
 .time-table-container .table td.weekend {
-  background: #F1F5F9;
+  background: #f1f5f9;
 }
 .time-table-container .table td.today {
-    background: #F0F9FF;
+  background: #f0f9ff;
 }
 .time-table-container .table .th-ticket-title {
   width: 60%;
@@ -87,22 +87,22 @@ input::-webkit-inner-spin-button {
   text-align: left;
 }
 .time-table-container .table th {
-    border: 1px solid #ccc !important;
-    background-color: #F8FAFC;
-    padding: 7px 15px;
+  border: 1px solid #ccc !important;
+  background-color: #f8fafc;
+  padding: 7px 15px;
 }
 .time-table-container .table th.weekend {
-    background: #F1F5F9;
+  background: #f1f5f9;
 }
 .time-table-container .table th.today {
-    background: #F0F9FF;
+  background: #f0f9ff;
 }
 .time-table-container .table td {
   border: 1px solid #ccc;
   padding: 15px;
 }
 .time-table-container .table .tr-total {
-  background-color: #E2E8F0;
+  background-color: #e2e8f0;
   font-weight: bold;
   cursor: default;
 }
