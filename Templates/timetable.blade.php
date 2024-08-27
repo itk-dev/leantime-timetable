@@ -2,117 +2,113 @@
 
 @section('content')
     <div class="time-table-container">
+    <input type="hidden" name="timetable-ticket-ids" value="{{$ticketIds}}" />
         <div class="flex-container">
-            <h1 class="h1"><i class="fa fa-clock"></i> {{ __('timeTable.dashboard_title') }}</h1>
             <div>
-                <button type="button" onclick="changeWeek(-1)"><i class="fa fa-arrow-left"></i> {{ __('timeTable.button_prev_week') }}</button>
-                <button type="button" onclick="changeWeek(1)">{{ __('timeTable.button_next_week') }} <i class="fa fa-arrow-right"></i></button>
-                <button class="new-button" type="button" onclick="openEditTimeLogModal()">{{ __('timeTable.button_add_time_log') }} <i class="fa fa-plus"></i></button>
+                <button type="button" class="timetable-week-prev"><i class="fa fa-arrow-left"></i> {{ __('timeTable.button_prev_week') }}</button>
+                <button type="button" class="timetable-week-next">{{ __('timeTable.button_next_week') }} <i class="fa fa-arrow-right"></i></button>
+                <button class="timetable-new-entry" type="button">{{ __('timeTable.button_add_time_log') }} <i class="fa fa-plus"></i></button>
             </div>
         </div>
-        <div class="search-bar">
-            <label class="sr-only">{{ __('timeTable.search_label') }}</label>
-            <input value="{!! $currentSearchTerm !!}" type="text" class="search-input"
-                onchange="redirectWithSearchTerm(this.value)" placeholder="{{ __('timeTable.empty_search_label') }}" />
-        </div>
-        <table class="table table-striped">
+        <table id="timetable" class="table">
             <thead>
-                <tr>
-                    <th scope="col">{{ __('timeTable.id_table_header') }}</th>
-                    <th scope="col">{{ __('timeTable.title_table_header') }}</th>
+            <tr>
+                <th class="th-ticket-title" scope="col">{{ __('timeTable.title_table_header') }}</th>
 
-                    <?php
-                    $i = 0;
-                    if (isset($weekDays) && isset($weekDates)){
-                    foreach ($weekDays as $key => $day) { ?>
-                    <th>
-                        {{ $day }}
-                        <?php
-                        echo $weekDates[$key]->format('Y-m-d');
-                        $i++;
-                        ?>
-                    </th>
-
-                    <?php }} ?>
-
-                </tr>
+                @if (isset($weekDays, $weekDates))
+                    @foreach ($weekDays as $key => $day)
+                        @php
+                            $weekDate = $weekDates[$key];
+                            $weekendClass = $weekDate->isWeekend() ? 'weekend' : '';
+                            $todayClass = $weekDate->isToday() ? 'today' : '';
+                            $classes = trim("$weekendClass $todayClass");
+                        @endphp
+                        <th data-hest="{{ $weekDate }}" @if($classes) class="{{ $classes }}" @endif>
+                            {{ $weekDate->format('d. D') }}
+                        </th>
+                    @endforeach
+                @endif
+            </tr>
             </thead>
             <tbody>
-                @foreach ($timesheetsByTicket as $key => $timesheet)
-                    <tr>
-                        <td scope="row">{{ $timesheet['ticketId'] }}</td>
-                        <td scope="row">{{ $timesheet['ticketTitle']  }}</td>
-                        @if (isset($weekDates))
+            <?php $totalHours = array(); ?>
+            @foreach ($timesheetsByTicket as $ticketId => $timesheet)
+                <tr>
+                    <td class="ticket-title" scope="row"><a href="{{$timesheet['ticketLink']}}">{{ $timesheet['ticketTitle']  }}</a> <span>{{$timesheet['projectName']}}</span></td>
+                    @if (isset($weekDates))
                         @foreach ($weekDates as $weekDate)
-                            <?php
+                                <?php
                                 $weekDateAccessor = isset($weekDate) ? $weekDate->format('Y-m-d') : null;
                                 $hours = isset($timesheet) ? $timesheet[$weekDateAccessor][0]['hours'] : null;
+
+                                // accumulate hours
+                                if ($hours) {
+                                    if (isset($totalHours[$weekDateAccessor])) {
+                                        $totalHours[$weekDateAccessor] += $hours;
+                                    } else {
+                                        $totalHours[$weekDateAccessor] = $hours;
+                                    }
+                                }
                                 $id = isset($timesheet) ? $timesheet[$weekDateAccessor][0]['id'] : null;
                                 $description = isset($timesheet) ? $timesheet[$weekDateAccessor][0]['description'] : null;
-                            ?>
-                            <td scope="row">
-                                <input
-                                    onclick="openEditTimeLogModal('{{$id}}', '{{ $key }}', '{{ $hours }}', `{{ $description }}`, '{{$weekDate->format('Y/m/d')}}')"
-                                    type="number" value="{{ $hours }}" />
+                                $weekendClass = (isset($weekDate) && $weekDate->isWeekend()) ? 'weekend' : '';
+                                $todayClass = (isset($weekDate) && $weekDate->isToday()) ? 'today' : '';
+                                ?>
+                            <td scope="row" class="timetable-edit-entry {{$weekendClass}} {{$todayClass}}" data-id="{{$id}}" data-ticketid="{{ $ticketId }}" data-hours="{{ $hours }}" data-description="{{ $description }}" data-date="{{$weekDate->format('Y-m-d')}}" title="{{ $description }}">
+                                <span>{{ $hours }}</span>
                                 @if (isset($hours) && $description === '')
                                     <span class="fa fa-circle-exclamation"></span>
                                 @endif
-
                             </td>
                         @endforeach
-                        @endif
-                    </tr>
+                    @endif
+                </tr>
+            @endforeach
+            <!-- add total hours row here -->
+            <tr class="tr-total">
+                <td scope="row">Total</td>
+                @foreach ($weekDates as $weekDate)
+                    <td> {{ $totalHours[$weekDate->format('Y-m-d')] ?? 0 }} </td>
                 @endforeach
+            </tr>
             </tbody>
         </table>
         {{-- Modal for editing work logs --}}
 
         <div id="edit-time-log-modal" class="nyroModalBg edit-time-log-modal">
-            <form method="post" id="modal-form" class="modal-content">
-                <div class="modal-close">
+            <form method="post" class="edit-time-log-form">
+                <div class="timetable-close-modal">
                     <span>×</span>
                 </div>
                 {{-- Hidden properties for post --}}
                 <input type="hidden" name="timesheet-ticket-id" />
-                <input type="hidden" name="timesheet-date" />
                 <input type="hidden" name="timesheet-id" />
-                <input type="hidden" name="timesheet-description" />
-                <input type="hidden" name="timesheet-hours" />
                 <input type="hidden" name="timesheet-offset" />
 
                 {{-- todo obviously this wont do... --}}
-                <input type="date">
-
+                <input type="date" name="timesheet-date">
 
                 {{-- copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.css and timeTable.js --}}
-                <div class="dropdown">
-                    <input onclick="myFunction(event)"  type="text" placeholder="Search todo.." id="myInput" onkeyup="filterFunction(event)" />
-                    <div id="myDropdown" class="dropdown-content">
-                      {{-- todo remove these obviouslu --}}
-                      <a href="#about">About</a>
-                      <a href="#base">Base</a>
-                      <a href="#blog">Blog</a>
-                      <a href="#contact">Contact</a>
-                      <a href="#custom">Custom</a>
-                      <a href="#support">Support</a>
-                      <a href="#tools">Tools</a>
-                    </div>
+                <div class="timetable-ticket-search">
+                    <input class="timetable-ticket-input" type="text" data-placeholder="Search tickets.." data-loading="Filtering tickets.." placeholder="Search todo.." />
+                    <div class="timetable-ticket-results"></div>
                   </div>
 
                 {{-- Hours input --}}
-                <input type="number" onchange="changeHours(this.value)" step="0.01" id="modal-hours" placeholder="Timer" required />
-                <span class="fa fa-clock"></span>
+                <input type="number" name="timesheet-hours" step="0.01" placeholder="Timer" required />
 
                 {{-- Description input --}}
-                <input type="text" id="modal-description" placeholder="Beskrivelse" onchange="changeDescription(this.value)" required />
+                <textarea type="text" id="modal-description" name="timesheet-description" placeholder="Beskrivelse" required></textarea>
 
                 {{-- Save or cancel buttons --}}
                 <div class="buttons">
-                    <button class="cancel-button" onclick="closeEditTimeLogModal(event)">{{ __('timeTable.button_modal_close') }}</button>
-                    <input type="submit" class="save-button" value="{{ __('timeTable.button_modal_save') }}" />
+                    <button type="button" class="timetable-modal-cancel">{{ __('timeTable.button_modal_close') }}</button>
+                    <button type="submit" class="timetable-modal-submit">{{__('timeTable.button_modal_save')}}</button>
                 </div>
             </form>
-
+            <div class="timetable-sync-panel">
+                <div><button class="timetable-sync-tickets"><span><i class="fa-solid fa-arrows-rotate"></i>Sync data</span></button></div><div><span></span></div>
+            </div>
         </div>
     </div>
 @endsection

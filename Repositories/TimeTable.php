@@ -70,9 +70,11 @@ class TimeTable
         timesheet.description,
         timesheet.ticketId,
         zp_tickets.headline,
-        zp_tickets.id as ticketId
+        zp_tickets.id as ticketId,
+        zp_projects.name
         FROM zp_timesheets AS timesheet
         LEFT JOIN zp_tickets ON timesheet.ticketId = zp_tickets.id
+        LEFT JOIN zp_projects ON zp_tickets.projectId = zp_projects.id
         WHERE timesheet.userId = :userId AND timesheet.ticketId = :ticketId AND (timesheet.workDate BETWEEN :dateFrom AND :dateTo)' . $searchTermQuery;
 
         $stmn = $this->db->database->prepare($sql);
@@ -154,7 +156,6 @@ class TimeTable
         $stmn->bindValue(':kind', $values['kind']);
         $stmn->bindValue(':description', $values['description']);
         $stmn->bindValue(':hours', $values['hours']);
-
 
         $stmn->execute();
         $stmn->closeCursor();
