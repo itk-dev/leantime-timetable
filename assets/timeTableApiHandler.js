@@ -3,7 +3,7 @@
  */
 export default class TimeTableApiHandler {
   static cacheTimeouts = {
-    tickets: 3600,
+    tickets: 1000,
   };
 
   /**
