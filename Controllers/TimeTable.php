@@ -56,7 +56,7 @@ class TimeTable extends Controller
         } else {
             $workDate = new CarbonImmutable($_POST['timesheet-date'], session('usersettings.timezone'));
             $workDate = $workDate->setToDbTimezone();
-            
+
             $values = [
                 'userId' => session('userdata.id'),
                 'hours' => $_POST['timesheet-hours'],

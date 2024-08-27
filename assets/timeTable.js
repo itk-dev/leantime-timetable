@@ -3,7 +3,6 @@ import TimeTableApiHandler from "./plugin-timeTableApiHandler.v%25%25VERSION%25%
 jQuery(document).ready(function ($) {
   class TimeTable {
     constructor() {
-      this.isFetching = false;
       this.activeTicketIds = new Set(
         $('input[name="timetable-ticket-ids"]').val().split(","),
       );
@@ -62,8 +61,11 @@ jQuery(document).ready(function ($) {
       // Register event handlers
       this.registerEventHandlers();
 
-      // Update time since last ticket sync
-      this.populateLastUpdated();
+      this.isFetching = true;
+      TimeTableApiHandler.fetchTicketData().then((availableTags) => {
+        this.isFetching = false;
+        this.populateLastUpdated();
+      });
     }
 
     /**
@@ -83,7 +85,18 @@ jQuery(document).ready(function ($) {
         this.updateLocation("searchTerm", e.target.value),
       );
       // New entry
-      this.newEntryButton.click(() => this.newTimeEntry());
+      this.newEntryButton.click(() => {
+        if (this.isFetching) {
+          let intervalId = setInterval(() => {
+            if (!this.isFetching) {
+              clearInterval(intervalId);
+              this.newTimeEntry();
+            }
+          }, 500);
+        } else {
+          this.newTimeEntry();
+        }
+      });
       // Edit entry
       this.editEntryCell.click((e) => {
         const id = e.target.dataset.id ?? null;
@@ -92,7 +105,16 @@ jQuery(document).ready(function ($) {
         const description = e.target.dataset.description ?? null;
         const date = e.target.dataset.date ?? null;
 
-        this.editTimeEntry(id, ticketId, hours, description, date);
+        if (this.isFetching) {
+          let intervalId = setInterval(() => {
+            if (!this.isFetching) {
+              clearInterval(intervalId);
+              this.editTimeEntry(id, ticketId, hours, description, date);
+            }
+          }, 500);
+        } else {
+          this.editTimeEntry(id, ticketId, hours, description, date);
+        }
       });
 
       // Close modal
@@ -150,6 +172,7 @@ jQuery(document).ready(function ($) {
      * @return {void}
      */
     newTimeEntry() {
+      this.populateLastUpdated();
       this.openEditTimeLogModal();
 
       // Set date today
@@ -279,11 +302,13 @@ jQuery(document).ready(function ($) {
       const ticket = TimeTableApiHandler.getTicketDataFromCache(
         parseInt(ticketId),
       );
+
       if (!ticket) {
         alert("ticket id not found!");
         return false;
       }
 
+      this.populateLastUpdated();
       this.openEditTimeLogModal();
 
       this.modalInputTimesheetId.val(id);

@@ -13,7 +13,7 @@
         <table id="timetable" class="table">
             <thead>
                 <tr>
-                    <th style="width:60%;" scope="col">{{ __('timeTable.title_table_header') }}</th>
+                    <th class="th-ticket-title" scope="col">{{ __('timeTable.title_table_header') }}</th>
 
                     <?php
                     $i = 0;
@@ -51,13 +51,13 @@
                                 }
                                 $id = isset($timesheet) ? $timesheet[$weekDateAccessor][0]['id'] : null;
                                 $description = isset($timesheet) ? $timesheet[$weekDateAccessor][0]['description'] : null;
+                                $weekendClass = (isset($weekDate) && $weekDate->isWeekend()) ? 'weekend' : '';
                                 ?>
-                            <td scope="row" class="timetable-edit-entry" data-id="{{$id}}" data-ticketid="{{ $ticketId }}" data-hours="{{ $hours }}" data-description="{{ $description }}" data-date="{{$weekDate->format('Y-m-d')}}">
+                            <td scope="row" class="timetable-edit-entry {{$weekendClass}}" data-id="{{$id}}" data-ticketid="{{ $ticketId }}" data-hours="{{ $hours }}" data-description="{{ $description }}" data-date="{{$weekDate->format('Y-m-d')}}">
                                 <span>{{ $hours }}</span>
                                 @if (isset($hours) && $description === '')
                                     <span class="fa fa-circle-exclamation"></span>
                                 @endif
-
                             </td>
                         @endforeach
                     @endif

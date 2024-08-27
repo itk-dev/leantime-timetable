@@ -74,11 +74,11 @@ input::-webkit-inner-spin-button {
 .table td {
   position: relative;
 }
-.time-table-container .table td:nth-child(7) {
+.time-table-container .table td.weekend {
   background: #e2e8f0;
 }
-.time-table-container .table td:nth-child(8) {
-  background: #e2e8f0;
+.time-table-container .table .th-ticket-title {
+  width: 60%;
 }
 .time-table-container .table td:first-child {
   text-align: left;
@@ -96,11 +96,6 @@ input::-webkit-inner-spin-button {
 .time-table-container .table .tr-total > td {
   padding: 7px 15px;
 }
-.time-table-container .table .tr-total td:nth-child(7),
-.time-table-container .table .tr-total td:nth-child(8) {
-  background-color: unset;
-}
-
 .time-table-container .table .timetable-edit-entry {
   cursor: pointer;
 }
