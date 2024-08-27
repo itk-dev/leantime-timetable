@@ -3,6 +3,7 @@
 namespace Leantime\Plugins\TimeTable\Controllers;
 
 use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
 use Leantime\Core\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,10 +54,13 @@ class TimeTable extends Controller
             ];
             $this->timeTableService->updateTime($values);
         } else {
+            $workDate = new CarbonImmutable($_POST['timesheet-date'], session('usersettings.timezone'));
+            $workDate = $workDate->setToDbTimezone();
+            
             $values = [
                 'userId' => session('userdata.id'),
                 'hours' => $_POST['timesheet-hours'],
-                'workDate' => (new Carbon($_POST['timesheet-date'], session('usersettings.timezone'))),
+                'workDate' => $workDate,
                 'ticketId' => $_POST['timesheet-ticket-id'],
                 'description' => $_POST['timesheet-description'],
                 'kind' => 'GENERAL_BILLABLE',
@@ -121,8 +125,9 @@ class TimeTable extends Controller
             $searchTermForFilter = $_GET['searchTerm'];
         }
 
-        $weekStartDate = $now->startOfWeek()->setToUserTimezone();
-        $weekEndDate = $now->endOfWeek()->setToUserTimezone();
+        $weekStartDateDb = $now->startOfWeek()->setToDbTimezone();
+        $weekEndDateDb = $now->endOfWeek()->setToDbTimezone();
+        $weekStartDateFrontend = $now->startOfWeek()->setToUserTimezone();
 
         $this->tpl->assign('currentSearchTerm', $searchTermForFilter);
 
@@ -131,9 +136,9 @@ class TimeTable extends Controller
         $days[] = array_shift($days);
         $weekDates = [];
         foreach ($days as $key => $day) {
-            $weekDates[$key] = $weekStartDate->addDays($key);
+            $weekDates[$key] = $weekStartDateFrontend->addDays($key);
         }
-        $relevantTicketIds = $this->timeTableService->getUniqueTicketIds($weekStartDate, $weekEndDate);
+        $relevantTicketIds = $this->timeTableService->getUniqueTicketIds($weekStartDateDb, $weekEndDateDb);
 
         $timesheetsByTicket = [];
         $ticketIds = [];
@@ -144,7 +149,7 @@ class TimeTable extends Controller
             $ticketIds[] = intval($ticket['ticketId']);
             $timesheetsSortedByWeekdate = [];
             foreach ($weekDates as $weekDate) {
-                $timesheetsByTicketAndDate = $this->timeTableService->getTimesheetByTicketIdAndWorkDate($ticket['ticketId'], $weekDate, $searchTermForFilter);
+                $timesheetsByTicketAndDate = $this->timeTableService->getTimesheetByTicketIdAndWorkDate($ticket['ticketId'], $weekDate->setToDbTimezone(), $searchTermForFilter);
 
                 $timesheetsSortedByWeekdate[$weekDate->format('Y-m-d')] = $timesheetsByTicketAndDate;
                 if (count($timesheetsByTicketAndDate) > 0) {
