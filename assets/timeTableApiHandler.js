@@ -3,7 +3,6 @@
  */
 const ticketCache = document.getElementById("ticketCache").value;
 export default class TimeTableApiHandler {
-
   static cacheTimeouts = {
     tickets: parseFloat(ticketCache),
   };

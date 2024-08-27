@@ -8,7 +8,7 @@
 
 
     <div class="maincontent">
-        <?php echo $tpl->displayNotification(); ?>
+        <?php if (isset($tpl)) {echo $tpl->displayNotification();}  ?>
         <div class="maincontentinner">
             <h5 class="subtitle">TimeTable Settings</h5>
             <p style="padding-bottom: 15px">These settings will change the way the TimeTable plugin works.</p>
@@ -21,7 +21,7 @@
                         <label>Tickets (minutes)</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="number" min="0" value="<?php echo (int) $tpl->get('ticketCacheExpiration'); ?>" name="ticketCacheExpiration" />
+                        <input type="number" min="0" value="{{ (int) $ticketCacheExpiration }}" name="ticketCacheExpiration" />
                     </div>
                 </div>
                 <input type="submit" value="Save" id="saveBtn" />

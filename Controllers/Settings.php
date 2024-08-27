@@ -33,23 +33,27 @@ class Settings extends Controller
      * get method
      *
      * @return Response
+     * @throws \Exception
      */
     public function get(): Response
     {
         $ticketCacheExpiration = (int) ($this->settingsRepo->getSetting('timetablesettings.ticketscache') ?: 1200);
 
         $this->tpl->assign('ticketCacheExpiration', $ticketCacheExpiration);
+
         return $this->tpl->display('timeTable.Settings');
     }
 
     /**
      * post method
-     * @param array $params
-     * @return Response
+     * @param array<string, int> $params
+     * @return RedirectResponse
+     * @throws \Exception
      */
     public function post(array $params): RedirectResponse
     {
         $this->settingsRepo->saveSetting('timetablesettings.ticketscache', (int) ($params['ticketCacheExpiration'] ?? 0));
+
         $this->tpl->setNotification('The settings were successfully saved.', 'success');
 
         return Frontcontroller::redirect(BASE_URL . '/TimeTable/settings');
