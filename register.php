@@ -49,7 +49,7 @@ Events::add_filter_listener('leantime.domain.menu.repositories.menu.getSectionMe
 Events::add_event_listener(
     'leantime.core.template.tpl.*.afterScriptLibTags',
     function () {
-        if (null !== (session('userdata.id'))) {
+        if (null !== (session('userdata.id')) && str_contains($_SERVER['REQUEST_URI'], '/TimeTable/timetable')) {
             echo '<script type="module" src="/dist/js/plugin-timeTableApiHandler.v' . urlencode('%%VERSION%%') . '.js"></script>';
             echo '<script type="module" src="/dist/js/plugin-timeTable.v' . urlencode('%%VERSION%%') . '.js"></script>';
             echo '<link rel="stylesheet" href="/dist/css/plugin-timeTable.v' . urlencode('%%VERSION%%') . '.css"></link>';
