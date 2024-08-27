@@ -11,6 +11,7 @@
   * Added apihandler symlink to install script
   * Added additional data as well as a get hook for jQuery ajax
   * Added left join to project table in order to get project name with worklogs
+  * Streamlined design with figma
 
 * [PR-4](https://github.com/ITK-Leantime/leantime-timetable/pull/4)
   * Adds get/posts in the controller. post for saving, get for getting/sorting/organizing data
