@@ -12,23 +12,23 @@
         </div>
         <table id="timetable" class="table">
             <thead>
-                <tr>
-                    <th class="th-ticket-title" scope="col">{{ __('timeTable.title_table_header') }}</th>
+            <tr>
+                <th class="th-ticket-title" scope="col">{{ __('timeTable.title_table_header') }}</th>
 
-                    <?php
-                    $i = 0;
-                    if (isset($weekDays) && isset($weekDates)){
-                    foreach ($weekDays as $key => $day) { ?>
-                    <th data-hest="{{$weekDates[$key]}}">
-                        <?php
-                        echo $weekDates[$key]->format('d. D');
-                        $i++;
-                        ?>
-                    </th>
-
-                    <?php }} ?>
-
-                </tr>
+                @if (isset($weekDays, $weekDates))
+                    @foreach ($weekDays as $key => $day)
+                        @php
+                            $weekDate = $weekDates[$key];
+                            $weekendClass = $weekDate->isWeekend() ? 'weekend' : '';
+                            $todayClass = $weekDate->isToday() ? 'today' : '';
+                            $classes = trim("$weekendClass $todayClass");
+                        @endphp
+                        <th data-hest="{{ $weekDate }}" @if($classes) class="{{ $classes }}" @endif>
+                            {{ $weekDate->format('d. D') }}
+                        </th>
+                    @endforeach
+                @endif
+            </tr>
             </thead>
             <tbody>
             <?php $totalHours = array(); ?>
@@ -52,8 +52,9 @@
                                 $id = isset($timesheet) ? $timesheet[$weekDateAccessor][0]['id'] : null;
                                 $description = isset($timesheet) ? $timesheet[$weekDateAccessor][0]['description'] : null;
                                 $weekendClass = (isset($weekDate) && $weekDate->isWeekend()) ? 'weekend' : '';
+                                $todayClass = (isset($weekDate) && $weekDate->isToday()) ? 'today' : '';
                                 ?>
-                            <td scope="row" class="timetable-edit-entry {{$weekendClass}}" data-id="{{$id}}" data-ticketid="{{ $ticketId }}" data-hours="{{ $hours }}" data-description="{{ $description }}" data-date="{{$weekDate->format('Y-m-d')}}">
+                            <td scope="row" class="timetable-edit-entry {{$weekendClass}} {{$todayClass}}" data-id="{{$id}}" data-ticketid="{{ $ticketId }}" data-hours="{{ $hours }}" data-description="{{ $description }}" data-date="{{$weekDate->format('Y-m-d')}}" title="{{ $description }}">
                                 <span>{{ $hours }}</span>
                                 @if (isset($hours) && $description === '')
                                     <span class="fa fa-circle-exclamation"></span>
@@ -75,7 +76,7 @@
         {{-- Modal for editing work logs --}}
 
         <div id="edit-time-log-modal" class="nyroModalBg edit-time-log-modal">
-            <form method="post" id="modal-form" class="modal-content">
+            <form method="post" class="edit-time-log-form">
                 <div class="timetable-close-modal">
                     <span>×</span>
                 </div>
@@ -102,7 +103,7 @@
                 {{-- Save or cancel buttons --}}
                 <div class="buttons">
                     <button type="button" class="timetable-modal-cancel">{{ __('timeTable.button_modal_close') }}</button>
-                    <button type="submit" class="save-button">{{__('timeTable.button_modal_save')}}</button>
+                    <button type="submit" class="timetable-modal-submit">{{__('timeTable.button_modal_save')}}</button>
                 </div>
             </form>
             <div class="timetable-sync-panel">

@@ -18,7 +18,7 @@ jQuery(document).ready(function ($) {
 
       // Modal selectors
       this.timeEditModal = $("#edit-time-log-modal");
-      this.modalContent = this.timeEditModal.find(".modal-content");
+      this.timeEditForm = this.timeEditModal.find(".edit-time-log-form");
       this.modalInputTimesheetId = this.timeEditModal.find(
         'input[name="timesheet-id"]',
       );
@@ -45,6 +45,7 @@ jQuery(document).ready(function ($) {
       this.modalCancelButton = this.timeEditModal.find(
         ".timetable-modal-cancel",
       );
+      this.modalSubmitButton = this.timeEditModal.find(".timetable-modal-submit");
       this.modalInputDate = this.timeEditModal.find(
         'input[name="timesheet-date"]',
       );
@@ -133,6 +134,10 @@ jQuery(document).ready(function ($) {
       this.modalInputDate.change((e) =>
         this.getActiveTicketsOfWeek(e.target.value),
       );
+
+      $('#modal-form').on('submit', (e) => {
+        this.modalSubmitButton.attr('disabled', 'disabled');
+      });
     }
 
     getActiveTicketsOfWeek(dateString) {
@@ -185,7 +190,7 @@ jQuery(document).ready(function ($) {
 
       // Ticket result click event
       let context = this;
-      this.modalContent.on("click", function (e) {
+      this.timeEditForm.on("click", function (e) {
         if ($(e.target).is(".timetable-ticket-result-item")) {
           context.selectTicket(e.target);
         }
@@ -452,7 +457,7 @@ jQuery(document).ready(function ($) {
      * @return {void}
      */
     clickOutsideModalHandler(event) {
-      if ($(event.target).find(".modal-content").length > 0) {
+      if ($(event.target).find(this.timeEditForm).length > 0) {
         this.closeEditTimeLogModal();
       }
       if ($(event.target).hasClass("timetable-sync-tickets")) {

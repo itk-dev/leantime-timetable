@@ -75,7 +75,10 @@ input::-webkit-inner-spin-button {
   position: relative;
 }
 .time-table-container .table td.weekend {
-  background: #e2e8f0;
+  background: #F1F5F9;
+}
+.time-table-container .table td.today {
+    background: #F0F9FF;
 }
 .time-table-container .table .th-ticket-title {
   width: 60%;
@@ -83,18 +86,25 @@ input::-webkit-inner-spin-button {
 .time-table-container .table td:first-child {
   text-align: left;
 }
+.time-table-container .table th {
+    border: 1px solid #ccc !important;
+    background-color: #F8FAFC;
+    padding: 7px 15px;
+}
+.time-table-container .table th.weekend {
+    background: #F1F5F9;
+}
+.time-table-container .table th.today {
+    background: #F0F9FF;
+}
 .time-table-container .table td {
   border: 1px solid #ccc;
-  text-align: center;
   padding: 15px;
 }
 .time-table-container .table .tr-total {
-  background-color: #e9e9e9;
+  background-color: #E2E8F0;
   font-weight: bold;
   cursor: default;
-}
-.time-table-container .table .tr-total > td {
-  padding: 7px 15px;
 }
 .time-table-container .table .timetable-edit-entry {
   cursor: pointer;
@@ -155,7 +165,7 @@ input::-webkit-inner-spin-button {
 }
 
 /* Modal Content/Box */
-.modal-content {
+.edit-time-log-form {
   display: flex;
   height: 300px;
   flex-direction: column;
@@ -168,7 +178,7 @@ input::-webkit-inner-spin-button {
   border-radius: 3px;
   position: relative;
 }
-.modal-content .timetable-close-modal {
+.edit-time-log-form .timetable-close-modal {
   position: absolute;
   top: 0;
   right: 0;
@@ -177,18 +187,18 @@ input::-webkit-inner-spin-button {
   height: 25px;
   display: flex;
 }
-.modal-content .timetable-close-modal span {
+.edit-time-log-form .timetable-close-modal span {
   margin: auto;
 }
-.modal-content input {
+.edit-time-log-form input {
   width: 100%;
   border-radius: 3px;
 }
-.modal-content .buttons {
+.edit-time-log-form .buttons {
   display: flex;
   justify-content: end;
 }
-.modal-content .save-button {
+.edit-time-log-form .timetable-modal-submit {
   border-radius: 3px;
   border: none;
   color: white;
@@ -199,7 +209,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
   font-weight: 400;
 }
-.modal-content .timetable-modal-cancel {
+.edit-time-log-form .timetable-modal-cancel {
   border-radius: 3px;
   background: white;
   border: 1px solid #cbd5e1;
@@ -208,13 +218,13 @@ input::-webkit-inner-spin-button {
   margin-right: 5px;
   padding: 0 15px;
 }
-.modal-content .fa-clock {
+.edit-time-log-form .fa-clock {
   position: absolute;
   top: 28px;
   right: 28px;
 }
 
-.modal-content #modal-description {
+.edit-time-log-form #modal-description {
   width: 100%;
   resize: none;
   height: 85px;
