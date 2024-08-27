@@ -1,7 +1,7 @@
 <?php
 
 use Leantime\Plugins\TimeTable\Middleware\GetLanguageAssets;
-use Leantime\Core\Events;
+use Leantime\Core\Events\EventDispatcher;
 
 /**
  * Adds a menu point for adding fixture data.
@@ -18,7 +18,7 @@ function addTimeTableItemToMenu(array $menuStructure): array
         'icon' => 'fa fa-fw fa-table',
         'tooltip' => 'View Timetable',
         'href' => '/TimeTable/timetable',
-        'active' => ['Timetable'],
+        'active' => ['TimeTable'],
         'module' => 'tickets',
     ];
 
@@ -35,25 +35,26 @@ function displayPersonalMenuOnEnteringTimeTable(array $sections): array
     $sections['TimeTable.timetable'] = 'personal';
     return $sections;
 }
-
+if (class_exists(EventDispatcher::class)) {
 // https://github.com/Leantime/plugin-template/blob/main/register.php#L43-L46
 // Register Language Assets
-Events::add_filter_listener(
-    'leantime.core.httpkernel.handle.plugins_middleware',
-    fn (array $middleware) => array_merge($middleware, [GetLanguageAssets::class]),
-);
+    EventDispatcher::add_filter_listener(
+        'leantime.core.httpkernel.handle.plugins_middleware',
+        fn(array $middleware) => array_merge($middleware, [GetLanguageAssets::class]),
+    );
 
-Events::add_filter_listener('leantime.domain.menu.repositories.menu.getMenuStructure.menuStructures', 'addTimeTableItemToMenu');
-Events::add_filter_listener('leantime.domain.menu.repositories.menu.getSectionMenuType.menuSections', 'displayPersonalMenuOnEnteringTimeTable');
+    EventDispatcher::add_filter_listener('leantime.domain.menu.repositories.menu.getMenuStructure.menuStructures', 'addTimeTableItemToMenu');
+    EventDispatcher::add_filter_listener('leantime.domain.menu.repositories.menu.getSectionMenuType.menuSections', 'displayPersonalMenuOnEnteringTimeTable');
 
-Events::add_event_listener(
-    'leantime.core.template.tpl.*.afterScriptLibTags',
-    function () {
-        if (null !== (session('userdata.id')) && str_contains($_SERVER['REQUEST_URI'], '/TimeTable/timetable')) {
-            echo '<script type="module" src="/dist/js/plugin-timeTableApiHandler.v' . urlencode('%%VERSION%%') . '.js"></script>';
-            echo '<script type="module" src="/dist/js/plugin-timeTable.v' . urlencode('%%VERSION%%') . '.js"></script>';
-            echo '<link rel="stylesheet" href="/dist/css/plugin-timeTable.v' . urlencode('%%VERSION%%') . '.css"></link>';
-        }
-    },
-    5
-);
+    EventDispatcher::add_event_listener(
+        'leantime.core.template.tpl.*.afterScriptLibTags',
+        function () {
+            if (null !== (session('userdata.id')) && str_contains($_SERVER['REQUEST_URI'], '/TimeTable/timetable')) {
+                echo '<script type="module" src="/dist/js/plugin-timeTableApiHandler.v' . urlencode('%%VERSION%%') . '.js"></script>';
+                echo '<script type="module" src="/dist/js/plugin-timeTable.v' . urlencode('%%VERSION%%') . '.js"></script>';
+                echo '<link rel="stylesheet" href="/dist/css/plugin-timeTable.v' . urlencode('%%VERSION%%') . '.css"></link>';
+            }
+        },
+        5
+    );
+}
