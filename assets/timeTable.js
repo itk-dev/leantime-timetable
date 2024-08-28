@@ -231,12 +231,12 @@ jQuery(document).ready(function ($) {
       const dropDownElement = $(".timetable-ticket-results");
 
       // Reset search
-      if (value.length < 3) {
+      if (value.length <= 1) {
         dropDownElement.empty();
       }
 
       // Perform search
-      if (value.length > 2) {
+      if (value.length > 1) {
         const { data: tickets } = TimeTableApiHandler.readFromCache("tickets");
         this.ticketSearch(tickets, value);
       }
