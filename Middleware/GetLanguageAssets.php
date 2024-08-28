@@ -42,7 +42,7 @@ class GetLanguageAssets
         }
 
         // @phpstan-ignore-next-line
-        if (($language = $_SESSION['usersettings.language'] ?? $this->config->language) !== 'en-US') {
+        if (($language = session('usersettings.language') ?? $this->config->language) !== 'en-US') {
             if (! Cache::store('installation')->has('timeTable.language.' . $language)) {
                 Cache::store('installation')->put(
                     'timeTable.language.' . $language,
