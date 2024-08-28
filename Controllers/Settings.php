@@ -2,8 +2,8 @@
 
 namespace Leantime\Plugins\TimeTable\Controllers;
 
-use Leantime\Core\Controller;
-use Leantime\Core\Frontcontroller;
+use Leantime\Core\Controller\Controller;
+use Leantime\Core\Controller\Frontcontroller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Leantime\Domain\Setting\Repositories\Setting as SettingRepository;

@@ -3,11 +3,11 @@
 namespace Leantime\Plugins\TimeTable\Controllers;
 
 use Carbon\CarbonImmutable;
-use Leantime\Core\Controller;
+use Leantime\Core\Controller\Controller;
+use Leantime\Core\Controller\Frontcontroller;
 use Symfony\Component\HttpFoundation\Response;
 use Leantime\Plugins\TimeTable\Services\TimeTable as TimeTableService;
 use Leantime\Core\Language as LanguageCore;
-use Leantime\Core\Frontcontroller as FrontcontrollerCore;
 use Leantime\Domain\Auth\Models\Roles;
 use Leantime\Domain\Auth\Services\Auth as AuthService;
 use Leantime\Domain\Setting\Repositories\Setting as SettingRepository;
@@ -71,7 +71,7 @@ class TimeTable extends Controller
             $redirectUrl = $redirectUrl . '?offset=' . $_GET['offset'];
         }
 
-        return FrontcontrollerCore::redirect($redirectUrl);
+        return Frontcontroller::redirect($redirectUrl);
     }
 
     /**
