@@ -5,8 +5,8 @@ namespace Leantime\Plugins\TimeTable\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Cache;
-use Leantime\Core\Environment;
-use Leantime\Core\IncomingRequest;
+use Leantime\Core\Configuration\Environment;
+use Leantime\Core\Http\IncomingRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Leantime\Core\Language;
 
@@ -29,6 +29,7 @@ class GetLanguageAssets
      **/
     public function handle(IncomingRequest $request, Closure $next): Response
     {
+
         $languageArray = Cache::get('timeTable.languageArray', []);
 
         // @phpstan-ignore-next-line
@@ -36,7 +37,6 @@ class GetLanguageAssets
             $this->language->ini_array = array_merge($this->language->ini_array, $languageArray);
             return $next($request);
         }
-
         if (! Cache::store('installation')->has('timeTable.language.en-US')) {
             $languageArray += parse_ini_file(__DIR__ . '/../Language/en-US.ini', true);
         }
