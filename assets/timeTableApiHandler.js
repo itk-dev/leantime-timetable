@@ -1,10 +1,10 @@
 /**
  * Class handles API requests for time table data.
  */
-const ticketCache = document.getElementById("ticketCache").value;
+const ticketCacheExpiration = document.getElementById("timetable-ticketCacheExpiration").value;
 export default class TimeTableApiHandler {
   static cacheTimeouts = {
-    tickets: parseFloat(ticketCache),
+    tickets: parseFloat(ticketCacheExpiration),
   };
 
   /**

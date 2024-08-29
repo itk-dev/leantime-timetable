@@ -2,7 +2,7 @@
 @section('content')
     <div class="time-table-container">
     <input type="hidden" name="timetable-ticket-ids" value="{{$ticketIds}}" />
-    <input type="hidden" id="ticketCache" name="timetable-ticket-cache" value="{{$ticketsCache}}" />
+    <input type="hidden" id="timetable-ticketCacheExpiration" name="timetable-ticket-cache" value="{{$ticketCacheExpiration}}" />
         <div class="flex-container">
             <div>
                 <button type="button" class="timetable-week-prev"><i class="fa fa-arrow-left"></i> {{ __('timeTable.button_prev_week') }}</button>

@@ -106,7 +106,7 @@ class TimeTable extends Controller
         $userIdForFilter = null;
         $searchTermForFilter = null;
         $now = CarbonImmutable::now();
-        $ticketsCache = $this->settings->getSetting('timetablesettings.ticketscache') ?? 1200;
+        $ticketCacheExpiration = $this->settings->getSetting('itk-leantime-timetable.ticketCacheExpiration') ?? 1200;
 
         if (isset($_GET['searchTerm'])) {
             $searchTerm = $_GET['searchTerm'];
@@ -166,7 +166,7 @@ class TimeTable extends Controller
         $this->tpl->assign('timesheetsByTicket', $timesheetsByTicket);
         $this->tpl->assign('weekDays', $days);
         $this->tpl->assign('weekDates', $weekDates);
-        $this->tpl->assign('ticketsCache', $ticketsCache);
+        $this->tpl->assign('ticketCacheExpiration', $ticketCacheExpiration);
 
         return $this->tpl->display('TimeTable.timetable');
     }
