@@ -37,9 +37,12 @@ class Settings extends Controller
      */
     public function get(): Response
     {
-        $ticketCacheExpiration = (int) ($this->settingsRepo->getSetting('timetablesettings.ticketscache') ?: 1200);
-
-        $this->tpl->assign('ticketCacheExpiration', $ticketCacheExpiration);
+        try {
+            $ticketCacheExpiration = (int) ($this->settingsRepo->getSetting('itk-leantime-timetable.ticketCacheExpiration') ?: 1200);
+            $this->tpl->assign('ticketCacheExpiration', $ticketCacheExpiration);
+        } catch (\Exception $e) {
+            $this->tpl->setNotification('An error occurred while saving the settings. '.$e, 'error');
+        }
 
         return $this->tpl->display('timeTable.Settings');
     }
@@ -52,9 +55,12 @@ class Settings extends Controller
      */
     public function post(array $params): RedirectResponse
     {
-        $this->settingsRepo->saveSetting('timetablesettings.ticketscache', (int) ($params['ticketCacheExpiration'] ?? 0));
-
-        $this->tpl->setNotification('The settings were successfully saved.', 'success');
+        try {
+            $this->settingsRepo->saveSetting('itk-leantime-timetable.ticketCacheExpiration', (int)($params['ticketCacheExpiration'] ?? 0));
+            $this->tpl->setNotification('The settings were successfully saved.', 'success');
+        } catch (\Exception $e) {
+            $this->tpl->setNotification('An error occurred while saving the settings. '.$e, 'error');
+        }
 
         return Frontcontroller::redirect(BASE_URL . '/TimeTable/settings');
     }
