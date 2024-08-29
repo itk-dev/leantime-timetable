@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+* [PR-8](https://github.com/ITK-Leantime/leantime-timetable/pull/8)
+  * Added compatability for Leantime 3.2
+  * Consistent naming and error handling
+
 * [PR-7](https://github.com/ITK-Leantime/leantime-timetable/pull/7)
   * Added settings page with input for ticket cache timeout
   * Grabbing cache timeout value in controller and passing to template
