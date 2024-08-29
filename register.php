@@ -37,9 +37,9 @@ function displayPersonalMenuOnEnteringTimeTable(array $sections): array
 }
 if (class_exists(EventDispatcher::class)) {
 // https://github.com/Leantime/plugin-template/blob/main/register.php#L43-L46
-// Register Language Assets
+
     EventDispatcher::add_filter_listener(
-        'leantime.core.httpkernel.handle.plugins_middleware',
+        'leantime.core.http.httpkernel.handle.plugins_middleware',
         fn(array $middleware) => array_merge($middleware, [GetLanguageAssets::class]),
     );
 
