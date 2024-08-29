@@ -11,12 +11,12 @@ use Leantime\Core\Events\EventDispatcher;
  */
 function addTimeTableItemToMenu(array $menuStructure): array
 {
-    // In the menu array, timesheets occupies spot 15 in the array list, which menupoints are sorted by. Timetable should be right after it.
+    // In the menu array, timesheets occupies spot 15 in the array list, which menupoints are sorted by. TimeTable should be right after it.
     $menuStructure['personal'][16] = [
         'type' => 'item',
         'title' => '<span class="fas fa-fw fa-table"></span> Timetable',
         'icon' => 'fa fa-fw fa-table',
-        'tooltip' => 'View Timetable',
+        'tooltip' => 'View TimeTable',
         'href' => '/TimeTable/timetable',
         'active' => ['TimeTable'],
         'module' => 'tickets',
@@ -26,7 +26,7 @@ function addTimeTableItemToMenu(array $menuStructure): array
 }
 
 /**
- * Adds Timetable to the personal menu
+ * Adds TimeTable to the personal menu
  * @param array<string, array<int, array<string, mixed>>> $sections The sections in the menu is to do with which menu is displayed on the current page.
  * @return array<string, string> - the sections array, where TimeTable.timetable is in the "personal" menu.
  */

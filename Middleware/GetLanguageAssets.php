@@ -5,7 +5,7 @@ namespace Leantime\Plugins\TimeTable\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Cache;
-use Leantime\Core\Configuration\Environment;
+use Leantime\Core\Configuration\Environment as Configuration;
 use Leantime\Core\Http\IncomingRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Leantime\Core\Language;
@@ -20,7 +20,7 @@ class GetLanguageAssets
      */
     public function __construct(
         private Language $language,
-        private Environment $config,
+        private Configuration $config,
     ) {
     }
 
