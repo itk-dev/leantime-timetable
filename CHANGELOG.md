@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+* [PR-7](https://github.com/ITK-Leantime/leantime-timetable/pull/7)
+  * Added settings page with input for ticket cache timeout
+  * Grabbing cache timeout value in controller and passing to template
+
 * [PR-6](https://github.com/ITK-Leantime/leantime-timetable/pull/6)
   * Added styling throughout plugin
   * Rewritten timeTable.js into a class, overhauled methods and added doccomments

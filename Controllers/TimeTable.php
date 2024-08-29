@@ -3,18 +3,14 @@
 namespace Leantime\Plugins\TimeTable\Controllers;
 
 use Carbon\CarbonImmutable;
-use Carbon\CarbonInterface;
 use Leantime\Core\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
 use Leantime\Plugins\TimeTable\Services\TimeTable as TimeTableService;
 use Leantime\Core\Language as LanguageCore;
 use Leantime\Core\Frontcontroller as FrontcontrollerCore;
-use Illuminate\Contracts\Container\BindingResolutionException;
-use Leantime\Domain\Api\Services\Api as ApiService;
 use Leantime\Domain\Auth\Models\Roles;
 use Leantime\Domain\Auth\Services\Auth as AuthService;
-use Carbon\Carbon;
+use Leantime\Domain\Setting\Repositories\Setting as SettingRepository;
 
 /**
  * Timetable controller.
@@ -23,6 +19,7 @@ class TimeTable extends Controller
 {
     private TimeTableService $timeTableService;
     protected LanguageCore $language;
+    private SettingRepository $settings;
 
     /**
      * constructor
@@ -31,10 +28,11 @@ class TimeTable extends Controller
      * @param LanguageCore     $language
      * @return void
      */
-    public function init(TimeTableService $timeTableService, LanguageCore $language): void
+    public function init(TimeTableService $timeTableService, LanguageCore $language, SettingRepository $settings): void
     {
         $this->timeTableService = $timeTableService;
         $this->language = $language;
+        $this->settings = $settings;
     }
 
     /**
@@ -108,6 +106,7 @@ class TimeTable extends Controller
         $userIdForFilter = null;
         $searchTermForFilter = null;
         $now = CarbonImmutable::now();
+        $ticketsCache = $this->settings->getSetting('timetablesettings.ticketscache') ?? 1200;
 
         if (isset($_GET['searchTerm'])) {
             $searchTerm = $_GET['searchTerm'];
@@ -167,6 +166,7 @@ class TimeTable extends Controller
         $this->tpl->assign('timesheetsByTicket', $timesheetsByTicket);
         $this->tpl->assign('weekDays', $days);
         $this->tpl->assign('weekDates', $weekDates);
+        $this->tpl->assign('ticketsCache', $ticketsCache);
 
         return $this->tpl->display('TimeTable.timetable');
     }
