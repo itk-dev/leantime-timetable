@@ -17,7 +17,7 @@ function addTimeTableItemToMenu(array $menuStructure): array
         'title' => '<span class="fas fa-fw fa-table"></span> Timetable',
         'icon' => 'fa fa-fw fa-table',
         'tooltip' => 'View TimeTable',
-        'href' => '/TimeTable/timetable',
+        'href' => '/TimeTable/TimeTable',
         'active' => ['TimeTable'],
         'module' => 'tickets',
     ];
@@ -49,7 +49,7 @@ if (class_exists(EventDispatcher::class)) {
     EventDispatcher::add_event_listener(
         'leantime.core.template.tpl.*.afterScriptLibTags',
         function () {
-            if (null !== (session('userdata.id')) && str_contains($_SERVER['REQUEST_URI'], '/TimeTable/timetable')) {
+            if (null !== (session('userdata.id')) && str_contains($_SERVER['REQUEST_URI'], '/TimeTable/TimeTable')) {
                 echo '<script type="module" src="/dist/js/plugin-timeTableApiHandler.v' . urlencode('%%VERSION%%') . '.js"></script>';
                 echo '<script type="module" src="/dist/js/plugin-timeTable.v' . urlencode('%%VERSION%%') . '.js"></script>';
                 echo '<link rel="stylesheet" href="/dist/css/plugin-timeTable.v' . urlencode('%%VERSION%%') . '.css"></link>';

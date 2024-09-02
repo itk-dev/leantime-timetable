@@ -16,7 +16,7 @@ use Leantime\Core\Template;
 /**
  * TimeTable controller.
  */
-class Timetable extends Controller
+class TimeTable extends Controller
 {
     private TimeTableService $timeTableService;
     protected LanguageCore $language;
@@ -173,6 +173,6 @@ class Timetable extends Controller
         $this->template->assign('weekDates', $weekDates);
         $this->template->assign('ticketCacheExpiration', $ticketCacheExpiration);
 
-        //return $this->template->display('TimeTable.timetable');
+        return $this->template->display('TimeTable.timetable');
     }
 }
