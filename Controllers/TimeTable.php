@@ -4,7 +4,7 @@ namespace Leantime\Plugins\TimeTable\Controllers;
 
 use Carbon\CarbonImmutable;
 use Leantime\Core\Controller\Controller;
-use Leantime\Core\Frontcontroller;
+use Leantime\Core\Controller\Frontcontroller;
 use Symfony\Component\HttpFoundation\Response;
 use Leantime\Plugins\TimeTable\Services\TimeTable as TimeTableService;
 use Leantime\Core\Language as LanguageCore;
@@ -173,6 +173,6 @@ class Timetable extends Controller
         $this->template->assign('weekDates', $weekDates);
         $this->template->assign('ticketCacheExpiration', $ticketCacheExpiration);
 
-        return $this->template->display('TimeTable.timetable');
+        //return $this->template->display('TimeTable.timetable');
     }
 }
