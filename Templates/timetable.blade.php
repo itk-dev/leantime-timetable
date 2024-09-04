@@ -23,7 +23,7 @@
                             $todayClass = $weekDate->isToday() ? 'today' : '';
                             $classes = trim("$weekendClass $todayClass");
                         @endphp
-                        <th data-hest="{{ $weekDate }}" @if($classes) class="{{ $classes }}" @endif>
+                        <th @if($classes) class="{{ $classes }}" @endif>
                             {{ $weekDate->format('d. D') }}
                         </th>
                     @endforeach
