@@ -47,7 +47,7 @@ class Settings extends Controller
             $this->template->setNotification('An error occurred while saving the settings. ' . $e, 'error');
         }
 
-        return $this->template->display('timeTable.Settings');
+        return $this->template->display('TimeTable.settings');
     }
 
     /**
