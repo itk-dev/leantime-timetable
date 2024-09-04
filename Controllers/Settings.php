@@ -52,7 +52,9 @@ class Settings extends Controller
 
     /**
      * post method
-     * @param array<string, int> $params
+     *
+     * @param array $params The parameters received in the request
+     * @return RedirectResponse
      * @throws \Exception
      */
     public function post(array $params): RedirectResponse

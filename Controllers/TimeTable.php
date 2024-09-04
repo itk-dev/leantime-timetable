@@ -26,10 +26,10 @@ class TimeTable extends Controller
     /**
      * constructor
      *
-     * @param TimeTableService $timeTableService
-     * @param LanguageCore $language
+     * @param TimeTableService  $timeTableService
+     * @param LanguageCore      $language
      * @param SettingRepository $settings
-     * @param Template $template
+     * @param Template          $template
      * @return void
      */
     public function init(TimeTableService $timeTableService, LanguageCore $language, SettingRepository $settings, Template $template): void
