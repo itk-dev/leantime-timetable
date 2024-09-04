@@ -88,7 +88,7 @@ export default class TimeTableApiHandler {
       jQuery.ajax({
         url:
           leantime.appUrl +
-          "/TimeTable/timetable?getActiveTicketIdsOfPeriod&" +
+          "/TimeTable/TimeTable?getActiveTicketIdsOfPeriod&" +
           encodedDate,
         method: "GET",
         headers: {
