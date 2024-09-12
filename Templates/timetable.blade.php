@@ -41,11 +41,9 @@
                                 $weekDateAccessor = isset($weekDate) ? $weekDate->format('Y-m-d') : null;
                                 $timesheetDate = isset($timesheet) ? $timesheet[$weekDateAccessor] : null;
 
-                                ['id' => $id, 'hours' => $hours, 'description' => $description] = [
-                                    'id' => $timesheetDate[0]['id'] ?? null,
-                                    'hours' => $timesheetDate[0]['hours'] ?? null,
-                                    'description' => $timesheetDate[0]['description'] ?? null
-                                ];
+                                $id = $timesheetDate[0]['id'] ?? null;
+                                $hours = $timesheetDate[0]['hours'] ?? null;
+                                $description = $timesheetDate[0]['description'] ?? null;
 
                                 // accumulate hours
                                 if ($hours) {
