@@ -32,8 +32,7 @@ class GetLanguageAssets
 
         $languageArray = Cache::get('timeTable.languageArray', []);
 
-        // @phpstan-ignore-next-line
-        if (! empty($languageArray)) {
+        if (!empty($languageArray)) {
             $this->language->ini_array = array_merge($this->language->ini_array, $languageArray);
             return $next($request);
         }
