@@ -158,7 +158,10 @@ jQuery(document).ready(function ($) {
         .attr("placeholder", () => {
           return $(this.modalTicketInput).attr("data-loading");
         });
+
       $(this.modalTicketSearch).addClass("ticket-loading");
+      // Reset search
+      this.modalTicketResults.empty();
       TimeTableApiHandler.getActiveTicketIdsOfPeriod(monday, sunday).then(
         (activeTicketIds) => {
           activeTicketIds = JSON.parse(activeTicketIds);
@@ -231,12 +234,12 @@ jQuery(document).ready(function ($) {
       const dropDownElement = $(".timetable-ticket-results");
 
       // Reset search
-      if (value.length < 3) {
+      if (value.length <= 1) {
         dropDownElement.empty();
       }
 
       // Perform search
-      if (value.length > 2) {
+      if (value.length > 1) {
         const { data: tickets } = TimeTableApiHandler.readFromCache("tickets");
         this.ticketSearch(tickets, value);
       }

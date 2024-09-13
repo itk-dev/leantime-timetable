@@ -6,12 +6,11 @@
         <h1>TimeTable Settings</h1>
     </x-global::pageheader>
 
-
     <div class="maincontent">
         <?php if (isset($tpl)) {echo $tpl->displayNotification();}  ?>
-        <div class="maincontentinner">
+        <div class="maincontentinner timetable-settings">
             <h5 class="subtitle">TimeTable Settings</h5>
-            <p style="padding-bottom: 15px">These settings will change the way the TimeTable plugin works.</p>
+            <p class="tw-pb-m">These settings will change the way the TimeTable plugin works.</p>
             <h4 class="widgettitle title-light"><span class="fa fa-cog"></span>
                 Cache expiration durations
             </h4>

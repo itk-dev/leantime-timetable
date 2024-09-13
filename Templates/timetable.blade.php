@@ -1,9 +1,8 @@
 @extends($layout)
-
 @section('content')
     <div class="time-table-container">
     <input type="hidden" name="timetable-ticket-ids" value="{{$ticketIds}}" />
-    <input type="hidden" id="ticketCache" name="timetable-ticket-cache" value="{{$ticketsCache}}" />
+    <input type="hidden" id="timetable-ticketCacheExpiration" name="timetable-ticket-cache" value="{{$ticketCacheExpiration}}" />
         <div class="flex-container">
             <div>
                 <button type="button" class="timetable-week-prev"><i class="fa fa-arrow-left"></i> {{ __('timeTable.button_prev_week') }}</button>
@@ -24,7 +23,7 @@
                             $todayClass = $weekDate->isToday() ? 'today' : '';
                             $classes = trim("$weekendClass $todayClass");
                         @endphp
-                        <th data-hest="{{ $weekDate }}" @if($classes) class="{{ $classes }}" @endif>
+                        <th @if($classes) class="{{ $classes }}" @endif>
                             {{ $weekDate->format('d. D') }}
                         </th>
                     @endforeach
@@ -40,7 +39,11 @@
                         @foreach ($weekDates as $weekDate)
                                 <?php
                                 $weekDateAccessor = isset($weekDate) ? $weekDate->format('Y-m-d') : null;
-                                $hours = isset($timesheet) ? $timesheet[$weekDateAccessor][0]['hours'] : null;
+                                $timesheetDate = isset($timesheet) ? $timesheet[$weekDateAccessor] : null;
+
+                                $id = $timesheetDate[0]['id'] ?? null;
+                                $hours = $timesheetDate[0]['hours'] ?? null;
+                                $description = $timesheetDate[0]['description'] ?? null;
 
                                 // accumulate hours
                                 if ($hours) {
@@ -50,8 +53,6 @@
                                         $totalHours[$weekDateAccessor] = $hours;
                                     }
                                 }
-                                $id = isset($timesheet) ? $timesheet[$weekDateAccessor][0]['id'] : null;
-                                $description = isset($timesheet) ? $timesheet[$weekDateAccessor][0]['description'] : null;
                                 $weekendClass = (isset($weekDate) && $weekDate->isWeekend()) ? 'weekend' : '';
                                 $todayClass = (isset($weekDate) && $weekDate->isToday()) ? 'today' : '';
                                 ?>

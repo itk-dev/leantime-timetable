@@ -2,8 +2,9 @@
 
 namespace Leantime\Plugins\TimeTable\Controllers;
 
-use Leantime\Core\Controller;
-use Leantime\Core\Frontcontroller;
+use Leantime\Core\Template;
+use Leantime\Core\Controller\Controller;
+use Leantime\Core\Controller\Frontcontroller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Leantime\Domain\Setting\Repositories\Setting as SettingRepository;
@@ -17,6 +18,7 @@ use Leantime\Domain\Setting\Repositories\Setting as SettingRepository;
 class Settings extends Controller
 {
     private SettingRepository $settingsRepo;
+    protected Template $template;
 
     /**
      * constructor
@@ -24,9 +26,10 @@ class Settings extends Controller
      *
      * @return void
      */
-    public function init(SettingRepository $settingsRepo): void
+    public function init(SettingRepository $settingsRepo, Template $template): void
     {
         $this->settingsRepo = $settingsRepo;
+        $this->template = $template;
     }
 
     /**
@@ -37,24 +40,32 @@ class Settings extends Controller
      */
     public function get(): Response
     {
-        $ticketCacheExpiration = (int) ($this->settingsRepo->getSetting('timetablesettings.ticketscache') ?: 1200);
+        try {
+            $ticketCacheExpiration = (int) ($this->settingsRepo->getSetting('itk-leantime-timetable.ticketCacheExpiration') ?: 1200);
+            $this->template->assign('ticketCacheExpiration', $ticketCacheExpiration);
+        } catch (\Exception $e) {
+            $this->template->setNotification('An error occurred while saving the settings. ' . $e, 'error');
+        }
 
-        $this->tpl->assign('ticketCacheExpiration', $ticketCacheExpiration);
-
-        return $this->tpl->display('timeTable.Settings');
+        return $this->template->display('TimeTable.settings');
     }
 
     /**
      * post method
-     * @param array<string, int> $params
+     *
+     * @param array<string, string> $params The parameters received in the request
      * @return RedirectResponse
      * @throws \Exception
      */
     public function post(array $params): RedirectResponse
     {
-        $this->settingsRepo->saveSetting('timetablesettings.ticketscache', (int) ($params['ticketCacheExpiration'] ?? 0));
+        try {
+            $this->settingsRepo->saveSetting('itk-leantime-timetable.ticketCacheExpiration', (int)($params['ticketCacheExpiration'] ?? 0));
+            $this->template->setNotification('The settings were successfully saved.', 'success');
+        } catch (\Exception $e) {
+            $this->template->setNotification('An error occurred while saving the settings. ' . $e, 'error');
+        }
 
-        $this->tpl->setNotification('The settings were successfully saved.', 'success');
 
         return Frontcontroller::redirect(BASE_URL . '/TimeTable/settings');
     }

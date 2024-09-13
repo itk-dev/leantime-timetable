@@ -1,10 +1,12 @@
 /**
  * Class handles API requests for time table data.
  */
-const ticketCache = document.getElementById("ticketCache").value;
+const ticketCacheExpiration = document.getElementById(
+  "timetable-ticketCacheExpiration",
+).value;
 export default class TimeTableApiHandler {
   static cacheTimeouts = {
-    tickets: parseFloat(ticketCache),
+    tickets: parseFloat(ticketCacheExpiration),
   };
 
   /**
@@ -86,7 +88,7 @@ export default class TimeTableApiHandler {
       jQuery.ajax({
         url:
           leantime.appUrl +
-          "/TimeTable/timetable?getActiveTicketIdsOfPeriod&" +
+          "/TimeTable/TimeTable?getActiveTicketIdsOfPeriod&" +
           encodedDate,
         method: "GET",
         headers: {

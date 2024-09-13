@@ -3,36 +3,41 @@
 namespace Leantime\Plugins\TimeTable\Controllers;
 
 use Carbon\CarbonImmutable;
-use Leantime\Core\Controller;
+use Leantime\Core\Controller\Controller;
+use Leantime\Core\Controller\Frontcontroller;
 use Symfony\Component\HttpFoundation\Response;
 use Leantime\Plugins\TimeTable\Services\TimeTable as TimeTableService;
 use Leantime\Core\Language as LanguageCore;
-use Leantime\Core\Frontcontroller as FrontcontrollerCore;
 use Leantime\Domain\Auth\Models\Roles;
 use Leantime\Domain\Auth\Services\Auth as AuthService;
 use Leantime\Domain\Setting\Repositories\Setting as SettingRepository;
+use Leantime\Core\Template;
 
 /**
- * Timetable controller.
+ * TimeTable controller.
  */
 class TimeTable extends Controller
 {
     private TimeTableService $timeTableService;
     protected LanguageCore $language;
     private SettingRepository $settings;
+    protected Template $template;
 
     /**
      * constructor
      *
-     * @param TimeTableService $timeTableService
-     * @param LanguageCore     $language
+     * @param TimeTableService  $timeTableService
+     * @param LanguageCore      $language
+     * @param SettingRepository $settings
+     * @param Template          $template
      * @return void
      */
-    public function init(TimeTableService $timeTableService, LanguageCore $language, SettingRepository $settings): void
+    public function init(TimeTableService $timeTableService, LanguageCore $language, SettingRepository $settings, Template $template): void
     {
         $this->timeTableService = $timeTableService;
         $this->language = $language;
         $this->settings = $settings;
+        $this->template = $template;
     }
 
     /**
@@ -42,7 +47,7 @@ class TimeTable extends Controller
     public function post(): Response
     {
         if (!AuthService::userIsAtLeast(Roles::$editor)) {
-            return $this->tpl->displayJson(['Error' => 'Not Authorized'], 403);
+            return $this->template->displayJson(['Error' => 'Not Authorized'], 403);
         }
         if (isset($_POST['timesheet-id']) && $_POST['timesheet-id'] !== '') {
             $values = [
@@ -66,12 +71,12 @@ class TimeTable extends Controller
             $this->timeTableService->logTimeOnTicket($values);
         }
 
-        $redirectUrl = BASE_URL . '/TimeTable/timetable';
+        $redirectUrl = BASE_URL . '/TimeTable/TimeTable';
         if (isset($_GET['offset'])) {
             $redirectUrl = $redirectUrl . '?offset=' . $_GET['offset'];
         }
 
-        return FrontcontrollerCore::redirect($redirectUrl);
+        return Frontcontroller::redirect($redirectUrl);
     }
 
     /**
@@ -106,7 +111,7 @@ class TimeTable extends Controller
         $userIdForFilter = null;
         $searchTermForFilter = null;
         $now = CarbonImmutable::now();
-        $ticketsCache = $this->settings->getSetting('timetablesettings.ticketscache') ?? 1200;
+        $ticketCacheExpiration = $this->settings->getSetting('itk-leantime-timetable.ticketCacheExpiration') ?? 1200;
 
         if (isset($_GET['searchTerm'])) {
             $searchTerm = $_GET['searchTerm'];
@@ -128,7 +133,7 @@ class TimeTable extends Controller
         $weekEndDateDb = $now->endOfWeek()->setToDbTimezone();
         $weekStartDateFrontend = $now->startOfWeek()->setToUserTimezone();
 
-        $this->tpl->assign('currentSearchTerm', $searchTermForFilter);
+        $this->template->assign('currentSearchTerm', $searchTermForFilter);
 
         $days = explode(',', $this->language->__('language.dayNames'));
         // Make the first day of week monday, by shifting sunday to the back of the array.
@@ -162,12 +167,12 @@ class TimeTable extends Controller
             $timesheetsByTicket[$ticket['ticketId']] = $timesheetsSortedByWeekdate;
         }
         // All tickets assignet to the template
-        $this->tpl->assign('ticketIds', implode(',', $ticketIds));
-        $this->tpl->assign('timesheetsByTicket', $timesheetsByTicket);
-        $this->tpl->assign('weekDays', $days);
-        $this->tpl->assign('weekDates', $weekDates);
-        $this->tpl->assign('ticketsCache', $ticketsCache);
+        $this->template->assign('ticketIds', implode(',', $ticketIds));
+        $this->template->assign('timesheetsByTicket', $timesheetsByTicket);
+        $this->template->assign('weekDays', $days);
+        $this->template->assign('weekDates', $weekDates);
+        $this->template->assign('ticketCacheExpiration', $ticketCacheExpiration);
 
-        return $this->tpl->display('TimeTable.timetable');
+        return $this->template->display('TimeTable.timetable');
     }
 }
