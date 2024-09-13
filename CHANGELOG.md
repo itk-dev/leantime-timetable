@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.0.1] 2024-10-13
+
 * [PR-8](https://github.com/ITK-Leantime/leantime-timetable/pull/8)
   * Added compatability for Leantime 3.2
   * Consistent naming and error handling
@@ -42,3 +44,5 @@
 
 * [PR-1](https://github.com/ITK-Leantime/leantime-timetable/pull/1)
   * Foundation for further development
+
+[0.0.1]: https://github.com/ITK-Leantime/leantime-timetable/releases/tag/0.0.1
