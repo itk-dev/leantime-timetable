@@ -4,6 +4,11 @@
 
 ## [0.0.1] 2024-10-13
 
+* [PR-9](https://github.com/ITK-Leantime/leantime-timetable/pull/10)
+  * Run GA with markdown runner
+  * Update create-release script
+  * Add GA that checks if documentation has been updated
+
 * [PR-8](https://github.com/ITK-Leantime/leantime-timetable/pull/8)
   * Added compatability for Leantime 3.2
   * Consistent naming and error handling
