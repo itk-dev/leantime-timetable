@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.0.1] 2024-10-13
+
 * [PR-9](https://github.com/ITK-Leantime/leantime-timetable/pull/10)
   * Run GA with markdown runner
   * Update create-release script
@@ -47,3 +49,5 @@
 
 * [PR-1](https://github.com/ITK-Leantime/leantime-timetable/pull/1)
   * Foundation for further development
+
+[0.0.1]: https://github.com/ITK-Leantime/leantime-timetable/releases/tag/0.0.1
