@@ -50,4 +50,5 @@
 * [PR-1](https://github.com/ITK-Leantime/leantime-timetable/pull/1)
   * Foundation for further development
 
+[unreleased]: https://github.com/ITK-Leantime/leantime-timetable/compare/0.0.0...HEAD
 [0.0.1]: https://github.com/ITK-Leantime/leantime-timetable/releases/tag/0.0.1
