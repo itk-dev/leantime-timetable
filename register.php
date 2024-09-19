@@ -50,9 +50,9 @@ if (class_exists(EventDispatcher::class)) {
         'leantime.core.template.tpl.*.afterScriptLibTags',
         function () {
             if (null !== (session('userdata.id')) && str_contains($_SERVER['REQUEST_URI'], '/TimeTable/TimeTable')) {
-                echo '<script type="module" src="/dist/js/plugin-timeTableApiHandler.v' . urlencode('%%VERSION%%') . '.js"></script>';
-                echo '<script type="module" src="/dist/js/plugin-timeTable.v' . urlencode('%%VERSION%%') . '.js"></script>';
-                echo '<link rel="stylesheet" href="/dist/css/plugin-timeTable.v' . urlencode('%%VERSION%%') . '.css"></link>';
+                echo '<script type="module" src="/dist/js/plugin-timeTableApiHandler.v%%VERSION%%.js"></script>';
+                echo '<script type="module" src="/dist/js/plugin-timeTable.v%%VERSION%%.js"></script>';
+                echo '<link rel="stylesheet" href="/dist/css/plugin-timeTable.v%%VERSION%%.css"></link>';
             }
         },
         5
