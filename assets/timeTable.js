@@ -1,4 +1,4 @@
-import TimeTableApiHandler from "./plugin-timeTableApiHandler.v%25%25VERSION%25%25.js";
+import TimeTableApiHandler from "./plugin-timeTableApiHandler.v%%VERSION%%.js";
 
 jQuery(document).ready(function ($) {
   class TimeTable {
