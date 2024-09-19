@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+* [PR-12](https://github.com/ITK-Leantime/leantime-timetable/pull/12)
+  Hotfix: Fix version placeholder in asset
+
 ## [1.0.0] - 2024-09-18
 
 ## [0.0.1] 2024-10-13
