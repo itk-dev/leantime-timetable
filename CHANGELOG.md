@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+* [PR-13](https://github.com/ITK-Leantime/leantime-timetable/pull/14)
+  Remove urlencode in `register.php`
+
 ## [1.0.2] - 2024-09-19
 
 ## [1.0.1] - 2024-09-19
