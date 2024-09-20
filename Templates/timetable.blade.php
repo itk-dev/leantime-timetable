@@ -95,43 +95,45 @@
             </tr>
             </tbody>
         </table>
-        {{-- Modal for editing work logs --}}
 
-        <div id="edit-time-log-modal" class="nyroModalBg edit-time-log-modal">
-            <form method="post" class="edit-time-log-form">
-                <div class="timetable-close-modal">
-                    <span>×</span>
-                </div>
-                {{-- Hidden properties for post --}}
-                <input type="hidden" name="timesheet-ticket-id" />
-                <input type="hidden" name="timesheet-id" />
-                <input type="hidden" name="timesheet-offset" />
-
-                {{-- todo obviously this wont do... --}}
-                <input type="date" name="timesheet-date">
-
-                {{-- copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.css and timeTable.js --}}
-                <div class="timetable-ticket-search">
-                    <input class="timetable-ticket-input" type="text" data-placeholder="Search tickets.." data-loading="Filtering tickets.." placeholder="Search todo.." />
-                    <div class="timetable-ticket-results"></div>
-                  </div>
-
-                {{-- Hours input --}}
-                <input type="number" name="timesheet-hours" step="0.01" placeholder="Timer" required />
-
-                {{-- Description input --}}
-                <textarea type="text" id="modal-description" name="timesheet-description" placeholder="Beskrivelse" required></textarea>
-
-                {{-- Save or cancel buttons --}}
-                <div class="buttons">
-                    <button type="button" class="timetable-modal-cancel">{{ __('timeTable.button_modal_close') }}</button>
-                    <button type="submit" class="timetable-modal-submit">{{__('timeTable.button_modal_save')}}</button>
-                </div>
-            </form>
-            <div class="timetable-sync-panel">
-                <div><button class="timetable-sync-tickets"><span><i class="fa-solid fa-arrows-rotate"></i>Sync data</span></button></div><div><span></span></div>
-            </div>
-        </div>
     </div>
         </div></div>
+
+    {{-- Modal for editing work logs --}}
+
+    <div id="edit-time-log-modal" class="nyroModalBg edit-time-log-modal">
+        <form method="post" class="edit-time-log-form">
+            <div class="timetable-close-modal">
+                <span>×</span>
+            </div>
+            {{-- Hidden properties for post --}}
+            <input type="hidden" name="timesheet-ticket-id" />
+            <input type="hidden" name="timesheet-id" />
+            <input type="hidden" name="timesheet-offset" />
+
+            {{-- todo obviously this wont do... --}}
+            <input type="date" name="timesheet-date">
+
+            {{-- copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.css and timeTable.js --}}
+            <div class="timetable-ticket-search">
+                <input class="timetable-ticket-input" type="text" data-placeholder="Search tickets.." data-loading="Filtering tickets.." placeholder="Search todo.." />
+                <div class="timetable-ticket-results"></div>
+            </div>
+
+            {{-- Hours input --}}
+            <input type="number" name="timesheet-hours" step="0.01" placeholder="Timer" required />
+
+            {{-- Description input --}}
+            <textarea type="text" id="modal-description" name="timesheet-description" placeholder="Beskrivelse" required></textarea>
+
+            {{-- Save or cancel buttons --}}
+            <div class="buttons">
+                <button type="button" class="timetable-modal-cancel">{{ __('timeTable.button_modal_close') }}</button>
+                <button type="submit" class="timetable-modal-submit">{{__('timeTable.button_modal_save')}}</button>
+            </div>
+        </form>
+        <div class="timetable-sync-panel">
+            <div><button class="timetable-sync-tickets"><span><i class="fa-solid fa-arrows-rotate"></i>Sync data</span></button></div><div><span></span></div>
+        </div>
+    </div>
 @endsection
