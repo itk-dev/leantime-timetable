@@ -8,7 +8,7 @@
         <div class="pageicon"><span class="fa-regular fa-clock"></span></div>
         <div class="pagetitle">
             <h5>{{ __("label.table-columns") }}</h5>
-            <h1>Timetable</h1>
+            <h1>{{ __("timeTable.headline") }}</h1>
         </div>
     </div>
     <!-- page header -->
@@ -86,6 +86,7 @@
                             </tr>
                         @endforeach
                     @else
+                        <!-- A little something for when the week has no logs -->
                         <tr><td colspan="{{count($weekDays) + 2}}">{{__("It seems the 'WORK-IT' fairy forgot to sprinkle her magic dust here! 🧚‍🪄✨")}}</td></tr>
                     @endif
                     <!-- add total hours row here -->
