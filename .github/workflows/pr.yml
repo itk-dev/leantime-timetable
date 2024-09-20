@@ -42,6 +42,7 @@ jobs:
           - development-install markdown-check
           - development-install composer-normalize
           - development-install check-coding-standards
+          - development-install prettier-check
           - development-install shell-check
           - development-install code-analysis
           - development-install test-create-release
