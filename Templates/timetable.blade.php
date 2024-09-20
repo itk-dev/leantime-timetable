@@ -1,8 +1,8 @@
 @extends($layout)
 @section('content')
     <div class="time-table-container">
-    <input type="hidden" name="timetable-ticket-ids" value="{{$ticketIds}}" />
-    <input type="hidden" id="timetable-ticketCacheExpiration" name="timetable-ticket-cache" value="{{$ticketCacheExpiration}}" />
+        <input type="hidden" name="timetable-ticket-ids" value="{{$ticketIds}}" />
+        <input type="hidden" id="timetable-ticketCacheExpiration" name="timetable-ticket-cache" value="{{$ticketCacheExpiration}}" />
         <div class="flex-container">
             <div>
                 <button type="button" class="timetable-week-prev"><i class="fa fa-arrow-left"></i> {{ __('timeTable.button_prev_week') }}</button>
@@ -29,44 +29,46 @@
                             {{ $weekDate->format('d. D') }}
                         </th>
                     @endforeach
+                    <th>Total</th> <!-- new column for row totals -->
                 @endif
             </tr>
             </thead>
             <tbody>
             <?php $totalHours = array(); ?>
             @foreach ($timesheetsByTicket as $ticketId => $timesheet)
+                    <?php $rowTotal = 0; ?> <!-- initializing row total -->
                 <tr>
                     <td class="ticket-title" scope="row"><a href="{{$timesheet['ticketLink']}}">{{ $timesheet['ticketTitle']  }}</a> <span>{{$timesheet['projectName']}}</span></td>
-                    @if (isset($weekDates))
-                        @foreach ($weekDates as $weekDate)
+                    @foreach ($weekDates as $weekDate)
+                            <?php
+                            $weekDateAccessor = isset($weekDate) ? $weekDate->format('Y-m-d') : null;
+                            $timesheetDate = isset($timesheet) ? $timesheet[$weekDateAccessor] : null;
 
-                                <?php
-                                $weekDateAccessor = isset($weekDate) ? $weekDate->format('Y-m-d') : null;
-                                $timesheetDate = isset($timesheet) ? $timesheet[$weekDateAccessor] : null;
+                            $id = $timesheetDate[0]['id'] ?? null;
+                            $hours = $timesheetDate[0]['hours'] ?? null;
+                            $description = $timesheetDate[0]['description'] ?? null;
 
-                                $id = $timesheetDate[0]['id'] ?? null;
-                                $hours = $timesheetDate[0]['hours'] ?? null;
-                                $description = $timesheetDate[0]['description'] ?? null;
-
-                                // accumulate hours
-                                if ($hours) {
-                                    if (isset($totalHours[$weekDateAccessor])) {
-                                        $totalHours[$weekDateAccessor] += $hours;
-                                    } else {
-                                        $totalHours[$weekDateAccessor] = $hours;
-                                    }
+                            // accumulate hours
+                            if ($hours) {
+                                if (isset($totalHours[$weekDateAccessor])) {
+                                    $totalHours[$weekDateAccessor] += $hours;
+                                } else {
+                                    $totalHours[$weekDateAccessor] = $hours;
                                 }
-                                $weekendClass = (isset($weekDate) && $weekDate->isWeekend()) ? 'weekend' : '';
-                                $todayClass = (isset($weekDate) && $weekDate->isToday()) ? 'today' : '';
-                                ?>
-                            <td scope="row" class="timetable-edit-entry {{$weekendClass}} {{$todayClass}}" data-id="{{$id}}" data-ticketid="{{ $ticketId }}" data-hours="{{ $hours }}" data-description="{{ $description }}" data-date="{{$weekDate->format('Y-m-d')}}" title="{{ $description }}">
-                                <span>{{ $hours }}</span>
-                                @if (isset($hours) && $description === '')
-                                    <span class="fa fa-circle-exclamation"></span>
-                                @endif
-                            </td>
-                        @endforeach
-                    @endif
+                                $rowTotal += $hours; // add to row total
+                            }
+
+                            $weekendClass = (isset($weekDate) && $weekDate->isWeekend()) ? 'weekend' : '';
+                            $todayClass = (isset($weekDate) && $weekDate->isToday()) ? 'today' : '';
+                            ?>
+                        <td scope="row" class="timetable-edit-entry {{$weekendClass}} {{$todayClass}}" data-id="{{$id}}" data-ticketid="{{ $ticketId }}" data-hours="{{ $hours }}" data-description="{{ $description }}" data-date="{{$weekDate->format('Y-m-d')}}" title="{{ $description }}">
+                            <span>{{ $hours }}</span>
+                            @if (isset($hours) && $description === '')
+                                <span class="fa fa-circle-exclamation"></span>
+                            @endif
+                        </td>
+                    @endforeach
+                    <td>{{ $rowTotal }}</td> <!-- displaying row total -->
                 </tr>
             @endforeach
             <!-- add total hours row here -->
@@ -75,6 +77,7 @@
                 @foreach ($weekDates as $weekDate)
                     <td> {{ $totalHours[$weekDate->format('Y-m-d')] ?? 0 }} </td>
                 @endforeach
+                <td>{{ array_sum($totalHours) }}</td> <!-- displaying grand total -->
             </tr>
             </tbody>
         </table>
