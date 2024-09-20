@@ -489,8 +489,14 @@ jQuery(document).ready(function ($) {
   let timeTable = new TimeTable();
 });
 
+/**
+ * Retrieves the current date's week number in the year.
+ * 86400000 is the number of milliseconds in a day used to convert time between dates into days.
+ *
+ * @returns {Number} — Week number of the year for this date.
+ */
 Date.prototype.getWeek = function () {
-  const firstDayOfYear = new Date(this.getFullYear(), 0, 1);
-  const pastDaysOfYear = (this - firstDayOfYear) / 86400000;
-  return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+    const firstDayOfYear = new Date(this.getFullYear(), 0, 1);
+    const pastDaysOfYear = (this - firstDayOfYear) / 86400000;
+    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
 };
