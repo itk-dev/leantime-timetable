@@ -14,87 +14,90 @@
     <!-- page header -->
     <div class="maincontent">
         <div class="maincontentinner">
-    <div class="time-table-container">
-        <input type="hidden" name="timetable-ticket-ids" value="{{$ticketIds}}" />
-        <input type="hidden" id="timetable-ticketCacheExpiration" name="timetable-ticket-cache" value="{{$ticketCacheExpiration}}" />
-        <div class="flex-container">
-            <div>
-                <button type="button" class="timetable-week-prev"><i class="fa fa-arrow-left"></i> {{ __('timeTable.button_prev_week') }}</button>
-                <button type="button" class="timetable-week-next">{{ __('timeTable.button_next_week') }} <i class="fa fa-arrow-right"></i></button>
-                <button class="timetable-new-entry" type="button">{{ __('timeTable.button_add_time_log') }} <i class="fa fa-plus"></i></button>
-            </div>
-        </div>
-        <table id="timetable" class="table">
-            <thead>
-            <tr>
-                <th class="th-ticket-title" scope="col">{{ __('timeTable.title_table_header') }}</th>
+            <div class="time-table-container">
+                <input type="hidden" name="timetable-ticket-ids" value="{{$ticketIds}}" />
+                <input type="hidden" id="timetable-ticketCacheExpiration" name="timetable-ticket-cache" value="{{$ticketCacheExpiration}}" />
+                <div class="flex-container">
+                    <div>
+                        <button type="button" class="timetable-week-prev"><i class="fa fa-arrow-left"></i> {{ __('timeTable.button_prev_week') }}</button>
+                        <button type="button" class="timetable-week-next">{{ __('timeTable.button_next_week') }} <i class="fa fa-arrow-right"></i></button>
+                        <button class="timetable-new-entry" type="button">{{ __('timeTable.button_add_time_log') }} <i class="fa fa-plus"></i></button>
+                    </div>
+                </div>
+                <table id="timetable" class="table">
+                    <thead>
+                    <tr>
+                        <th class="th-ticket-title" scope="col">{{ __('timeTable.title_table_header') }}</th>
+                        @if (isset($weekDays, $weekDates))
+                            <input type="hidden" name="timetable-current-week-first-day" value="<?php echo isset($weekDates[0]) ? $weekDates[0]->format('Y-m-d') : ''; ?>" />
+                            <input type="hidden" name="timetable-current-week" value="<?php echo isset($weekDates[0]) ? $weekDates[0]->format('W') : ''; ?>" />
+                            @foreach ($weekDays as $key => $day)
+                                @php
+                                    $weekDate = $weekDates[$key];
+                                    $weekendClass = $weekDate->isWeekend() ? 'weekend' : '';
+                                    $todayClass = $weekDate->isToday() ? 'today' : '';
+                                    $classes = trim("$weekendClass $todayClass");
+                                @endphp
+                                <th @if($classes) class="{{ $classes }}" @endif>
+                                    {{ $weekDate->format('d. D') }}
+                                </th>
+                            @endforeach
+                            <th scope="col">Total</th> <!-- Total Column Header -->
+                        @endif
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php $totalHours = array(); ?>
+                    @if (!empty($timesheetsByTicket))
+                        @foreach ($timesheetsByTicket as $ticketId => $timesheet)
+                            <tr>
+                                <td class="ticket-title" scope="row"><a href="{{$timesheet['ticketLink']}}">{{ $timesheet['ticketTitle']  }}</a> <span>{{$timesheet['projectName']}}</span></td>
+                                    <?php $rowTotal = 0; ?> <!-- initializing row total -->
+                                @foreach ($weekDates as $weekDate)
+                                        <?php
+                                        $weekDateAccessor = isset($weekDate) ? $weekDate->format('Y-m-d') : null;
+                                        $timesheetDate = isset($timesheet) ? $timesheet[$weekDateAccessor] : null;
+                                        $id = $timesheetDate[0]['id'] ?? null;
+                                        $hours = $timesheetDate[0]['hours'] ?? null;
+                                        $description = $timesheetDate[0]['description'] ?? null;
 
-                @if (isset($weekDays, $weekDates))
-                    <input type="hidden" name="timetable-current-week-first-day" value="<?php echo isset($weekDates[0]) ? $weekDates[0]->format('Y-m-d') : ''; ?>" />
-                    <input type="hidden" name="timetable-current-week" value="<?php echo isset($weekDates[0]) ? $weekDates[0]->format('W') : ''; ?>" />
-                    @foreach ($weekDays as $key => $day)
-                        @php
-                            $weekDate = $weekDates[$key];
-                            $weekendClass = $weekDate->isWeekend() ? 'weekend' : '';
-                            $todayClass = $weekDate->isToday() ? 'today' : '';
-                            $classes = trim("$weekendClass $todayClass");
-                        @endphp
-                        <th @if($classes) class="{{ $classes }}" @endif>
-                            {{ $weekDate->format('d. D') }}
-                        </th>
-                    @endforeach
-                    <th>Total</th> <!-- new column for row totals -->
-                @endif
-            </tr>
-            </thead>
-            <tbody>
-            <?php $totalHours = array(); ?>
-            @foreach ($timesheetsByTicket as $ticketId => $timesheet)
-                    <?php $rowTotal = 0; ?> <!-- initializing row total -->
-                <tr>
-                    <td class="ticket-title" scope="row"><a href="{{$timesheet['ticketLink']}}">{{ $timesheet['ticketTitle']  }}</a> <span>{{$timesheet['projectName']}}</span></td>
-                    @foreach ($weekDates as $weekDate)
-                            <?php
-                            $weekDateAccessor = isset($weekDate) ? $weekDate->format('Y-m-d') : null;
-                            $timesheetDate = isset($timesheet) ? $timesheet[$weekDateAccessor] : null;
+                                        // accumulate hours
+                                        if ($hours) {
+                                            if (isset($totalHours[$weekDateAccessor])) {
+                                                $totalHours[$weekDateAccessor] += $hours;
+                                            } else {
+                                                $totalHours[$weekDateAccessor] = $hours;
+                                            }
+                                            $rowTotal += $hours; // add to row total
+                                        }
 
-                            $id = $timesheetDate[0]['id'] ?? null;
-                            $hours = $timesheetDate[0]['hours'] ?? null;
-                            $description = $timesheetDate[0]['description'] ?? null;
+                                        $weekendClass = (isset($weekDate) && $weekDate->isWeekend()) ? 'weekend' : '';
+                                        $todayClass = (isset($weekDate) && $weekDate->isToday()) ? 'today' : '';
+                                        ?>
 
-                            // accumulate hours
-                            if ($hours) {
-                                if (isset($totalHours[$weekDateAccessor])) {
-                                    $totalHours[$weekDateAccessor] += $hours;
-                                } else {
-                                    $totalHours[$weekDateAccessor] = $hours;
-                                }
-                                $rowTotal += $hours; // add to row total
-                            }
-
-                            $weekendClass = (isset($weekDate) && $weekDate->isWeekend()) ? 'weekend' : '';
-                            $todayClass = (isset($weekDate) && $weekDate->isToday()) ? 'today' : '';
-                            ?>
-                        <td scope="row" class="timetable-edit-entry {{$weekendClass}} {{$todayClass}}" data-id="{{$id}}" data-ticketid="{{ $ticketId }}" data-hours="{{ $hours }}" data-description="{{ $description }}" data-date="{{$weekDate->format('Y-m-d')}}" title="{{ $description }}">
-                            <span>{{ $hours }}</span>
-                            @if (isset($hours) && $description === '')
-                                <span class="fa fa-circle-exclamation"></span>
-                            @endif
-                        </td>
-                    @endforeach
-                    <td>{{ $rowTotal }}</td> <!-- displaying row total -->
-                </tr>
-            @endforeach
-            <!-- add total hours row here -->
-            <tr class="tr-total">
-                <td scope="row">Total</td>
-                @foreach ($weekDates as $weekDate)
-                    <td> {{ $totalHours[$weekDate->format('Y-m-d')] ?? 0 }} </td>
-                @endforeach
-                <td>{{ array_sum($totalHours) }}</td> <!-- displaying grand total -->
-            </tr>
-            </tbody>
-        </table>
+                                    <td scope="row" class="timetable-edit-entry {{$weekendClass}} {{$todayClass}}" data-id="{{$id}}" data-ticketid="{{ $ticketId }}" data-hours="{{ $hours }}" data-description="{{ $description }}" data-date="{{$weekDate->format('Y-m-d')}}" title="{{ $description }}">
+                                        <span>{{ $hours }}</span>
+                                        @if (isset($hours) && $description === '')
+                                            <span class="fa fa-circle-exclamation"></span>
+                                        @endif
+                                    </td>
+                                @endforeach
+                                <td>{{$rowTotal}}</td> <!-- Row Total Column -->
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr><td colspan="{{count($weekDays) + 2}}">{{__("It seems the 'WORK-IT' fairy forgot to sprinkle her magic dust here! 🧚‍🪄✨")}}</td></tr>
+                    @endif
+                    <!-- add total hours row here -->
+                    <tr class="tr-total">
+                        <td scope="row">Total</td>
+                        @foreach ($weekDates as $weekDate)
+                            <td> {{ $totalHours[$weekDate->format('Y-m-d')] ?? 0 }} </td>
+                        @endforeach
+                        <td>{{array_sum($totalHours)}}</td> <!-- Grand Total Column -->
+                    </tr>
+                    </tbody>
+                </table>
 
     </div>
         </div></div>
