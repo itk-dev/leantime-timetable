@@ -16,8 +16,8 @@
                 <th class="th-ticket-title" scope="col">{{ __('timeTable.title_table_header') }}</th>
 
                 @if (isset($weekDays, $weekDates))
-                    <input type="hidden" name="timetable-current-week-first-day" value="<?php echo $weekDates[0]->format('Y-m-d'); ?>" />
-                    <input type="hidden" name="timetable-current-week" value="<?php echo $weekDates[0]->format('W'); ?>" />
+                    <input type="hidden" name="timetable-current-week-first-day" value="<?php echo isset($weekDates[0]) ? $weekDates[0]->format('Y-m-d') : ''; ?>" />
+                    <input type="hidden" name="timetable-current-week" value="<?php echo isset($weekDates[0]) ? $weekDates[0]->format('W') : ''; ?>" />
                     @foreach ($weekDays as $key => $day)
                         @php
                             $weekDate = $weekDates[$key];
