@@ -99,7 +99,7 @@ input::-webkit-inner-spin-button {
 }
 .time-table-container .table td {
   border: 1px solid #ccc;
-  padding: 15px;
+  padding: 10px;
 }
 .time-table-container .table .tr-total {
   background-color: #e2e8f0;
