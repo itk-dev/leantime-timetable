@@ -32,9 +32,11 @@ function addTimeTableItemToMenu(array $menuStructure): array
  */
 function displayPersonalMenuOnEnteringTimeTable(array $sections): array
 {
-    $sections['TimeTable.timetable'] = 'personal';
+    $sections['TimeTable.TimeTable'] = 'personal';
+
     return $sections;
 }
+
 if (class_exists(EventDispatcher::class)) {
 // https://github.com/Leantime/plugin-template/blob/main/register.php#L43-L46
 
