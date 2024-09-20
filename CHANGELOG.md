@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 * [PR-16](https://github.com/ITK-Leantime/leantime-timetable/pull/16)
-  * Fixed way assets are versioned
+  * Assets are now versioned with query strings to [cache bust](https://www.keycdn.com/support/what-is-cache-busting#1-file-name-versioning)
   * Better preset values when logging time
 
 ## [1.0.3] - 2024-09-19
