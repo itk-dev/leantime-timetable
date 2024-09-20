@@ -1,13 +1,15 @@
 /* Todo scope css better so it doesnt "ruin" leantime again */
 /* Todo streamline kebab case / camelcase stuff */
-
+#timetable {
+    background-color: #fff;
+}
 .time-table-container {
   position: relative;
-  background-color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 10px;
+  margin: 0 10px;
 }
 .time-table-container > h1 {
   margin-bottom: 30px;
@@ -99,7 +101,7 @@ input::-webkit-inner-spin-button {
 }
 .time-table-container .table td {
   border: 1px solid #ccc;
-  padding: 10px;
+  padding: 12px;
 }
 .time-table-container .table .tr-total {
   background-color: #e2e8f0;

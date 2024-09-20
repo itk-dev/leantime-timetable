@@ -1,5 +1,19 @@
 @extends($layout)
+
+
+
 @section('content')
+    <!-- page header -->
+    <div class="pageheader">
+        <div class="pageicon"><span class="fa-regular fa-clock"></span></div>
+        <div class="pagetitle">
+            <h5>{{ __("label.table-columns") }}</h5>
+            <h1>Timetable</h1>
+        </div>
+    </div>
+    <!-- page header -->
+    <div class="maincontent">
+        <div class="maincontentinner">
     <div class="time-table-container">
         <input type="hidden" name="timetable-ticket-ids" value="{{$ticketIds}}" />
         <input type="hidden" id="timetable-ticketCacheExpiration" name="timetable-ticket-cache" value="{{$ticketCacheExpiration}}" />
@@ -119,4 +133,5 @@
             </div>
         </div>
     </div>
+        </div></div>
 @endsection
