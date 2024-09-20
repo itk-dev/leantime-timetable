@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+* [PR-16](https://github.com/ITK-Leantime/leantime-timetable/pull/16)
+  * Fixed way assets are versioned
+  * Better preset values when logging time
+
 ## [1.0.3] - 2024-09-19
 
 * [PR-13](https://github.com/ITK-Leantime/leantime-timetable/pull/14)
