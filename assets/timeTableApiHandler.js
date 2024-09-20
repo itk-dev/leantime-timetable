@@ -24,9 +24,11 @@ export default class TimeTableApiHandler {
     } else {
       ticketPromise = this.getAllTickets().then((data) => {
         const result = data.result;
-          let tickets = result.filter(
-              ({type}) => type.toLowerCase() !== "story" && type.toLowerCase() !== "milestone"
-          );
+        let tickets = result.filter(
+          ({ type }) =>
+            type.toLowerCase() !== "story" &&
+            type.toLowerCase() !== "milestone",
+        );
         const ticketGroup = {
           id: "task",
           text: "Todos",

@@ -496,7 +496,7 @@ jQuery(document).ready(function ($) {
  * @returns {Number} — Week number of the year for this date.
  */
 Date.prototype.getWeek = function () {
-    const firstDayOfYear = new Date(this.getFullYear(), 0, 1);
-    const pastDaysOfYear = (this - firstDayOfYear) / 86400000;
-    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+  const firstDayOfYear = new Date(this.getFullYear(), 0, 1);
+  const pastDaysOfYear = (this - firstDayOfYear) / 86400000;
+  return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
 };

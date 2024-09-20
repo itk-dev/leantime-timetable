@@ -1,7 +1,7 @@
 /* Todo scope css better so it doesnt "ruin" leantime again */
 /* Todo streamline kebab case / camelcase stuff */
 #timetable {
-    background-color: #fff;
+  background-color: #fff;
 }
 .time-table-container {
   position: relative;
