@@ -19,7 +19,7 @@ function addTimeTableItemToMenu(array $menuStructure): array
         'tooltip' => 'View TimeTable',
         'href' => '/TimeTable/TimeTable',
         'active' => ['TimeTable'],
-        'module' => 'TimeTable',
+        'module' => 'TimeTable', // First part of the path when visiting your plugin e.g. leantime.dk/{this part}/TimeTable
     ];
 
     return $menuStructure;
