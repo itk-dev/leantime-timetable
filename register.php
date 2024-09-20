@@ -19,7 +19,7 @@ function addTimeTableItemToMenu(array $menuStructure): array
         'tooltip' => 'View TimeTable',
         'href' => '/TimeTable/TimeTable',
         'active' => ['TimeTable'],
-        'module' => 'tickets',
+        'module' => 'TimeTable',
     ];
 
     return $menuStructure;
