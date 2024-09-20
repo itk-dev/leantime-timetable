@@ -339,7 +339,7 @@ jQuery(document).ready(function ($) {
       this.modalInputTicketName.val(ticket.text).attr("disabled", "disabled");
       this.modalInputHours.val(hours);
       this.modalTextareaDescription.val(description);
-      this.modalInputDate.val(date);
+      this.modalInputDate.val(date).attr("disabled", "disabled");
 
       this.modalInputHours.focus();
     }
