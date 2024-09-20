@@ -340,6 +340,8 @@ jQuery(document).ready(function ($) {
       this.modalInputHours.val(hours);
       this.modalTextareaDescription.val(description);
       this.modalInputDate.val(date);
+
+      this.modalInputHours.focus();
     }
 
     /**
