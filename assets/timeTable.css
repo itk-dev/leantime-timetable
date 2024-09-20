@@ -8,8 +8,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px;
-  margin: 0 10px;
 }
 .time-table-container > h1 {
   margin-bottom: 30px;
