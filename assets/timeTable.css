@@ -13,10 +13,10 @@
   margin-bottom: 30px;
 }
 .time-table-container .fa-circle-exclamation {
-    position: absolute;
-    color: #ffc107;
-    right: 5px;
-    top: 5px;
+  position: absolute;
+  color: #ffc107;
+  right: 5px;
+  top: 5px;
 }
 .time-table-container .flex-container {
   justify-content: space-between;
