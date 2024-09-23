@@ -5,10 +5,10 @@ jQuery(document).ready(function ($) {
     constructor() {
       this.activeTicketIds = new Set(
         $('input[name="timetable-ticket-ids"]').val().split(","),
-        (this.viewCurrentWeek = $(
+        (this.currentViewWeek = $(
           "input[name='timetable-current-week']",
         ).val()),
-        (this.viewFirstDay = $(
+        (this.currentViewFirstDay = $(
           "input[name='timetable-current-week-first-day']",
         ).val()),
       );
@@ -202,12 +202,12 @@ jQuery(document).ready(function ($) {
 
       // Set date today
       let currentWeekNumber = new Date().getWeek();
-      let viewWeekNumber = parseInt(this.viewCurrentWeek, 10);
+      let viewWeekNumber = parseInt(this.currentViewWeek, 10);
 
       const dateToSet =
         currentWeekNumber === viewWeekNumber
           ? new Date().toISOString().split("T")[0]
-          : this.viewFirstDay;
+          : this.currentViewFirstDay;
 
       this.modalInputDate.val(dateToSet);
 
