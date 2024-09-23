@@ -123,7 +123,6 @@
             <input type="hidden" name="timesheet-id" />
             <input type="hidden" name="timesheet-offset" />
 
-            {{-- todo obviously this wont do... --}}
             <input type="date" name="timesheet-date">
 
             {{-- copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.css and timeTable.js --}}
