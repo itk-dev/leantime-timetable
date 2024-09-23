@@ -127,7 +127,7 @@
 
             {{-- copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.css and timeTable.js --}}
             <div class="timetable-ticket-search">
-                <input class="timetable-ticket-input" type="text" data-placeholder="{{ __("timeTable.search_tickets") }}" data-loading="{{ __("timeTable.filtering_tickets") }}" placeholder="Search todo.." />
+                <input class="timetable-ticket-input" type="text" data-placeholder="{{ __("timeTable.search_tickets") }}" data-loading="{{ __("timeTable.filtering_tickets") }}" placeholder="{{ __("timeTable.search_tickets") }}" />
                 <div class="timetable-ticket-results"></div>
             </div>
 
