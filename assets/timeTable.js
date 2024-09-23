@@ -204,7 +204,7 @@ jQuery(document).ready(function ($) {
       let currentWeekNumber = new Date().getWeek();
       let viewWeekNumber = parseInt(this.viewCurrentWeek, 10);
 
-      let dateToSet =
+      const dateToSet =
         currentWeekNumber === viewWeekNumber
           ? new Date().toISOString().split("T")[0]
           : this.viewFirstDay;
@@ -282,7 +282,9 @@ jQuery(document).ready(function ($) {
 
       let results = [];
 
-      if (
+        // Checks if `obj`'s `text` or `id` contains `lowerCaseQuery` and not already added to timetable.
+
+        if (
         "text" in obj &&
         typeof text === "string" &&
         (text.toLowerCase().includes(lowerCaseQuery) ||
@@ -355,7 +357,7 @@ jQuery(document).ready(function ($) {
       this.modalInputTicketName.val(ticket.text).attr("disabled", "disabled");
       this.modalInputHours.val(hours);
       this.modalTextareaDescription.val(description);
-      this.modalInputDate.val(date); //.attr("disabled", "disabled");
+      this.modalInputDate.val(date);
 
       this.modalInputHours.focus();
     }
@@ -467,7 +469,7 @@ jQuery(document).ready(function ($) {
     deleteTimeEntry() {
       const timesheetId = this.modalInputTimesheetId.val();
       $(this.modalDeleteButton).text($(this.modalDeleteButton).data("loading"));
-      fetch("", {
+      fetch(window.location.href, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

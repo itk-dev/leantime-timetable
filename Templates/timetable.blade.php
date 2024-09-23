@@ -128,15 +128,15 @@
 
             {{-- copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.css and timeTable.js --}}
             <div class="timetable-ticket-search">
-                <input class="timetable-ticket-input" type="text" data-placeholder="Search tickets.." data-loading="Filtering already logged tickets.." placeholder="Search todo.." />
+                <input class="timetable-ticket-input" type="text" data-placeholder="{{ __("timeTable.search_tickets") }}" data-loading="{{ __("timeTable.filtering_tickets") }}" placeholder="Search todo.." />
                 <div class="timetable-ticket-results"></div>
             </div>
 
             {{-- Hours input --}}
-            <input type="number" name="timesheet-hours" step="0.01" placeholder="Timer" required />
+            <input type="number" name="timesheet-hours" step="0.01" placeholder="{{__('timeTable.hours')}}" required />
 
             {{-- Description input --}}
-            <textarea type="text" id="modal-description" name="timesheet-description" placeholder="Beskrivelse" required></textarea>
+            <textarea type="text" id="modal-description" name="timesheet-description" placeholder="{{__("timeTable.description")}}" required></textarea>
 
             {{-- Save or cancel buttons --}}
             <div class="buttons">
