@@ -191,9 +191,9 @@ input::-webkit-inner-spin-button {
   margin: auto;
 }
 .edit-time-log-form .timetable-modal-delete {
-    margin-right: auto;
-    border: 1px solid #cbd5e1;
-    padding: 0 15px;
+  margin-right: auto;
+  border: 1px solid #cbd5e1;
+  padding: 0 15px;
 }
 .edit-time-log-form input {
   width: 100%;
@@ -204,11 +204,11 @@ input::-webkit-inner-spin-button {
   justify-content: end;
 }
 .edit-time-log-form .buttons .btn {
-    border-radius: 3px !important;
+  border-radius: 3px !important;
 }
 .edit-time-log-form .timetable-modal-submit {
   color: white;
-    border: 1px solid #cbd5e1;
+  border: 1px solid #cbd5e1;
   height: 28px;
   padding: 0 15px;
   margin: 0;
