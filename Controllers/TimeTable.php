@@ -5,12 +5,14 @@ namespace Leantime\Plugins\TimeTable\Controllers;
 use Carbon\CarbonImmutable;
 use Leantime\Core\Controller\Controller;
 use Leantime\Core\Controller\Frontcontroller;
+use mysql_xdevapi\Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Leantime\Plugins\TimeTable\Services\TimeTable as TimeTableService;
 use Leantime\Core\Language as LanguageCore;
 use Leantime\Domain\Auth\Models\Roles;
 use Leantime\Domain\Auth\Services\Auth as AuthService;
 use Leantime\Domain\Setting\Repositories\Setting as SettingRepository;
+use Leantime\Domain\Timesheets\Repositories\Timesheets as TimesheetRepository;
 use Leantime\Core\Template;
 
 /**
@@ -22,6 +24,7 @@ class TimeTable extends Controller
     protected LanguageCore $language;
     private SettingRepository $settings;
     protected Template $template;
+    private TimesheetRepository $timesheetRepository;
 
     /**
      * constructor
@@ -30,14 +33,16 @@ class TimeTable extends Controller
      * @param LanguageCore      $language
      * @param SettingRepository $settings
      * @param Template          $template
+     * @param TimesheetRepository $timesheetRepository
      * @return void
      */
-    public function init(TimeTableService $timeTableService, LanguageCore $language, SettingRepository $settings, Template $template): void
+    public function init(TimeTableService $timeTableService, LanguageCore $language, SettingRepository $settings, Template $template, TimesheetRepository $timesheetRepository): void
     {
         $this->timeTableService = $timeTableService;
         $this->language = $language;
         $this->settings = $settings;
         $this->template = $template;
+        $this->timesheetRepository = $timesheetRepository;
     }
 
     /**
@@ -49,8 +54,23 @@ class TimeTable extends Controller
         if (!AuthService::userIsAtLeast(Roles::$editor)) {
             return $this->template->displayJson(['Error' => 'Not Authorized'], 403);
         }
+        $jsonPayload = json_decode(file_get_contents('php://input'), true);
+        if (isset($jsonPayload['action']) && $jsonPayload['action'] === 'delete') {
+            $timesheetId = $jsonPayload['timesheetId'];
+            if ($timesheetId) {
+                try {
+                    $this->timesheetRepository->deleteTime($timesheetId);
+                    exit(json_encode(["status" => "success"]));
+                } catch (Exception $e) {
+                    exit(json_encode(["status" => "error", "error" => $e->getMessage()]));
+                }
+            }
+        }
         if (isset($_POST['timesheet-id']) && $_POST['timesheet-id'] !== '') {
+            $workDate = new CarbonImmutable($_POST['timesheet-date'], session('usersettings.timezone'));
+            $workDate = $workDate->setToDbTimezone();
             $values = [
+                'workDate' => $workDate,
                 'hours' => $_POST['timesheet-hours'],
                 'description' => $_POST['timesheet-description'],
                 'id' => $_POST['timesheet-id'],
