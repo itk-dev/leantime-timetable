@@ -19,7 +19,7 @@ function addTimeTableItemToMenu(array $menuStructure): array
         'tooltip' => 'View TimeTable',
         'href' => '/TimeTable/TimeTable',
         'active' => ['TimeTable'],
-        'module' => 'tickets',
+        'module' => 'TimeTable', // First part of the path when visiting your plugin e.g. leantime.dk/{this part}/TimeTable
     ];
 
     return $menuStructure;
@@ -32,9 +32,11 @@ function addTimeTableItemToMenu(array $menuStructure): array
  */
 function displayPersonalMenuOnEnteringTimeTable(array $sections): array
 {
-    $sections['TimeTable.timetable'] = 'personal';
+    $sections['TimeTable.TimeTable'] = 'personal';
+
     return $sections;
 }
+
 if (class_exists(EventDispatcher::class)) {
 // https://github.com/Leantime/plugin-template/blob/main/register.php#L43-L46
 
@@ -50,9 +52,12 @@ if (class_exists(EventDispatcher::class)) {
         'leantime.core.template.tpl.*.afterScriptLibTags',
         function () {
             if (null !== (session('userdata.id')) && str_contains($_SERVER['REQUEST_URI'], '/TimeTable/TimeTable')) {
-                echo '<script type="module" src="/dist/js/plugin-timeTableApiHandler.v%%VERSION%%.js"></script>';
-                echo '<script type="module" src="/dist/js/plugin-timeTable.v%%VERSION%%.js"></script>';
-                echo '<link rel="stylesheet" href="/dist/css/plugin-timeTable.v%%VERSION%%.css"></link>';
+                $apiHandlerUrl = '/dist/js/plugin-timeTableApiHandler.js?' . http_build_query(['v' => '%%VERSION%%']);
+                echo '<script type="module" src="' . htmlspecialchars($apiHandlerUrl) . '"></script>';
+                $timeTableUrl = '/dist/js/plugin-timeTable.js?' . http_build_query(['v' => '%%VERSION%%']);
+                echo '<script type="module" src="' . htmlspecialchars($timeTableUrl) . '"></script>';
+                $timeTableStyle = '/dist/css/plugin-timeTable.css?' . http_build_query(['v' => '%%VERSION%%']);
+                echo '<link rel="stylesheet" href="' . htmlspecialchars($timeTableStyle) . '"></link>';
             }
         },
         5

@@ -1,10 +1,16 @@
-import TimeTableApiHandler from "./plugin-timeTableApiHandler.v%%VERSION%%.js";
+import TimeTableApiHandler from "./plugin-timeTableApiHandler.js?v=%%VERSION%%";
 
 jQuery(document).ready(function ($) {
   class TimeTable {
     constructor() {
       this.activeTicketIds = new Set(
         $('input[name="timetable-ticket-ids"]').val().split(","),
+        (this.viewCurrentWeek = $(
+          "input[name='timetable-current-week']",
+        ).val()),
+        (this.viewFirstDay = $(
+          "input[name='timetable-current-week-first-day']",
+        ).val()),
       );
 
       // General selectors
@@ -186,8 +192,15 @@ jQuery(document).ready(function ($) {
       this.openEditTimeLogModal();
 
       // Set date today
-      let today = new Date().toISOString().split("T")[0];
-      this.modalInputDate.val(today);
+      let currentWeekNumber = new Date().getWeek();
+      let viewWeekNumber = parseInt(this.viewCurrentWeek, 10);
+
+      let dateToSet =
+        currentWeekNumber === viewWeekNumber
+          ? new Date().toISOString().split("T")[0]
+          : this.viewFirstDay;
+
+      this.modalInputDate.val(dateToSet);
 
       // Init ticket search
       this.modalInputTicketName.removeAttr("disabled");
@@ -326,7 +339,9 @@ jQuery(document).ready(function ($) {
       this.modalInputTicketName.val(ticket.text).attr("disabled", "disabled");
       this.modalInputHours.val(hours);
       this.modalTextareaDescription.val(description);
-      this.modalInputDate.val(date);
+      this.modalInputDate.val(date).attr("disabled", "disabled");
+
+      this.modalInputHours.focus();
     }
 
     /**
@@ -473,3 +488,15 @@ jQuery(document).ready(function ($) {
 
   let timeTable = new TimeTable();
 });
+
+/**
+ * Retrieves the current date's week number in the year.
+ * 86400000 is the number of milliseconds in a day used to convert time between dates into days.
+ *
+ * @returns {Number} — Week number of the year for this date.
+ */
+Date.prototype.getWeek = function () {
+  const firstDayOfYear = new Date(this.getFullYear(), 0, 1);
+  const pastDaysOfYear = (this - firstDayOfYear) / 86400000;
+  return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+};

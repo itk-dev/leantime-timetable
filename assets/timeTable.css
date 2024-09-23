@@ -1,22 +1,22 @@
 /* Todo scope css better so it doesnt "ruin" leantime again */
 /* Todo streamline kebab case / camelcase stuff */
-
+#timetable {
+  background-color: #fff;
+}
 .time-table-container {
   position: relative;
-  background-color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px;
 }
 .time-table-container > h1 {
   margin-bottom: 30px;
 }
 .time-table-container .fa-circle-exclamation {
   position: absolute;
-  color: #b91c1c;
-  right: 20px;
-  top: 10px;
+  color: #ffc107;
+  right: 5px;
+  top: 5px;
 }
 .time-table-container .flex-container {
   justify-content: space-between;
@@ -99,7 +99,7 @@ input::-webkit-inner-spin-button {
 }
 .time-table-container .table td {
   border: 1px solid #ccc;
-  padding: 15px;
+  padding: 12px;
 }
 .time-table-container .table .tr-total {
   background-color: #e2e8f0;
@@ -230,7 +230,9 @@ input::-webkit-inner-spin-button {
   height: 85px;
   border-radius: 0;
 }
-
+.edit-time-log-form input:disabled {
+  opacity: 0.6;
+}
 /* The Close Button */
 .close {
   color: #aaa;
