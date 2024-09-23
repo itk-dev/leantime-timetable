@@ -29,10 +29,10 @@ class TimeTable extends Controller
     /**
      * constructor
      *
-     * @param TimeTableService  $timeTableService
-     * @param LanguageCore      $language
-     * @param SettingRepository $settings
-     * @param Template          $template
+     * @param TimeTableService    $timeTableService
+     * @param LanguageCore        $language
+     * @param SettingRepository   $settings
+     * @param Template            $template
      * @param TimesheetRepository $timesheetRepository
      * @return void
      */
@@ -60,9 +60,9 @@ class TimeTable extends Controller
             if ($timesheetId) {
                 try {
                     $this->timesheetRepository->deleteTime($timesheetId);
-                    exit(json_encode(["status" => "success"]));
+                    exit(json_encode(['status' => 'success']));
                 } catch (Exception $e) {
-                    exit(json_encode(["status" => "error", "error" => $e->getMessage()]));
+                    exit(json_encode(['status' => 'error', 'error' => $e->getMessage()]));
                 }
             }
         }
