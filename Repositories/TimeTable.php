@@ -35,7 +35,7 @@ class TimeTable
         $sql = 'SELECT DISTINCT
         timesheet.ticketId
         FROM zp_timesheets AS timesheet
-        WHERE timesheet.userId = :userId AND (timesheet.workDate BETWEEN :dateFrom AND :dateTo)';
+        WHERE timesheet.userId = :userId AND timesheet.workDate >= :dateFrom AND timesheet.workDate < :dateTo';
         $stmn = $this->db->database->prepare($sql);
 
         $userId = session('userdata.id');
@@ -107,17 +107,18 @@ class TimeTable
     public function updateTime(array $values): void
     {
         $sql = 'UPDATE
-            zp_timesheets
-        SET
-            hours = :hours,
-            description =:description
-        WHERE
-            id = :id';
+                    zp_timesheets
+                SET
+                    hours = :hours,
+                    description = :description,
+                    workDate = :date
+                WHERE
+                    id = :id';
         $stmn = $this->db->database->prepare($sql);
         $stmn->bindValue(':hours', $values['hours']);
         $stmn->bindValue(':description', $values['description']);
+        $stmn->bindValue(':date', $values['workDate']);
         $stmn->bindValue(':id', $values['id']);
-
 
         $stmn->execute();
         $stmn->closeCursor();
