@@ -231,7 +231,7 @@ input::-webkit-inner-spin-button {
   border-radius: 0;
 }
 .edit-time-log-form input:disabled {
-    opacity: .6;
+  opacity: 0.6;
 }
 /* The Close Button */
 .close {
