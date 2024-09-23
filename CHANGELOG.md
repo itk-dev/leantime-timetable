@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.1.0] - 2024-09-23
+
 * [PR-17](https://github.com/ITK-Leantime/leantime-timetable/pull/17)
   * Added delete button to timelog modal
   * Enable change date when editing time log
@@ -72,7 +74,8 @@
 * [PR-1](https://github.com/ITK-Leantime/leantime-timetable/pull/1)
   * Foundation for further development
 
-[Unreleased]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.0.2...HEAD
+[Unreleased]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.1.0...HEAD
+[1.1.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.0.2...1.1.0
 [1.0.2]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/0.0.1...1.0.0
