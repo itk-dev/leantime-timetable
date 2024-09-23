@@ -29,7 +29,7 @@
   height: 28px;
 }
 .time-table-container .flex-container button:hover {
-    background-color: #f9f9f9;
+  background-color: #f9f9f9;
 }
 .time-table-container .flex-container i {
   color: #cbd5e1;
@@ -204,8 +204,9 @@ input::-webkit-inner-spin-button {
   margin-right: auto;
   border: 1px solid #cbd5e1;
   padding: 0 15px;
-    background-color: red;
-    color: #fff;
+  background-color: red;
+  color: #fff;
+  font-size: 12px;
 }
 .edit-time-log-form input {
   width: 100%;
@@ -219,7 +220,7 @@ input::-webkit-inner-spin-button {
   border-radius: 3px !important;
 }
 .edit-time-log-form .buttons button:hover {
-    filter: brightness(0.95);
+  filter: brightness(0.95);
 }
 .edit-time-log-form .timetable-modal-submit {
   color: white;

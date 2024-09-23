@@ -139,7 +139,7 @@
 
             {{-- Save or cancel buttons --}}
             <div class="buttons">
-                <button type="button" class="timetable-modal-delete" data-loading="{{ __('timeTable.button_modal_deleting') }}">{{ __('timeTable.button_modal_delete') }}</button>
+                <button type="button" class="timetable-modal-delete" data-loading="{{ __('timeTable.button_modal_deleting') }}"> <i class="fa fa-trash"></i></button>
                 <button type="button" class="timetable-modal-cancel">{{ __('timeTable.button_modal_close') }}</button>
                 <button type="submit" class="timetable-modal-submit">{{__('timeTable.button_modal_save')}}</button>
             </div>
