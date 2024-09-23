@@ -28,6 +28,9 @@
   color: #334155;
   height: 28px;
 }
+.time-table-container .flex-container button:hover {
+    background-color: #f9f9f9;
+}
 .time-table-container .flex-container i {
   color: #cbd5e1;
 }
