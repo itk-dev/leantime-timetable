@@ -207,6 +207,11 @@ input::-webkit-inner-spin-button {
   background-color: red;
   color: #fff;
   font-size: 12px;
+  width: 45px;
+}
+.edit-time-log-form .timetable-modal-delete.deleting > i {
+  animation: spin 1.2s linear infinite;
+  font-size: 13px;
 }
 .edit-time-log-form input {
   width: 100%;

@@ -466,7 +466,9 @@ jQuery(document).ready(function ($) {
 
     deleteTimeEntry() {
       const timesheetId = this.modalInputTimesheetId.val();
-      $(this.modalDeleteButton).text($(this.modalDeleteButton).data("loading"));
+      $(this.modalDeleteButton)
+        .html('<i class="fa-solid fa-arrows-rotate"></i>')
+        .addClass("deleting");
       fetch(window.location.href, {
         method: "POST",
         headers: {
