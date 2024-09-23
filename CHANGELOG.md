@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+* [PR-17](https://github.com/ITK-Leantime/leantime-timetable/pull/17)
+  * Added delete button to timelog modal
+  * Enable change date when editing time log
+
 * [PR-16](https://github.com/ITK-Leantime/leantime-timetable/pull/16)
   * Assets are now versioned with query strings to [cache bust](https://www.keycdn.com/support/what-is-cache-busting#1-file-name-versioning)
   * Better preset values when logging time
