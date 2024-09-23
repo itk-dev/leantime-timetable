@@ -39,7 +39,8 @@
                                     $classes = trim("$weekendClass $todayClass");
                                 @endphp
                                 <th @if($classes) class="{{ $classes }}" @endif>
-                                    {{ $weekDate->format('d. D') }}
+                                   <small>{{ $weekDate->format('d/n') }}</small>
+                                    <span>{{ $weekDate->format('D') }}</span>
                                 </th>
                             @endforeach
                             <th scope="col">Total</th> <!-- Total Column Header -->
@@ -54,12 +55,14 @@
                                 <td class="ticket-title" scope="row"><a href="{{$timesheet['ticketLink']}}">{{ $timesheet['ticketTitle']  }}</a> <span>{{$timesheet['projectName']}}</span></td>
                                     <?php $rowTotal = 0; ?> <!-- initializing row total -->
                                 @foreach ($weekDates as $weekDate)
+
                                         <?php
                                         $weekDateAccessor = isset($weekDate) ? $weekDate->format('Y-m-d') : null;
                                         $timesheetDate = isset($timesheet) ? $timesheet[$weekDateAccessor] : null;
                                         $id = $timesheetDate[0]['id'] ?? null;
                                         $hours = $timesheetDate[0]['hours'] ?? null;
                                         $description = $timesheetDate[0]['description'] ?? null;
+                                        $isMissingDescription = isset($hours) && trim($description) === '';
 
                                         // accumulate hours
                                         if ($hours) {
@@ -74,21 +77,17 @@
                                         $weekendClass = (isset($weekDate) && $weekDate->isWeekend()) ? 'weekend' : '';
                                         $todayClass = (isset($weekDate) && $weekDate->isToday()) ? 'today' : '';
                                         ?>
-
                                     <td
                                         scope="row"
-                                        class="timetable-edit-entry {{$weekendClass}} {{$todayClass}}"
+                                        class="timetable-edit-entry {{$weekendClass}} {{$todayClass}} {{ $isMissingDescription ? 'description-missing' : ''}}"
                                         data-id="{{$id}}"
                                         data-ticketid="{{ $ticketId }}"
                                         data-hours="{{ $hours }}"
                                         data-description="{{ $description }}"
                                         data-date="{{$weekDate->format('Y-m-d')}}"
-                                        title="{{ isset($hours) && trim($description) === '' ? __("timeTable.description_missing") : '' }}"
+                                        title="{{ $isMissingDescription ? __("timeTable.description_missing") : '' }}"
                                     >
                                         <span>{{ $hours }}</span>
-                                        @if (isset($hours) && trim($description) === '')
-                                            <span  class="fa fa-circle-exclamation"></span>
-                                        @endif
                                     </td>
                                 @endforeach
                                 <td>{{$rowTotal}}</td> <!-- Row Total Column -->

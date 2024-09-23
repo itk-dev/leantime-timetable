@@ -12,12 +12,7 @@
 .time-table-container > h1 {
   margin-bottom: 30px;
 }
-.time-table-container .fa-circle-exclamation {
-  position: absolute;
-  color: #ffc107;
-  right: 5px;
-  top: 5px;
-}
+
 .time-table-container .flex-container {
   justify-content: space-between;
   width: 100%;
@@ -108,6 +103,18 @@ input::-webkit-inner-spin-button {
 }
 .time-table-container .table .timetable-edit-entry {
   cursor: pointer;
+  position: relative;
+}
+.time-table-container .table .timetable-edit-entry.description-missing:after {
+  content: "";
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-left: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-top: 10px solid #ff9459;
 }
 .time-table-container .table .timetable-edit-entry:hover {
   background-color: #f9f9f9;
