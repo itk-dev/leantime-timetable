@@ -75,10 +75,19 @@
                                         $todayClass = (isset($weekDate) && $weekDate->isToday()) ? 'today' : '';
                                         ?>
 
-                                    <td scope="row" class="timetable-edit-entry {{$weekendClass}} {{$todayClass}}" data-id="{{$id}}" data-ticketid="{{ $ticketId }}" data-hours="{{ $hours }}" data-description="{{ $description }}" data-date="{{$weekDate->format('Y-m-d')}}" title="{{ $description }}">
+                                    <td
+                                        scope="row"
+                                        class="timetable-edit-entry {{$weekendClass}} {{$todayClass}}"
+                                        data-id="{{$id}}"
+                                        data-ticketid="{{ $ticketId }}"
+                                        data-hours="{{ $hours }}"
+                                        data-description="{{ $description }}"
+                                        data-date="{{$weekDate->format('Y-m-d')}}"
+                                        title="{{ isset($hours) && trim($description) === '' ? __("timeTable.description_missing") : '' }}"
+                                    >
                                         <span>{{ $hours }}</span>
-                                        @if (isset($hours) && $description === '')
-                                            <span class="fa fa-circle-exclamation"></span>
+                                        @if (isset($hours) && trim($description) === '')
+                                            <span  class="fa fa-circle-exclamation"></span>
                                         @endif
                                     </td>
                                 @endforeach
