@@ -282,9 +282,9 @@ jQuery(document).ready(function ($) {
 
       let results = [];
 
-        // Checks if `obj`'s `text` or `id` contains `lowerCaseQuery` and not already added to timetable.
+      // Checks if `obj`'s `text` or `id` contains `lowerCaseQuery` and not already added to timetable.
 
-        if (
+      if (
         "text" in obj &&
         typeof text === "string" &&
         (text.toLowerCase().includes(lowerCaseQuery) ||
