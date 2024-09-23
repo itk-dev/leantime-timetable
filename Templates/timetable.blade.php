@@ -139,9 +139,9 @@
 
             {{-- Save or cancel buttons --}}
             <div class="buttons">
-                <button type="button" class="timetable-modal-delete btn btn-danger" data-loading="{{ __('timeTable.button_modal_deleting') }}">{{ __('timeTable.button_modal_delete') }}</button>
-                <button type="button" class="timetable-modal-cancel btn btn-default">{{ __('timeTable.button_modal_close') }}</button>
-                <button type="submit" class="timetable-modal-submit btn btn-primary">{{__('timeTable.button_modal_save')}}</button>
+                <button type="button" class="timetable-modal-delete" data-loading="{{ __('timeTable.button_modal_deleting') }}">{{ __('timeTable.button_modal_delete') }}</button>
+                <button type="button" class="timetable-modal-cancel">{{ __('timeTable.button_modal_close') }}</button>
+                <button type="submit" class="timetable-modal-submit">{{__('timeTable.button_modal_save')}}</button>
             </div>
         </form>
         <div class="timetable-sync-panel">
