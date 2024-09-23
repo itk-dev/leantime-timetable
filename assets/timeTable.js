@@ -204,12 +204,10 @@ jQuery(document).ready(function ($) {
       let currentWeekNumber = new Date().getWeek();
       let viewWeekNumber = parseInt(this.currentViewWeek, 10);
 
-      const dateToSet =
+      this.modalInputDate[0].valueAsDate =
         currentWeekNumber === viewWeekNumber
-          ? new Date().toISOString().split("T")[0]
-          : this.currentViewFirstDay;
-
-      this.modalInputDate.val(dateToSet);
+          ? new Date()
+          : new Date(this.currentViewFirstDay);
 
       // Init ticket search
       this.modalInputTicketName.removeAttr("disabled");
