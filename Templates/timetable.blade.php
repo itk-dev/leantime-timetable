@@ -39,7 +39,8 @@
                                     $classes = trim("$weekendClass $todayClass");
                                 @endphp
                                 <th @if($classes) class="{{ $classes }}" @endif>
-                                    {{ $weekDate->format('d. D') }}
+                                   <small>{{ $weekDate->format('d/n') }}</small>
+                                    <span>{{ $weekDate->format('D') }}</span>
                                 </th>
                             @endforeach
                             <th scope="col">Total</th> <!-- Total Column Header -->
@@ -54,12 +55,14 @@
                                 <td class="ticket-title" scope="row"><a href="{{$timesheet['ticketLink']}}">{{ $timesheet['ticketTitle']  }}</a> <span>{{$timesheet['projectName']}}</span></td>
                                     <?php $rowTotal = 0; ?> <!-- initializing row total -->
                                 @foreach ($weekDates as $weekDate)
+
                                         <?php
                                         $weekDateAccessor = isset($weekDate) ? $weekDate->format('Y-m-d') : null;
                                         $timesheetDate = isset($timesheet) ? $timesheet[$weekDateAccessor] : null;
                                         $id = $timesheetDate[0]['id'] ?? null;
                                         $hours = $timesheetDate[0]['hours'] ?? null;
                                         $description = $timesheetDate[0]['description'] ?? null;
+                                        $isMissingDescription = isset($hours) && trim($description) === '';
 
                                         // accumulate hours
                                         if ($hours) {
@@ -74,12 +77,17 @@
                                         $weekendClass = (isset($weekDate) && $weekDate->isWeekend()) ? 'weekend' : '';
                                         $todayClass = (isset($weekDate) && $weekDate->isToday()) ? 'today' : '';
                                         ?>
-
-                                    <td scope="row" class="timetable-edit-entry {{$weekendClass}} {{$todayClass}}" data-id="{{$id}}" data-ticketid="{{ $ticketId }}" data-hours="{{ $hours }}" data-description="{{ $description }}" data-date="{{$weekDate->format('Y-m-d')}}" title="{{ $description }}">
+                                    <td
+                                        scope="row"
+                                        class="timetable-edit-entry {{$weekendClass}} {{$todayClass}} {{ $isMissingDescription ? 'description-missing' : ''}}"
+                                        data-id="{{$id}}"
+                                        data-ticketid="{{ $ticketId }}"
+                                        data-hours="{{ $hours }}"
+                                        data-description="{{ $description }}"
+                                        data-date="{{$weekDate->format('Y-m-d')}}"
+                                        title="{{ $isMissingDescription ? __("timeTable.description_missing") : '' }}"
+                                    >
                                         <span>{{ $hours }}</span>
-                                        @if (isset($hours) && $description === '')
-                                            <span class="fa fa-circle-exclamation"></span>
-                                        @endif
                                     </td>
                                 @endforeach
                                 <td>{{$rowTotal}}</td> <!-- Row Total Column -->
@@ -115,23 +123,23 @@
             <input type="hidden" name="timesheet-id" />
             <input type="hidden" name="timesheet-offset" />
 
-            {{-- todo obviously this wont do... --}}
             <input type="date" name="timesheet-date">
 
             {{-- copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.css and timeTable.js --}}
             <div class="timetable-ticket-search">
-                <input class="timetable-ticket-input" type="text" data-placeholder="Search tickets.." data-loading="Filtering tickets.." placeholder="Search todo.." />
+                <input class="timetable-ticket-input" type="text" data-placeholder="{{ __("timeTable.search_tickets") }}" data-loading="{{ __("timeTable.filtering_tickets") }}" placeholder="{{ __("timeTable.search_tickets") }}" />
                 <div class="timetable-ticket-results"></div>
             </div>
 
             {{-- Hours input --}}
-            <input type="number" name="timesheet-hours" step="0.01" placeholder="Timer" required />
+            <input type="number" name="timesheet-hours" step="0.01" placeholder="{{__('timeTable.hours')}}" required />
 
             {{-- Description input --}}
-            <textarea type="text" id="modal-description" name="timesheet-description" placeholder="Beskrivelse" required></textarea>
+            <textarea type="text" id="modal-description" name="timesheet-description" placeholder="{{__("timeTable.description")}}" required></textarea>
 
             {{-- Save or cancel buttons --}}
             <div class="buttons">
+                <button type="button" class="timetable-modal-delete" data-loading="{{ __('timeTable.button_modal_deleting') }}"> <i class="fa fa-trash"></i></button>
                 <button type="button" class="timetable-modal-cancel">{{ __('timeTable.button_modal_close') }}</button>
                 <button type="submit" class="timetable-modal-submit">{{__('timeTable.button_modal_save')}}</button>
             </div>

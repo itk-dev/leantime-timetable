@@ -12,12 +12,7 @@
 .time-table-container > h1 {
   margin-bottom: 30px;
 }
-.time-table-container .fa-circle-exclamation {
-  position: absolute;
-  color: #ffc107;
-  right: 5px;
-  top: 5px;
-}
+
 .time-table-container .flex-container {
   justify-content: space-between;
   width: 100%;
@@ -32,6 +27,9 @@
   border: 1px solid #cbd5e1;
   color: #334155;
   height: 28px;
+}
+.time-table-container .flex-container button:hover {
+  background-color: #f9f9f9;
 }
 .time-table-container .flex-container i {
   color: #cbd5e1;
@@ -108,6 +106,18 @@ input::-webkit-inner-spin-button {
 }
 .time-table-container .table .timetable-edit-entry {
   cursor: pointer;
+  position: relative;
+}
+.time-table-container .table .timetable-edit-entry.description-missing:after {
+  content: "";
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-left: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-top: 10px solid #ff9459;
 }
 .time-table-container .table .timetable-edit-entry:hover {
   background-color: #f9f9f9;
@@ -190,6 +200,19 @@ input::-webkit-inner-spin-button {
 .edit-time-log-form .timetable-close-modal span {
   margin: auto;
 }
+.edit-time-log-form .timetable-modal-delete {
+  margin-right: auto;
+  border: 1px solid #cbd5e1;
+  padding: 0 15px;
+  background-color: red;
+  color: #fff;
+  font-size: 12px;
+  width: 45px;
+}
+.edit-time-log-form .timetable-modal-delete.deleting > i {
+  animation: spin 1.2s linear infinite;
+  font-size: 13px;
+}
 .edit-time-log-form input {
   width: 100%;
   border-radius: 3px;
@@ -198,19 +221,21 @@ input::-webkit-inner-spin-button {
   display: flex;
   justify-content: end;
 }
+.edit-time-log-form .buttons button {
+  border-radius: 3px !important;
+}
+.edit-time-log-form .buttons button:hover {
+  filter: brightness(0.95);
+}
 .edit-time-log-form .timetable-modal-submit {
-  border-radius: 3px;
-  border: none;
   color: white;
-  background: #4f46e5;
-  border: 1px solid #4f46e5;
+  border: 1px solid #cbd5e1;
   height: 28px;
   padding: 0 15px;
   margin: 0;
   font-weight: 400;
 }
 .edit-time-log-form .timetable-modal-cancel {
-  border-radius: 3px;
   background: white;
   border: 1px solid #cbd5e1;
   color: #334155;

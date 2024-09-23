@@ -5,10 +5,10 @@ jQuery(document).ready(function ($) {
     constructor() {
       this.activeTicketIds = new Set(
         $('input[name="timetable-ticket-ids"]').val().split(","),
-        (this.viewCurrentWeek = $(
+        (this.currentViewWeek = $(
           "input[name='timetable-current-week']",
         ).val()),
-        (this.viewFirstDay = $(
+        (this.currentViewFirstDay = $(
           "input[name='timetable-current-week-first-day']",
         ).val()),
       );
@@ -48,6 +48,9 @@ jQuery(document).ready(function ($) {
       );
 
       this.modalCloseButton = this.timeEditModal.find(".timetable-close-modal");
+      this.modalDeleteButton = this.timeEditModal.find(
+        ".timetable-modal-delete",
+      );
       this.modalCancelButton = this.timeEditModal.find(
         ".timetable-modal-cancel",
       );
@@ -146,9 +149,15 @@ jQuery(document).ready(function ($) {
       $("#modal-form").on("submit", (e) => {
         this.modalSubmitButton.attr("disabled", "disabled");
       });
+
+      // Delete timeentry
+      this.modalDeleteButton.click(() => this.deleteTimeEntry());
     }
 
     getActiveTicketsOfWeek(dateString) {
+      if (this.modalInputTimesheetId.val()) {
+        return false;
+      }
       let selectedDateTimestamp = new Date(dateString).getTime();
       let day = new Date(dateString).getDay();
 
@@ -193,18 +202,17 @@ jQuery(document).ready(function ($) {
 
       // Set date today
       let currentWeekNumber = new Date().getWeek();
-      let viewWeekNumber = parseInt(this.viewCurrentWeek, 10);
+      let viewWeekNumber = parseInt(this.currentViewWeek, 10);
 
-      let dateToSet =
+      this.modalInputDate[0].valueAsDate =
         currentWeekNumber === viewWeekNumber
-          ? new Date().toISOString().split("T")[0]
-          : this.viewFirstDay;
-
-      this.modalInputDate.val(dateToSet);
+          ? new Date()
+          : new Date(this.currentViewFirstDay);
 
       // Init ticket search
       this.modalInputTicketName.removeAttr("disabled");
       this.modalTicketInput.focus().keyup((e) => this.filterFunction(e));
+      this.modalDeleteButton.hide();
 
       // Ticket result click event
       let context = this;
@@ -266,17 +274,19 @@ jQuery(document).ready(function ($) {
      * @return {Object} results
      */
     ticketSearch(obj, query) {
-      const { text, children } = obj;
+      const { id, text, children } = obj;
 
       const lowerCaseQuery = query.toLowerCase();
 
       let results = [];
 
-      // Checks if `obj`'s `text` contains `lowerCaseQuery` and not already added to timetable.
+      // Checks if `obj`'s `text` or `id` contains `lowerCaseQuery` and not already added to timetable.
+
       if (
         "text" in obj &&
         typeof text === "string" &&
-        text.toLowerCase().includes(lowerCaseQuery) &&
+        (text.toLowerCase().includes(lowerCaseQuery) ||
+          (id && id.toString().toLowerCase().includes(lowerCaseQuery))) &&
         !this.activeTicketIds.has(String(obj.id)) &&
         !this.activeTicketIds.has(Number(obj.id))
       ) {
@@ -334,12 +344,18 @@ jQuery(document).ready(function ($) {
       this.populateLastUpdated();
       this.openEditTimeLogModal();
 
+      if (id) {
+        this.modalDeleteButton.show();
+      } else {
+        this.modalDeleteButton.hide();
+      }
+
       this.modalInputTimesheetId.val(id);
       this.modalInputTicketId.val(ticket.id);
       this.modalInputTicketName.val(ticket.text).attr("disabled", "disabled");
       this.modalInputHours.val(hours);
       this.modalTextareaDescription.val(description);
-      this.modalInputDate.val(date).attr("disabled", "disabled");
+      this.modalInputDate.val(date);
 
       this.modalInputHours.focus();
     }
@@ -446,6 +462,32 @@ jQuery(document).ready(function ($) {
         .children("div")
         .last()
         .html(ticketsLastUpdatedElement);
+    }
+
+    deleteTimeEntry() {
+      const timesheetId = this.modalInputTimesheetId.val();
+      $(this.modalDeleteButton)
+        .html('<i class="fa-solid fa-arrows-rotate"></i>')
+        .addClass("deleting");
+      fetch(window.location.href, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "delete",
+          timesheetId: timesheetId,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "success") {
+            window.location.reload();
+          } else {
+            alert("An error has occurred");
+          }
+        });
+      console.log(timesheetId);
     }
 
     /**
