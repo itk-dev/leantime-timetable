@@ -120,7 +120,7 @@
 
             {{-- copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.css and timeTable.js --}}
             <div class="timetable-ticket-search">
-                <input class="timetable-ticket-input" type="text" data-placeholder="Search tickets.." data-loading="Filtering tickets.." placeholder="Search todo.." />
+                <input class="timetable-ticket-input" type="text" data-placeholder="Search tickets.." data-loading="Filtering already logged tickets.." placeholder="Search todo.." />
                 <div class="timetable-ticket-results"></div>
             </div>
 
@@ -132,8 +132,9 @@
 
             {{-- Save or cancel buttons --}}
             <div class="buttons">
-                <button type="button" class="timetable-modal-cancel">{{ __('timeTable.button_modal_close') }}</button>
-                <button type="submit" class="timetable-modal-submit">{{__('timeTable.button_modal_save')}}</button>
+                <button type="button" class="timetable-modal-delete btn btn-danger" data-loading="{{ __('timeTable.button_modal_deleting') }}">{{ __('timeTable.button_modal_delete') }}</button>
+                <button type="button" class="timetable-modal-cancel btn btn-default">{{ __('timeTable.button_modal_close') }}</button>
+                <button type="submit" class="timetable-modal-submit btn btn-primary">{{__('timeTable.button_modal_save')}}</button>
             </div>
         </form>
         <div class="timetable-sync-panel">
