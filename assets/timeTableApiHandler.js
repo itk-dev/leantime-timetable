@@ -76,42 +76,41 @@ export default class TimeTableApiHandler {
       });
   }
 
+  /**
+   * Retrieves a specific ticket data from cache or fetches it from the server.
+   *
+   * @param {number} ticketId The ID of the ticket to fetch.
+   * @returns {Promise<Object>} An object of ticket data.
+   */
+  static async fetchTicketDatum(ticketId) {
+    let ticketPromise;
+    let ticketCacheData = this.getCacheData("tickets");
+    ticketPromise = this.getTicket(ticketId).then((ticket) => {
+      ticket = ticket.result;
+      const ticketData = {
+        isDone: ticket.status === 0,
+        id: ticket.id,
+        text: ticket.headline,
+        type: ticket.type,
+        tags: ticket.tags,
+        sprintName: ticket.sprintName,
+        projectId: ticket.projectId,
+        projectName: ticket.projectName,
+      };
+      ticketCacheData["children"].push(ticketData);
+      this.writeToCache("tickets", {
+        data: ticketCacheData,
+        expiration: Date.now(),
+      });
 
-    /**
-     * Retrieves a specific ticket data from cache or fetches it from the server.
-     *
-     * @param {number} ticketId The ID of the ticket to fetch.
-     * @returns {Promise<Object>} An object of ticket data.
-     */
-    static async fetchTicketDatum(ticketId) {
-        let ticketPromise;
-        let ticketCacheData = this.getCacheData('tickets');
-        ticketPromise = this.getTicket(ticketId).then((ticket) => {
-            ticket = ticket.result;
-            const ticketData = {
-                isDone: ticket.status === 0,
-                id: ticket.id,
-                text: ticket.headline,
-                type: ticket.type,
-                tags: ticket.tags,
-                sprintName: ticket.sprintName,
-                projectId: ticket.projectId,
-                projectName: ticket.projectName,
-            };
-            ticketCacheData['children'].push(ticketData);
-            this.writeToCache("tickets", {
-                data: ticketCacheData,
-                expiration: Date.now(),
-            });
+      return ticketData;
+    });
 
-            return ticketData;
-        });
-
-        const result = await Promise.allSettled([ticketPromise]);
-        return result
-            .filter((result) => result.status === "fulfilled")
-            .map((result) => result.value)[0];
-    }
+    const result = await Promise.allSettled([ticketPromise]);
+    return result
+      .filter((result) => result.status === "fulfilled")
+      .map((result) => result.value)[0];
+  }
 
   static getActiveTicketIdsOfPeriod(startDate, endDate) {
     const dateString1 = startDate.toISOString(); // convert to string
@@ -201,9 +200,9 @@ export default class TimeTableApiHandler {
     return this.callApi("leantime.rpc.tickets.getAll", {});
   }
 
-    static getTicket(id) {
-        return this.callApi("leantime.rpc.tickets.getTicket", {'id': id});
-    }
+  static getTicket(id) {
+    return this.callApi("leantime.rpc.tickets.getTicket", { id: id });
+  }
 
   /**
    * Sends a JSON-RPC POST request to the specified API endpoint.

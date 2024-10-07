@@ -337,14 +337,14 @@ jQuery(document).ready(function ($) {
         parseInt(ticketId),
       );
 
-        if (!ticket) {
-            this.openEditTimeSyncModal();
-            TimeTableApiHandler.fetchTicketDatum(ticketId).then((availableTags) => {
-                this.closeEditTimeSyncModal();
-                this.editTimeEntry(id, ticketId, hours, description, date, offset);
-            });
-            return false;
-        }
+      if (!ticket) {
+        this.openEditTimeSyncModal();
+        TimeTableApiHandler.fetchTicketDatum(ticketId).then((availableTags) => {
+          this.closeEditTimeSyncModal();
+          this.editTimeEntry(id, ticketId, hours, description, date, offset);
+        });
+        return false;
+      }
 
       this.populateLastUpdated();
       this.openEditTimeLogModal();
@@ -512,16 +512,16 @@ jQuery(document).ready(function ($) {
      * @returns {void}
      */
     openEditTimeLogModal() {
-      $(this.timeEditModal).show().css('display', 'flex');
+      $(this.timeEditModal).show().css("display", "flex");
       $(document).on("mousedown", this.boundClickOutsideModalHandler);
     }
 
     openEditTimeSyncModal() {
-        $(this.timeEditSyncModal).show().css('display', 'flex');
+      $(this.timeEditSyncModal).show().css("display", "flex");
     }
 
     closeEditTimeSyncModal() {
-        $(this.timeEditSyncModal).hide();
+      $(this.timeEditSyncModal).hide();
     }
 
     /**
