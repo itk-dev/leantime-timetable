@@ -4,6 +4,9 @@
 
 ## [1.1.0] - 2024-09-23
 
+* [PR-20](https://github.com/ITK-Leantime/leantime-timetable/pull/20)
+  * Sync missing ticket on open
+
 * [PR-17](https://github.com/ITK-Leantime/leantime-timetable/pull/17)
   * Added delete button to timelog modal
   * Enable change date when editing time log
