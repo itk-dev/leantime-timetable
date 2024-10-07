@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+* [PR-19](https://github.com/ITK-Leantime/leantime-timetable/pull/19)
+  Update css and finetune design
+
 ## [1.1.0] - 2024-09-23
 
 * [PR-17](https://github.com/ITK-Leantime/leantime-timetable/pull/17)
