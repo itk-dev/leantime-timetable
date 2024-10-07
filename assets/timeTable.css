@@ -222,7 +222,6 @@
             opacity: 0;
         }
 
-
         &:hover {
             position: relative;
             background-color: var(--itk-color-success-100);
@@ -240,15 +239,14 @@
                 left: calc(50% - 5px);
                 color: var(--itk-color-success);
                 opacity: 0.8;
-                transition: opacity: ; var(--transition-time)
+                transition: opacity var(--transition-time)
                     var(--transition-easing);
             }
 
             &:not([data-hours=""]) {
                 &:after {
-                    content: '✎';
+                    content: "✎";
                 }
-
             }
         }
     }
