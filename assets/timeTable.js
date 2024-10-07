@@ -25,6 +25,7 @@ jQuery(document).ready(function ($) {
       // Modal selectors
       this.timeEditModal = $("#edit-time-log-modal");
       this.timeEditForm = this.timeEditModal.find(".edit-time-log-form");
+      this.timeEditSyncModal = $("#edit-time-sync-modal");
       this.modalInputTimesheetId = this.timeEditModal.find(
         'input[name="timesheet-id"]',
       );
@@ -336,10 +337,14 @@ jQuery(document).ready(function ($) {
         parseInt(ticketId),
       );
 
-      if (!ticket) {
-        alert("ticket id not found!");
-        return false;
-      }
+        if (!ticket) {
+            this.openEditTimeSyncModal();
+            TimeTableApiHandler.fetchTicketDatum(ticketId).then((availableTags) => {
+                this.closeEditTimeSyncModal();
+                this.editTimeEntry(id, ticketId, hours, description, date, offset);
+            });
+            return false;
+        }
 
       this.populateLastUpdated();
       this.openEditTimeLogModal();
@@ -507,8 +512,16 @@ jQuery(document).ready(function ($) {
      * @returns {void}
      */
     openEditTimeLogModal() {
-      $(this.timeEditModal).show();
+      $(this.timeEditModal).show().css('display', 'flex');
       $(document).on("mousedown", this.boundClickOutsideModalHandler);
+    }
+
+    openEditTimeSyncModal() {
+        $(this.timeEditSyncModal).show().css('display', 'flex');
+    }
+
+    closeEditTimeSyncModal() {
+        $(this.timeEditSyncModal).hide();
     }
 
     /**
