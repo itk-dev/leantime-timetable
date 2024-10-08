@@ -177,14 +177,16 @@ input::-webkit-inner-spin-button {
 
 .edit-time-sync-modal > div {
   margin: auto;
-  height: 50px;
-  width: 50px;
   display: flex;
+  flex-direction: column;
 }
 .edit-time-sync-modal > div > span {
   margin: auto;
   color: #fff;
   font-size: 18px;
+}
+.edit-time-sync-modal > div > span:last-child {
+    margin-top: 10px;
 }
 
 /* Modal Content/Box */
