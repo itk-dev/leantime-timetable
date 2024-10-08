@@ -79,6 +79,7 @@ jQuery(document).ready(function ($) {
         this.isFetching = false;
         this.populateLastUpdated();
       });
+        this.openEditTimeSyncModal();
     }
 
     /**
