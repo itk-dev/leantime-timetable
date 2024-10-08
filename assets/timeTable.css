@@ -181,7 +181,7 @@
     border: 1px solid var(--itk-border-color);
     padding: var(--itk-spacing-md);
 
-    &:last-child {
+    &:last-child&:not([colspan="9"]) {
       color: var(--itk-color-gray-500);
       background-color: var(--itk-color-gray-100);
     }
@@ -206,7 +206,7 @@
       user-select: none;
     }
 
-    .description-missing:after {
+    &.description-missing:after {
       content: "";
       width: 0;
       height: 0;
@@ -218,7 +218,7 @@
       border-top: 10px solid var(--itk-color-danger);
     }
 
-    &:after {
+    &:before {
       opacity: 0;
     }
 
@@ -229,7 +229,7 @@
       transition: background-color var(--transition-time)
         var(--transition-easing);
 
-      &:after {
+      &:before {
         content: "+";
         position: absolute;
         display: block;
@@ -243,7 +243,7 @@
       }
 
       &:not([data-hours=""]) {
-        &:after {
+        &:before {
           content: "✎";
         }
       }
@@ -346,24 +346,42 @@
     right: 28px;
   }
 
+  .edit-time-log-form {
+    .description-wrapper {
+      position: relative;
+
+      &:after {
+        content: "";
+        width: 0;
+        height: 0;
+        position: absolute;
+        top: 0;
+        right: 0;
+        border-left: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-top: 10px solid var(--itk-border-color);
+      }
+
+      &:focus-within {
+        &:after {
+          border-top: 10px solid var(--itk-color-black);
+        }
+      }
+
+      &:has(textarea:invalid) {
+        &:after {
+          border-top: 10px solid var(--itk-color-danger);
+        }
+      }
+    }
+  }
+
   .edit-time-log-form #modal-description {
     position: relative;
     width: 100%;
     resize: none;
     height: 85px;
     border-radius: 0;
-
-    &:after {
-      content: "";
-      width: 0;
-      height: 0;
-      position: absolute;
-      top: 0;
-      right: 0;
-      border-left: 10px solid transparent;
-      border-bottom: 10px solid transparent;
-      border-top: 10px solid var(--itk-color-danger);
-    }
   }
   .edit-time-log-form input:disabled {
     opacity: 0.6;

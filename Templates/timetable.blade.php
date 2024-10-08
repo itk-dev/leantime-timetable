@@ -170,7 +170,9 @@
             <input type="number" name="timesheet-hours" step="0.01" placeholder="{{__('timeTable.hours')}}" required />
 
             {{-- Description input --}}
-            <textarea type="text" id="modal-description" name="timesheet-description" placeholder="{{__("timeTable.description")}}" required></textarea>
+            <div class="description-wrapper">
+                <textarea type="text" id="modal-description" name="timesheet-description" placeholder="{{__("timeTable.description")}}" required></textarea>
+            </div>
 
             {{-- Save or cancel buttons --}}
             <div class="buttons flex-container gap-3">
