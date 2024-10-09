@@ -16,6 +16,7 @@ jQuery(document).ready(function ($) {
       // General selectors
       this.prevWeekButton = $("button.timetable-week-prev");
       this.nextWeekButton = $("button.timetable-week-next");
+      this.todayButton = $("button.timetable-to-today");
       this.searchInput = $("input.timetable-search");
       this.newEntryButton = $("button.timetable-new-entry");
       this.editEntryCell = $("td.timetable-edit-entry");
@@ -152,6 +153,16 @@ jQuery(document).ready(function ($) {
 
       // Delete timeentry
       this.modalDeleteButton.click(() => this.deleteTimeEntry());
+
+      // Return to current week.
+      this.todayButton.click(() => {
+          let params = new URLSearchParams(document.location.search);
+          let offset = params.get("offset");
+          if (offset) {
+              let oppositeOffset = offset * -1;
+              this.changeWeek(oppositeOffset);
+          }
+      });
     }
 
     getActiveTicketsOfWeek(dateString) {
