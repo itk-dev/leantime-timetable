@@ -159,7 +159,7 @@ jQuery(document).ready(function ($) {
         let params = new URLSearchParams(document.location.search);
         let offset = params.get("offset");
         if (offset) {
-          let oppositeOffset = offset * -1;
+          const oppositeOffset = offset * -1;
           this.changeWeek(oppositeOffset);
         }
       });
