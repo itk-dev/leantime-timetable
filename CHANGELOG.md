@@ -2,8 +2,10 @@
 
 ## [Unreleased]
 
+* [PR-21](https://github.com/ITK-Leantime/leantime-timetable/pull/21)
+  * Add functionality and translation to button provided in #19
 * [PR-19](https://github.com/ITK-Leantime/leantime-timetable/pull/19)
-  Update css and finetune design
+  * Update css and finetune design
 
 ## [1.1.0] - 2024-09-23
 
