@@ -157,7 +157,7 @@ jQuery(document).ready(function ($) {
       // Return to current week.
       this.todayButton.click(() => {
         const params = new URLSearchParams(document.location.search);
-        let offset = params.get("offset");
+        const offset = params.get("offset");
         if (offset) {
           const oppositeOffset = offset * -1;
           this.changeWeek(oppositeOffset);
