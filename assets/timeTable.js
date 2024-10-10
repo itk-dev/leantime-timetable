@@ -156,12 +156,12 @@ jQuery(document).ready(function ($) {
 
       // Return to current week.
       this.todayButton.click(() => {
-          let params = new URLSearchParams(document.location.search);
-          let offset = params.get("offset");
-          if (offset) {
-              let oppositeOffset = offset * -1;
-              this.changeWeek(oppositeOffset);
-          }
+        let params = new URLSearchParams(document.location.search);
+        let offset = params.get("offset");
+        if (offset) {
+          let oppositeOffset = offset * -1;
+          this.changeWeek(oppositeOffset);
+        }
       });
     }
 
