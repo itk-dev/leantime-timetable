@@ -170,8 +170,23 @@ input::-webkit-inner-spin-button {
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
-.edit-time-log-modal {
+.edit-time-log-modal,
+.edit-time-sync-modal {
   display: none;
+}
+
+.edit-time-sync-modal > div {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+.edit-time-sync-modal > div > span {
+  margin: auto;
+  color: #fff;
+  font-size: 18px;
+}
+.edit-time-sync-modal > div > span:last-child {
+  margin-top: 10px;
 }
 
 /* Modal Content/Box */
@@ -180,7 +195,7 @@ input::-webkit-inner-spin-button {
   height: 300px;
   flex-direction: column;
   background-color: #fefefe;
-  margin: 15% auto;
+  margin: auto;
   padding: 30px 20px 20px 20px;
   border: 1px solid #888;
   width: 25vw; /* Could be more or less, depending on screen size */
