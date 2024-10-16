@@ -185,4 +185,5 @@
             <div><button class="timetable-sync-tickets"><span><i class="fa-solid fa-arrows-rotate"></i>Sync data</span></button></div><div><span></span></div>
         </div>
     </div>
+    <div id="edit-time-sync-modal" class="nyroModalBg edit-time-sync-modal"><div><span><i class="fa-solid fa-spinner fa-2xl fa-spin"></i></span><span>{{__('timeTable.synchronizing')}}</span></div></div>
 @endsection

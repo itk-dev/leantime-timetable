@@ -293,18 +293,36 @@
     background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
   }
 
-  &.edit-time-log-modal {
+  &.edit-time-log-modal,
+  &.edit-time-sync-modal {
     display: none;
   }
+
+    .edit-time-sync-modal > div {
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    .edit-time-sync-modal > div > span {
+        margin: auto;
+        color: #fff;
+        font-size: 18px;
+    }
+    .edit-time-sync-modal > div > span:last-child {
+        margin-top: 10px;
+    }
 
   /* Modal Content/Box */
   .edit-time-log-form {
     display: flex;
+      height: 300px;
     flex-direction: column;
     background-color: var(--itk-color-gray-50);
     margin: 15% auto;
     padding: var(--itk-spacing-lg);
     width: clamp(25vw, 450px, 100%);
+      border: 1px solid #888;
+      min-width: 300px;
     border-radius: var(--itk-border-radius);
     position: relative;
 
@@ -345,6 +363,115 @@
     top: 28px;
     right: 28px;
   }
+    .edit-time-log-form .timetable-modal-delete {
+        margin-right: auto;
+        border: 1px solid #cbd5e1;
+        padding: 0 15px;
+        background-color: red;
+        color: #fff;
+        font-size: 12px;
+        width: 45px;
+    }
+
+    .edit-time-log-form .buttons {
+        display: flex;
+        justify-content: end;
+    }
+
+    .edit-time-log-form .buttons button {
+        border-radius: 3px !important;
+    }
+    .edit-time-log-form .buttons button:hover {
+        filter: brightness(0.95);
+    }
+.edit-time-sync-modal > div {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+.edit-time-sync-modal > div > span {
+  margin: auto;
+  color: #fff;
+  font-size: 18px;
+}
+.edit-time-sync-modal > div > span:last-child {
+  margin-top: 10px;
+}
+
+/* Modal Content/Box */
+.edit-time-log-form {
+  display: flex;
+  height: 300px;
+  flex-direction: column;
+  background-color: #fefefe;
+  margin: auto;
+  padding: 30px 20px 20px 20px;
+  border: 1px solid #888;
+  width: 25vw; /* Could be more or less, depending on screen size */
+  min-width: 300px;
+  border-radius: 3px;
+  position: relative;
+}
+.edit-time-log-form .timetable-close-modal {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  display: flex;
+}
+.edit-time-log-form .timetable-close-modal span {
+  margin: auto;
+}
+.edit-time-log-form .timetable-modal-delete {
+  margin-right: auto;
+  border: 1px solid #cbd5e1;
+  padding: 0 15px;
+  background-color: red;
+  color: #fff;
+  font-size: 12px;
+  width: 45px;
+}
+.edit-time-log-form .timetable-modal-delete.deleting > i {
+  animation: spin 1.2s linear infinite;
+  font-size: 13px;
+}
+.edit-time-log-form input {
+  width: 100%;
+  border-radius: 3px;
+}
+.edit-time-log-form .buttons {
+  display: flex;
+  justify-content: end;
+}
+.edit-time-log-form .buttons button {
+  border-radius: 3px !important;
+}
+.edit-time-log-form .buttons button:hover {
+  filter: brightness(0.95);
+}
+.edit-time-log-form .timetable-modal-submit {
+  color: white;
+  border: 1px solid #cbd5e1;
+  height: 28px;
+  padding: 0 15px;
+  margin: 0;
+  font-weight: 400;
+}
+.edit-time-log-form .timetable-modal-cancel {
+  background: white;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  height: 28px;
+  margin-right: 5px;
+  padding: 0 15px;
+}
+.edit-time-log-form .fa-clock {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+}
 
   .edit-time-log-form {
     .description-wrapper {
