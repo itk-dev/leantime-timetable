@@ -14,23 +14,31 @@
     <!-- page header -->
     <div class="maincontent">
         <div class="maincontentinner">
-            <div class="time-table-container">
+            <div class="timetable">
                 <input type="hidden" name="timetable-ticket-ids" value="{{$ticketIds}}" />
                 <input type="hidden" id="timetable-ticketCacheExpiration" name="timetable-ticket-cache" value="{{$ticketCacheExpiration}}" />
-                <div class="flex-container">
-                    <div>
-                        <button type="button" class="timetable-week-prev"><i class="fa fa-arrow-left"></i> {{ __('timeTable.button_prev_week') }}</button>
-                        <button type="button" class="timetable-week-next">{{ __('timeTable.button_next_week') }} <i class="fa fa-arrow-right"></i></button>
-                        <button class="timetable-new-entry" type="button">{{ __('timeTable.button_add_time_log') }} <i class="fa fa-plus"></i></button>
-                    </div>
+                <div class="flex-container gap-3 tools">
+                    <button type="button" class="timetable-week-prev btn btn-default"><i class="fa fa-arrow-left"></i> {{ __('timeTable.button_prev_week') }}</button>
+                    <button type="button" class="timetable-week-next btn btn-default">{{ __('timeTable.button_next_week') }} <i class="fa fa-arrow-right"></i></button>
+                    <!-- TODO: Translate button, and have it navigate to the current week/day -->
+                    <button type="button" class="timetable-to-today btn btn-default">{{ __('timeTable.button_to_today') }}</button>
+                    <button class="timetable-new-entry btn btn-primary ml-auto" type="button">{{ __('timeTable.button_add_time_log') }} <i class="fa fa-plus"></i></button>
                 </div>
                 <table id="timetable" class="table">
                     <thead>
                     <tr>
                         <th class="th-ticket-title" scope="col">{{ __('timeTable.title_table_header') }}</th>
                         @if (isset($weekDays, $weekDates))
-                            <input type="hidden" name="timetable-current-week-first-day" value="<?php echo isset($weekDates[0]) ? $weekDates[0]->format('Y-m-d') : ''; ?>" />
-                            <input type="hidden" name="timetable-current-week" value="<?php echo isset($weekDates[0]) ? $weekDates[0]->format('W') : ''; ?>" />
+                            <input type="hidden" name="timetable-current-week-first-day" value="<?php echo isset(
+                                $weekDates[0]
+                            )
+                                ? $weekDates[0]->format("Y-m-d")
+                                : ""; ?>" />
+                            <input type="hidden" name="timetable-current-week" value="<?php echo isset(
+                                $weekDates[0]
+                            )
+                                ? $weekDates[0]->format("W")
+                                : ""; ?>" />
                             @foreach ($weekDays as $key => $day)
                                 @php
                                     $weekDate = $weekDates[$key];
@@ -39,16 +47,16 @@
                                     $classes = trim("$weekendClass $todayClass");
                                 @endphp
                                 <th @if($classes) class="{{ $classes }}" @endif>
-                                   <small>{{ $weekDate->format('d/n') }}</small>
+                                <small>{{ $weekDate->format('d/n') }}</small>
                                     <span>{{ $weekDate->format('D') }}</span>
                                 </th>
                             @endforeach
-                            <th scope="col">Total</th> <!-- Total Column Header -->
+                            <th scope="col"><span>Total</span></th> <!-- Total Column Header -->
                         @endif
                     </tr>
                     </thead>
                     <tbody>
-                    <?php $totalHours = array(); ?>
+                    <?php $totalHours = []; ?>
                     @if (!empty($timesheetsByTicket))
                         @foreach ($timesheetsByTicket as $ticketId => $timesheet)
                             <tr>
@@ -57,25 +65,52 @@
                                 @foreach ($weekDates as $weekDate)
 
                                         <?php
-                                        $weekDateAccessor = isset($weekDate) ? $weekDate->format('Y-m-d') : null;
-                                        $timesheetDate = isset($timesheet) ? $timesheet[$weekDateAccessor] : null;
-                                        $id = $timesheetDate[0]['id'] ?? null;
-                                        $hours = $timesheetDate[0]['hours'] ?? null;
-                                        $description = $timesheetDate[0]['description'] ?? null;
-                                        $isMissingDescription = isset($hours) && trim($description) === '';
+                                        $weekDateAccessor = isset($weekDate)
+                                            ? $weekDate->format("Y-m-d")
+                                            : null;
+                                        $timesheetDate = isset($timesheet)
+                                            ? $timesheet[$weekDateAccessor]
+                                            : null;
+                                        $id = $timesheetDate[0]["id"] ?? null;
+                                        $hours =
+                                            $timesheetDate[0]["hours"] ?? null;
+                                        $description =
+                                            $timesheetDate[0]["description"] ??
+                                            null;
+                                        $isMissingDescription =
+                                            isset($hours) &&
+                                            trim($description) === "";
 
                                         // accumulate hours
                                         if ($hours) {
-                                            if (isset($totalHours[$weekDateAccessor])) {
-                                                $totalHours[$weekDateAccessor] += $hours;
+                                            if (
+                                                isset(
+                                                    $totalHours[
+                                                        $weekDateAccessor
+                                                    ]
+                                                )
+                                            ) {
+                                                $totalHours[
+                                                    $weekDateAccessor
+                                                ] += $hours;
                                             } else {
-                                                $totalHours[$weekDateAccessor] = $hours;
+                                                $totalHours[
+                                                    $weekDateAccessor
+                                                ] = $hours;
                                             }
                                             $rowTotal += $hours; // add to row total
                                         }
 
-                                        $weekendClass = (isset($weekDate) && $weekDate->isWeekend()) ? 'weekend' : '';
-                                        $todayClass = (isset($weekDate) && $weekDate->isToday()) ? 'today' : '';
+                                        $weekendClass =
+                                            isset($weekDate) &&
+                                            $weekDate->isWeekend()
+                                                ? "weekend"
+                                                : "";
+                                        $todayClass =
+                                            isset($weekDate) &&
+                                            $weekDate->isToday()
+                                                ? "today"
+                                                : "";
                                         ?>
                                     <td
                                         scope="row"
@@ -107,14 +142,14 @@
                     </tr>
                     </tbody>
                 </table>
-
+            </div>
+        </div>
     </div>
-        </div></div>
 
     {{-- Modal for editing work logs --}}
 
-    <div id="edit-time-log-modal" class="nyroModalBg edit-time-log-modal">
-        <form method="post" class="edit-time-log-form">
+    <div id="edit-time-log-modal" class="timetable nyroModalBg edit-time-log-modal">
+        <form method="post" class="edit-time-log-form shadow">
             <div class="timetable-close-modal">
                 <span>×</span>
             </div>
@@ -135,13 +170,15 @@
             <input type="number" name="timesheet-hours" step="0.01" placeholder="{{__('timeTable.hours')}}" required />
 
             {{-- Description input --}}
-            <textarea type="text" id="modal-description" name="timesheet-description" placeholder="{{__("timeTable.description")}}" required></textarea>
+            <div class="description-wrapper">
+                <textarea type="text" id="modal-description" name="timesheet-description" placeholder="{{__("timeTable.description")}}" required></textarea>
+            </div>
 
             {{-- Save or cancel buttons --}}
-            <div class="buttons">
-                <button type="button" class="timetable-modal-delete" data-loading="{{ __('timeTable.button_modal_deleting') }}"> <i class="fa fa-trash"></i></button>
-                <button type="button" class="timetable-modal-cancel">{{ __('timeTable.button_modal_close') }}</button>
-                <button type="submit" class="timetable-modal-submit">{{__('timeTable.button_modal_save')}}</button>
+            <div class="buttons flex-container gap-3">
+                <button type="button" class="timetable-modal-delete btn btn-danger" data-loading="{{ __('timeTable.button_modal_deleting') }}"> <i class="fa fa-trash"></i></button>
+                <button type="button" class="timetable-modal-cancel btn btn-default ml-auto">{{ __('timeTable.button_modal_close') }}</button>
+                <button type="submit" class="timetable-modal-submit btn btn-primary">{{__('timeTable.button_modal_save')}}</button>
             </div>
         </form>
         <div class="timetable-sync-panel">
