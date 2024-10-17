@@ -39,13 +39,14 @@ jobs:
     strategy:
       matrix:
         blocks:
-          - development-install markdown-check
-          - development-install composer-normalize
-          - development-install check-coding-standards
-          - development-install prettier-check
-          - development-install shell-check
+          - markdown-check
+          - composer-normalize
+          - check-coding-standards
+          - prettier-check
+          - shell-check
           - development-install code-analysis
           - development-install test-create-release
+          - blade-check
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
