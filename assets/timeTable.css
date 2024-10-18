@@ -481,6 +481,7 @@
     resize: none;
     height: 85px;
     border-radius: 0;
+    overflow-x: hidden;
   }
   .edit-time-log-form input:disabled {
     opacity: 0.6;
