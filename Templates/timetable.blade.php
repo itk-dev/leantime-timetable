@@ -15,9 +15,8 @@
     <div class="maincontent">
         <div class="maincontentinner">
             <div class="timetable">
-                <input type="hidden" name="timetable-ticket-ids" value="{{ $ticketIds }}" />
-                <input type="hidden" id="timetable-ticketCacheExpiration" name="timetable-ticket-cache"
-                    value="{{ $ticketCacheExpiration }}" />
+                <input type="hidden" name="timetable-ticket-ids" value="{{$ticketIds}}" />
+                <input type="hidden" id="timetable-ticketCacheExpiration" name="timetable-ticket-cache" value="{{$ticketCacheExpiration}}" />
                 <div class="flex-container gap-3 tools">
                     <button type="button" class="timetable-week-prev btn btn-default"><i class="fa fa-arrow-left"></i>
                         {{ __('timeTable.button_prev_week') }}</button>
@@ -73,7 +72,7 @@
                                         $hours = $timesheetDate[0]['hours'] ?? null;
                                         $description = $timesheetDate[0]['description'] ?? null;
                                         $isMissingDescription = isset($hours) && trim($description) === '';
-                                        
+
                                         // accumulate hours
                                         if ($hours) {
                                             if (isset($totalHours[$weekDateAccessor])) {
@@ -83,10 +82,39 @@
                                             }
                                             $rowTotal += $hours; // add to row total
                                         }
-                                        
+
                                         $weekendClass = isset($weekDate) && $weekDate->isWeekend() ? 'weekend' : '';
                                         $todayClass = isset($weekDate) && $weekDate->isToday() ? 'today' : '';
                                         ?>
+                                    <td
+                                        scope="row"
+                                        class="timetable-edit-entry {{$weekendClass}} {{$todayClass}} {{ $isMissingDescription ? 'description-missing' : ''}}"
+                                        data-id="{{$id}}"
+                                        data-ticketid="{{ $ticketId }}"
+                                        data-hours="{{ $hours }}"
+                                        data-hoursleft="{{ $hoursLeft }}"
+                                        data-description="{{ $description }}"
+                                        data-date="{{$weekDate->format('Y-m-d')}}"
+                                        title="{{ $isMissingDescription ? __("timeTable.description_missing") : '' }}"
+                                    >
+                                        <span>{{ $hours }}</span>
+                                    </td>
+                                @endforeach
+                                <td>{{$rowTotal}}</td> <!-- Row Total Column -->
+                            </tr>
+                        @endforeach
+                    @else
+                        <!-- A little something for when the week has no logs -->
+                        <tr><td colspan="{{count($weekDays) + 2}}">{{__("It seems the 'WORK-IT' fairy forgot to sprinkle her magic dust here! 🧚‍🪄✨")}}</td></tr>
+                    @endif
+                    <!-- add total hours row here -->
+                    <tr class="tr-total">
+                        <td scope="row">Total</td>
+                        @foreach ($weekDates as $weekDate)
+                            <td> {{ $totalHours[$weekDate->format('Y-m-d')] ?? 0 }} </td>
+                        @endforeach
+                        <td>{{array_sum($totalHours)}}</td> <!-- Grand Total Column -->
+                    </tr>
                                         <td scope="row"
                                             class="timetable-edit-entry {{ $weekendClass }} {{ $todayClass }} {{ $isMissingDescription ? 'description-missing' : '' }}"
                                             data-id="{{ $id }}" data-ticketid="{{ $ticketId }}"
@@ -144,7 +172,7 @@
             </div>
 
             {{-- Hours input --}}
-            <input type="number" name="timesheet-hours" step="0.01" placeholder="{{ __('timeTable.hours') }}" required />
+            <input type="number" name="timesheet-hours" step="0.01" placeholder="{{__('timeTable.hours')}}" required />
 
             {{-- Description input --}}
             <div class="description-wrapper">
