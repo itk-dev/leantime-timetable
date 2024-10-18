@@ -171,8 +171,8 @@
             <div class="timetable-hours-left">
                 <input type="number" name="timesheet-hours" step="0.01" placeholder="{{__('timeTable.hours')}}" required />
                 <div>
-                    <span>{{__('timeTable.hours_left')}} </span>
-                    <input type="number" name="timesheet-hours-left" disabled="disabled" />
+                <span>Hours left: </span>
+                <input type="number" name="timesheet-hours-left" disabled="disabled" />
                 </div>
             </div>
 
