@@ -14,14 +14,20 @@
     <!-- page header -->
     <div class="maincontent">
         <div class="maincontentinner">
-            <div class="timetable">
-                <input type="hidden" id="timetable-ticketCacheExpiration" name="timetable-ticket-cache" value="{{$ticketCacheExpiration}}" />
+            <div class="timetable" data-userId="{{ $userId }}">
+                <input type="hidden" id="timetable-ticketCacheExpiration" name="timetable-ticket-cache"
+                       value="{{$ticketCacheExpiration}}"/>
                 <div class="flex-container gap-3 tools">
-                    <button type="button" class="timetable-week-prev btn btn-default"><i class="fa fa-arrow-left"></i> {{ __('timeTable.button_prev_week') }}</button>
-                    <button type="button" class="timetable-week-next btn btn-default">{{ __('timeTable.button_next_week') }} <i class="fa fa-arrow-right"></i></button>
+                    <button type="button" class="timetable-week-prev btn btn-default"><i
+                            class="fa fa-arrow-left"></i> {{ __('timeTable.button_prev_week') }}</button>
+                    <button type="button"
+                            class="timetable-week-next btn btn-default">{{ __('timeTable.button_next_week') }} <i
+                            class="fa fa-arrow-right"></i></button>
                     <!-- TODO: Translate button, and have it navigate to the current week/day -->
-                    <button type="button" class="timetable-to-today btn btn-default">{{ __('timeTable.button_to_today') }}</button>
-                    <button class="timetable-new-entry btn btn-primary ml-auto" type="button">{{ __('timeTable.button_add_time_log') }} <i class="fa fa-plus"></i></button>
+                    <button type="button"
+                            class="timetable-to-today btn btn-default">{{ __('timeTable.button_to_today') }}</button>
+                    <button class="timetable-new-entry btn btn-primary ml-auto"
+                            type="button">{{ __('timeTable.button_add_time_log') }} <i class="fa fa-plus"></i></button>
                 </div>
                 <table id="timetable" class="table">
                     <thead>
@@ -32,12 +38,12 @@
                                 $weekDates[0]
                             )
                                 ? $weekDates[0]->format("Y-m-d")
-                                : ""; ?>" />
+                                : ""; ?>"/>
                             <input type="hidden" name="timetable-current-week" value="<?php echo isset(
                                 $weekDates[0]
                             )
                                 ? $weekDates[0]->format("W")
-                                : ""; ?>" />
+                                : ""; ?>"/>
                             @foreach ($weekDays as $key => $day)
                                 @php
                                     $weekDate = $weekDates[$key];
@@ -58,8 +64,10 @@
                     <?php $totalHours = []; ?>
                     @if (!empty($timesheetsByTicket))
                         @foreach ($timesheetsByTicket as $ticketId => $timesheet)
-                            <tr>
-                                <td class="ticket-title" scope="row"><a href="{{$timesheet['ticketLink']}}">{{ $timesheet['ticketTitle']  }}</a> <span>{{$timesheet['projectName']}}</span></td>
+                            <tr data-ticketId="{{$ticketId}}">
+                                <td class="ticket-title" scope="row"><a
+                                        href="{{$timesheet['ticketLink']}}">{{ $timesheet['ticketTitle']  }}</a>
+                                    <span>{{$timesheet['projectName']}}</span></td>
                                     <?php $rowTotal = 0; ?> <!-- initializing row total -->
                                 @foreach ($weekDates as $weekDate)
 
@@ -86,18 +94,12 @@
                                         if ($hours) {
                                             if (
                                                 isset(
-                                                    $totalHours[
-                                                    $weekDateAccessor
-                                                    ]
+                                                    $totalHours[$weekDateAccessor]
                                                 )
                                             ) {
-                                                $totalHours[
-                                                $weekDateAccessor
-                                                ] += $hours;
+                                                $totalHours[$weekDateAccessor] += $hours;
                                             } else {
-                                                $totalHours[
-                                                $weekDateAccessor
-                                                ] = $hours;
+                                                $totalHours[$weekDateAccessor] = $hours;
                                             }
                                             $rowTotal += $hours; // add to row total
                                         }
@@ -130,9 +132,33 @@
                                 <td>{{$rowTotal}}</td> <!-- Row Total Column -->
                             </tr>
                         @endforeach
+                        <tr>
+                            <td class="add-new"><input class="timetable-tomselect form-control-lg" /></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
                     @else
                         <!-- A little something for when the week has no logs -->
-                        <tr><td colspan="{{count($weekDays) + 2}}">{{__("It seems the 'WORK-IT' fairy forgot to sprinkle her magic dust here! 🧚‍🪄✨")}}</td></tr>
+                        <tr>
+                            <td colspan="{{count($weekDays) + 2}}">{{__("It seems the 'WORK-IT' fairy forgot to sprinkle her magic dust here! 🧚‍🪄✨")}}</td>
+                        </tr>
+                        <tr>
+                            <td class="add-new"><input class="timetable-tomselect form-control-lg" /></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
                     @endif
                     <!-- add total hours row here -->
                     <tr class="tr-total">
@@ -145,6 +171,13 @@
                     </tbody>
                 </table>
             </div>
+            <div class="timetable-sync-panel">
+                <div>
+                    <button class="timetable-sync-tickets"><span><i class="fa-solid fa-arrows-rotate"></i>Sync data</span>
+                    </button>
+                </div>
+                <div><span></span></div>
+            </div>
         </div>
     </div>
 
@@ -156,23 +189,27 @@
                 <span>×</span>
             </div>
             {{-- Hidden properties for post --}}
-            <input type="hidden" name="timesheet-ticket-id" />
-            <input type="hidden" name="timesheet-id" />
-            <input type="hidden" name="timesheet-offset" />
+            <input type="hidden" name="timesheet-ticket-id"/>
+            <input type="hidden" name="timesheet-id"/>
+            <input type="hidden" name="timesheet-offset"/>
 
             <input type="date" name="timesheet-date">
 
             {{-- copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.css and timeTable.js --}}
             <div class="timetable-ticket-search">
-                <input class="timetable-ticket-input" type="text" data-placeholder="{{ __("timeTable.search_tickets") }}" data-loading="{{ __("timeTable.filtering_tickets") }}" placeholder="{{ __("timeTable.search_tickets") }}" />
+                <input class="timetable-ticket-input" type="text"
+                       data-placeholder="{{ __("timeTable.search_tickets") }}"
+                       data-loading="{{ __("timeTable.filtering_tickets") }}"
+                       placeholder="{{ __("timeTable.search_tickets") }}"/>
                 <div class="timetable-ticket-results"></div>
             </div>
 
             <div class="timetable-hours-left">
-                <input type="number" name="timesheet-hours" step="0.01" placeholder="{{__('timeTable.hours')}}" required />
+                <input type="number" name="timesheet-hours" step="0.01" placeholder="{{__('timeTable.hours')}}"
+                       required/>
                 <div>
-                <span>{{__('timeTable.hours_left')}} </span>
-                <input type="number" name="timesheet-hours-left" disabled="disabled" />
+                    <span>{{__('timeTable.hours_left')}} </span>
+                    <input type="number" name="timesheet-hours-left" disabled="disabled" />
                 </div>
             </div>
 
@@ -180,19 +217,26 @@
 
             {{-- Description input --}}
             <div class="description-wrapper">
-                <textarea type="text" id="modal-description" name="timesheet-description" placeholder="{{__("timeTable.description")}}" required></textarea>
+                <textarea type="text" id="modal-description" name="timesheet-description"
+                          placeholder="{{__("timeTable.description")}}" required></textarea>
             </div>
 
             {{-- Save or cancel buttons --}}
             <div class="buttons flex-container gap-3">
-                <button type="button" class="timetable-modal-delete btn btn-danger" data-loading="{{ __('timeTable.button_modal_deleting') }}"> <i class="fa fa-trash"></i></button>
-                <button type="button" class="timetable-modal-cancel btn btn-default ml-auto">{{ __('timeTable.button_modal_close') }}</button>
-                <button type="submit" class="timetable-modal-submit btn btn-primary">{{__('timeTable.button_modal_save')}}</button>
+                <button type="button" class="timetable-modal-delete btn btn-danger"
+                        data-loading="{{ __('timeTable.button_modal_deleting') }}"><i class="fa fa-trash"></i></button>
+                <button type="button"
+                        class="timetable-modal-cancel btn btn-default ml-auto">{{ __('timeTable.button_modal_close') }}</button>
+                <button type="submit"
+                        class="timetable-modal-submit btn btn-primary">{{__('timeTable.button_modal_save')}}</button>
             </div>
         </form>
-        <div class="timetable-sync-panel">
-            <div><button class="timetable-sync-tickets"><span><i class="fa-solid fa-arrows-rotate"></i>Sync data</span></button></div><div><span></span></div>
+
+    </div>
+    <div id="edit-time-sync-modal" class="nyroModalBg edit-time-sync-modal">
+        <div><span><i
+                    class="fa-solid fa-spinner fa-2xl fa-spin"></i></span><span>{{__('timeTable.synchronizing')}}</span>
         </div>
     </div>
-    <div id="edit-time-sync-modal" class="nyroModalBg edit-time-sync-modal"><div><span><i class="fa-solid fa-spinner fa-2xl fa-spin"></i></span><span>{{__('timeTable.synchronizing')}}</span></div></div>
+
 @endsection
