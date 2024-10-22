@@ -59,7 +59,8 @@
                                 <tr>
                                     <td class="ticket-title" scope="row"><a
                                             href="{{ $timesheet['ticketLink'] }}">{{ $timesheet['ticketTitle'] }}</a>
-                                        <span>{{ $timesheet['projectName'] }}</span></td>
+                                        <span>{{ $timesheet['projectName'] }}</span>
+                                    </td>
                                     <?php $rowTotal = 0; ?>
                                     <!-- initializing row total -->
                                     @foreach ($weekDates as $weekDate)
