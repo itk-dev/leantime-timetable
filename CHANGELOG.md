@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [2.0.0] - 2024-10-22
+
 * [PR-25](https://github.com/ITK-Leantime/leantime-timetable/pull/25)
   * Added quick-add ticket to timetable
   * Added possibility to add a ticket via API
@@ -95,7 +97,8 @@
 * [PR-1](https://github.com/ITK-Leantime/leantime-timetable/pull/1)
   * Foundation for further development
 
-[Unreleased]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.2.0...HEAD
+[Unreleased]: https://github.com/ITK-Leantime/leantime-timetable/compare/2.0.0...HEAD
+[2.0.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.2.0...2.0.0
 [1.2.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.0.2...1.1.0
 [1.0.2]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.0.1...1.0.2
