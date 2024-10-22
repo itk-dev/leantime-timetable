@@ -9,3 +9,4 @@ node_modules
 release/
 checksum.txt
 *.tar.gz
+yarn.lock
