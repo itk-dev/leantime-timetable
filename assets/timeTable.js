@@ -538,15 +538,26 @@ jQuery(document).ready(function ($) {
       const pageSize = 50;
       const userId = $("div.timetable").attr("data-userid");
 
+      // Sort tickets by editorId and created date.
+      tickets.sort((a, b) => {
+        if (a.editorId === userId && b.editorId !== userId) {
+          return -1;
+        } else if (b.editorId === userId && a.editorId !== userId) {
+          return 1;
+        } else {
+          const dateA = new Date(a.createdDate);
+          const dateB = new Date(b.createdDate);
+          return dateB - dateA;
+        }
+      });
+
+      // Exclude tickets that are already present in the table.
+
       const activeTicketIds = $("#timetable > tbody > tr[data-ticketid]")
         .map(function () {
           return $(this).data("ticketid");
         })
         .get();
-
-      tickets.sort((a, b) =>
-        a.editorId === userId ? -1 : b.editorId === userId ? 1 : 0,
-      );
 
       const options = tickets
         .filter((child) => !activeTicketIds.includes(child.id))
@@ -559,7 +570,7 @@ jQuery(document).ready(function ($) {
           };
         });
 
-      console.log(options);
+      // Init tomselect
       let tomselect = new TomSelect(".timetable-tomselect", {
         options: options,
         searchField: ["text", "value", "projectName"],
@@ -593,6 +604,7 @@ jQuery(document).ready(function ($) {
         onChange: function (value) {
           const selectedOption = this.options[value];
 
+          // Check if selected option is the "create new" one
           if (
             selectedOption.text === selectedOption.value &&
             typeof selectedOption.projectName === "undefined"
@@ -609,6 +621,7 @@ jQuery(document).ready(function ($) {
                 .map((project) => ({ value: project.id, text: project.text })),
             ];
 
+            // Destroy select and populate with projects for the new ticket to be created in
             this.destroy();
             tomselect = new TomSelect(".timetable-tomselect", {
               options: projectOptions,
@@ -627,6 +640,7 @@ jQuery(document).ready(function ($) {
                   let result = TimeTableApiHandler.createNewTicket(
                     ticketName,
                     projectId,
+                    userId,
                   );
                   result.then((data) => {
                     const ticketId = data.result[0];

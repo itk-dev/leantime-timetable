@@ -81,6 +81,7 @@ export default class TimeTableApiHandler {
             projectName: ticket.projectName,
             editorId: ticket.editorId,
             hoursLeft: ticket.hourRemaining,
+            createdDate: ticket.date,
           };
           childrenForTicketGroup.push(option);
         });
@@ -130,6 +131,7 @@ export default class TimeTableApiHandler {
         projectName: ticket.projectName,
         editorId: ticket.editorId,
         hoursLeft: ticket.hourRemaining,
+        createdDate: ticket.date,
       };
       ticketCacheData["children"].push(ticketData);
       this.writeToCache("tickets", {
@@ -146,9 +148,9 @@ export default class TimeTableApiHandler {
       .map((result) => result.value)[0];
   }
 
-  static async createNewTicket(ticketName, projectId) {
+  static async createNewTicket(ticketName, projectId, userId) {
     return this.callApi("leantime.rpc.tickets.addTicket", {
-      values: { headline: ticketName, projectId: projectId },
+      values: { headline: ticketName, projectId: projectId, editorId: userId },
     });
   }
 
