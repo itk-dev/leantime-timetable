@@ -17,8 +17,7 @@ class TimeTable
      */
     private static array $assets = [
         // source => target
-        __DIR__ . '/../assets/timeTableApiHandler.js' => APP_ROOT . '/public/dist/js/plugin-timeTableApiHandler.js',
-        __DIR__ . '/../assets/timeTable.js' => APP_ROOT . '/public/dist/js/plugin-timeTable.js',
+        __DIR__ . '/../dist/js/timeTable.js' => APP_ROOT . '/public/dist/js/plugin-timeTable.js',
         __DIR__ . '/../assets/timeTable.css' => APP_ROOT . '/public/dist/css/plugin-timeTable.css',
     ];
 
