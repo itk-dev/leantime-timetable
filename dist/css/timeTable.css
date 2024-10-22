@@ -1,0 +1,1315 @@
+/* Todo scope css better so it doesnt "ruin" leantime again */
+/* Todo streamline kebab case / camelcase stuff */
+.maincontentinner {
+  padding-bottom: 50px;
+}
+.timetable {
+  --itk-color-primary: hsla(200, 98%, 39%, 1);
+  --itk-color-primary-50: hsla(204, 100%, 97%, 1);
+  --itk-color-primary-100: hsla(204, 94%, 94%, 1);
+  --itk-color-primary-800: hsla(201, 90%, 27%, 1);
+  --itk-color-success: hsla(142, 76%, 36%, 1);
+  --itk-color-success-100: hsla(141, 84%, 93%, 1);
+  --itk-color-danger: hsla(0, 72%, 51%, 1);
+  --itk-color-danger-800: hsla(0, 70%, 35%, 1);
+  --itk-color-white: white;
+  --itk-color-gray-50: hsla(210, 40%, 98%, 1);
+  --itk-color-gray-100: hsla(214, 32%, 91%, 1);
+  --itk-color-gray-200: hsla(213, 27%, 84%, 1);
+  --itk-color-gray-500: hsla(215, 16%, 47%, 1);
+  --itk-color-gray-700: hsla(215, 25%, 27%, 1);
+  --itk-color-black: black;
+
+  --itk-border-color: var(--itk-color-gray-200);
+
+  --itk-border-radius: 4px;
+
+  --itk-spacing: 16px;
+  --itk-spacing-xs: calc(var(--itk-spacing) * 0.25);
+  --itk-spacing-sm: calc(var(--itk-spacing) * 0.5);
+  --itk-spacing-md: var(--itk-spacing);
+  --itk-spacing-lg: calc(var(--itk-spacing) * 1.5);
+  --itk-spacing-xl: calc(var(--itk-spacing) * 2);
+
+  #timetable {
+    background-color: var(--itk-color-white);
+
+    tbody {
+      tr.newly-added-tr {
+        td:not(:last-child) {
+          background-color: var(--itk-color-primary-50) !important;
+        }
+      }
+    }
+  }
+
+  .timetable-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  > h1 {
+    margin-bottom: var(--itk-spacing-xl);
+  }
+
+  .flex-container {
+    display: flex;
+  }
+
+  .justify-between {
+    justify-content: space-between;
+  }
+
+  .ml-auto {
+    margin-left: auto;
+  }
+
+  .gap-3 {
+    gap: var(--itk-spacing-md);
+  }
+
+  .shadow {
+    box-shadow: 1px 2px 16px hsla(0, 100%, 0%, 0.16);
+  }
+
+  .tools {
+    width: 100%;
+    margin-bottom: var(--itk-spacing-md);
+  }
+
+  .btn {
+    --transition-time: 0.4s;
+    --transition-easing: ease-in-out;
+
+    border-radius: var(--itk-border-radius) !important;
+    background: none;
+    padding: var(--itk-spacing-xs) var(--itk-spacing-sm);
+    width: auto;
+    transition:
+      border calc(var(--transition-time) * 0.5) var(--transition-easing),
+      background-color calc(var(--transition-time) * 0.5)
+        var(--transition-easing);
+
+    i {
+      color: inherit;
+      pointer-events: none;
+    }
+
+    &:hover {
+      transition:
+        border var(--transition-time) var(--transition-easing),
+        background-color var(--transition-time) var(--transition-easing);
+    }
+
+    &:focus {
+      outline: 1px solid var(--itk-color-black);
+    }
+  }
+
+  .btn-default {
+    background: var(--itk-color-gray-50);
+    border: 1px solid var(--itk-border-color);
+    color: var(--itk-color-gray-700);
+
+    &:hover {
+      color: var(--itk-color-black);
+      background-color: var(--itk-color-white);
+      border-color: var(--itk-color-gray-500);
+    }
+  }
+
+  .btn-primary {
+    background: var(--itk-color-primary);
+    border: 1px solid var(--itk-color-primary);
+    color: var(--itk-color-white);
+
+    &:hover {
+      background-color: var(--itk-color-primary-800);
+      border-color: var(--itk-color-primary-800);
+    }
+  }
+
+  .btn-danger {
+    background: var(--itk-color-danger);
+    border: 1px solid var(--itk-color-danger);
+    color: var(--itk-color-white);
+    padding: 0 var(--itk-spacing-md);
+
+    &:hover {
+      background-color: var(--itk-color-danger-800);
+      border-color: var(--itk-color-danger-800);
+    }
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  .table td {
+    position: relative;
+  }
+  .table td.weekend {
+    background: var(--itk-color-gray-50);
+  }
+  .table td.today {
+    background: var(--itk-color-primary-50);
+  }
+  .table .th-ticket-title {
+    width: 60%;
+  }
+  .table td:first-child {
+    text-align: left;
+  }
+
+  .table th {
+    border: 1px solid var(--itk-border-color) !important;
+    background-color: var(--itk-color-gray-50);
+    padding: var(--itk-spacing-sm) var(--itk-spacing-md);
+
+    &:last-child {
+      color: var(--itk-color-gray-500);
+      background-color: var(--itk-color-gray-100);
+    }
+  }
+  .table th.weekend {
+    color: var(--itk-color-gray-500);
+    background: var(--itk-color-gray-50);
+  }
+  .table th.today {
+    background: var(--itk-color-primary-100);
+  }
+  .table td {
+    border: 1px solid var(--itk-border-color);
+    padding: var(--itk-spacing-md);
+
+    &:last-child&:not([colspan="9"]):not(.add-new) {
+      color: var(--itk-color-gray-500);
+      background-color: var(--itk-color-gray-100);
+    }
+  }
+  .table .tr-total {
+    color: var(--itk-color-gray-500);
+    background-color: var(--itk-color-gray-100);
+    font-weight: bold;
+    cursor: default;
+  }
+  .table .timetable-edit-entry {
+    --transition-time: 0.2s;
+    --transition-easing: ease-in-out;
+
+    cursor: pointer;
+    position: relative;
+    transition: background-color calc(var(--transition-time) * 0.5)
+      var(--transition-easing);
+
+    span {
+      pointer-events: none;
+      user-select: none;
+    }
+
+    &.description-missing:after {
+      content: "";
+      width: 0;
+      height: 0;
+      position: absolute;
+      top: 0;
+      right: 0;
+      border-left: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-top: 10px solid var(--itk-color-danger);
+    }
+
+    &:before {
+      opacity: 0;
+    }
+
+    &:hover {
+      position: relative;
+      background-color: var(--itk-color-success-100);
+
+      transition: background-color var(--transition-time)
+        var(--transition-easing);
+
+      &:before {
+        content: "+";
+        position: absolute;
+        display: block;
+        width: 10px;
+        height: 18px;
+        top: calc(50% - 9px);
+        left: calc(50% - 5px);
+        color: var(--itk-color-success);
+        opacity: 0.8;
+        transition: opacity var(--transition-time) var(--transition-easing);
+      }
+
+      &:not([data-hours=""]) {
+        &:before {
+          content: "✎";
+        }
+      }
+    }
+  }
+  .table td select {
+    all: unset;
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    border: none;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  .table td input:not(#tomselect-1-ts-control) {
+    all: unset;
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    border: none;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  > input {
+    border-radius: 3px !important;
+  }
+
+  /* The Modal (background) */
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  }
+
+  &.edit-time-log-modal {
+    display: none;
+  }
+
+  /* Modal Content/Box */
+  &.edit-time-log-form {
+    display: flex;
+    height: 300px;
+    flex-direction: column;
+    background-color: var(--itk-color-gray-50);
+    margin: 15% auto;
+    padding: var(--itk-spacing-lg);
+    width: clamp(25vw, 450px, 100%);
+    border: 1px solid #888;
+    min-width: 300px;
+    border-radius: var(--itk-border-radius);
+    position: relative;
+
+    input,
+    textarea {
+      padding: var(--itk-spacing-sm) var(--itk-spacing-md);
+      border-radius: var(--itk-border-radius);
+
+      &:focus {
+        outline: 1px solid var(--itk-color-black);
+      }
+    }
+  }
+  .edit-time-log-form .timetable-close-modal {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    display: flex;
+  }
+  .edit-time-log-form .timetable-close-modal span {
+    margin: auto;
+  }
+
+  .edit-time-log-form .timetable-modal-delete.deleting > i {
+    animation: spin 1.2s linear infinite;
+    font-size: 13px;
+  }
+  .edit-time-log-form input {
+    width: 100%;
+    border-radius: 3px;
+    margin-right: 10px;
+  }
+
+  .edit-time-log-form .fa-clock {
+    position: absolute;
+    top: 28px;
+    right: 28px;
+  }
+  .edit-time-log-form .timetable-modal-delete {
+    margin-right: auto;
+    border: 1px solid #cbd5e1;
+    padding: 0 15px;
+    background-color: red;
+    color: #fff;
+    font-size: 12px;
+    width: 45px;
+  }
+
+  .edit-time-log-form .buttons {
+    display: flex;
+    justify-content: end;
+  }
+
+  .edit-time-log-form .buttons button {
+    border-radius: 3px !important;
+  }
+  .edit-time-log-form .buttons button:hover {
+    filter: brightness(0.95);
+  }
+
+  /* Modal Content/Box */
+  .edit-time-log-form {
+    display: flex;
+    height: 300px;
+    flex-direction: column;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 30px 20px 20px 20px;
+    border: 1px solid #888;
+    width: 25vw; /* Could be more or less, depending on screen size */
+    min-width: 300px;
+    border-radius: 3px;
+    position: relative;
+  }
+  .edit-time-log-form .timetable-close-modal {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    display: flex;
+  }
+  .edit-time-log-form .timetable-close-modal span {
+    margin: auto;
+  }
+  .edit-time-log-form .timetable-modal-delete {
+    margin-right: auto;
+    border: 1px solid #cbd5e1;
+    padding: 0 15px;
+    background-color: red;
+    color: #fff;
+    font-size: 12px;
+    width: 45px;
+  }
+  .edit-time-log-form .timetable-modal-delete.deleting > i {
+    animation: spin 1.2s linear infinite;
+    font-size: 13px;
+  }
+  .edit-time-log-form input {
+    width: 100%;
+    border-radius: 3px;
+  }
+  .edit-time-log-form .buttons {
+    display: flex;
+    justify-content: end;
+  }
+  .edit-time-log-form .buttons button {
+    border-radius: 3px !important;
+  }
+  .edit-time-log-form .buttons button:hover {
+    filter: brightness(0.95);
+  }
+  .edit-time-log-form .timetable-modal-submit {
+    color: white;
+    border: 1px solid #cbd5e1;
+    height: 28px;
+    padding: 0 15px;
+    margin: 0;
+    font-weight: 400;
+  }
+  .edit-time-log-form .timetable-modal-cancel {
+    background: white;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+    height: 28px;
+    margin-right: 5px;
+    padding: 0 15px;
+  }
+  .edit-time-log-form .fa-clock {
+    position: absolute;
+    top: 28px;
+    right: 28px;
+  }
+
+  .edit-time-log-form {
+    .description-wrapper {
+      position: relative;
+
+      &:after {
+        content: "";
+        width: 0;
+        height: 0;
+        position: absolute;
+        top: 0;
+        right: 0;
+        border-left: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-top: 10px solid var(--itk-border-color);
+      }
+
+      &:focus-within {
+        &:after {
+          border-top: 10px solid var(--itk-color-black);
+        }
+      }
+
+      &:has(textarea:invalid) {
+        &:after {
+          border-top: 10px solid var(--itk-color-danger);
+        }
+      }
+    }
+  }
+
+  .edit-time-log-form #modal-description {
+    position: relative;
+    width: 100%;
+    resize: none;
+    height: 85px;
+    border-radius: 0;
+    overflow-x: hidden;
+  }
+  .edit-time-log-form input:disabled {
+    opacity: 0.6;
+  }
+  /* The Close Button */
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  /* copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.js and timetable.blade.php */
+  /* Dropdown Button */
+  .dropbtn {
+    /*background-color: #04aa6d;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;*/
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: transparent;
+    border: none;
+    height: 31px;
+  }
+
+  /* The container <div> - needed to position the dropdown content */
+  .timetable-ticket-search {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* Dropdown Content (Hidden by Default) */
+  .timetable-ticket-search .timetable-ticket-results {
+    position: absolute;
+    background-color: #f6f6f6;
+    min-width: 230px;
+    width: 100%;
+    border: 1px solid var(--itk-border-color);
+    z-index: 1;
+    top: calc(100% - 11px);
+    max-height: 175px;
+    overflow-y: auto;
+  }
+
+  .timetable-ticket-search .timetable-ticket-result-item:before {
+    content: attr(data-project);
+    position: absolute;
+    top: 3px;
+    left: 15px;
+    font-size: 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: calc(100% - 20px);
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .timetable-ticket-search .timetable-ticket-result-item > span {
+    white-space: nowrap;
+    position: absolute;
+    bottom: 3px;
+    left: 15px;
+    text-overflow: ellipsis;
+    width: calc(100% - 15px);
+    overflow: hidden;
+    pointer-events: none;
+  }
+  /* Links inside the dropdown */
+  .timetable-ticket-search .timetable-ticket-result-item,
+  .timetable-ticket-search .timetable-ticket-result-item-no-results {
+    color: black;
+    padding: 5px 15px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+    position: relative;
+    font-size: 12px;
+    height: 40px;
+    border-top: 1px solid var(--itk-border-color);
+  }
+
+  /* Change color of dropdown links on hover */
+  .timetable-ticket-search .timetable-ticket-result-item:hover {
+    background-color: #f1f1f1;
+  }
+
+  .timetable-ticket-search
+    .timetable-ticket-input
+    + .timetable-ticket-results:empty,
+  .timetable-ticket-search
+    .timetable-ticket-input:disabled
+    + .timetable-ticket-results {
+    display: none;
+  }
+
+  .timetable-ticket-input:disabled {
+    border: 1px solid var(--itk-color-gray-100);
+  }
+
+  .ticket-title span {
+    color: #666;
+    cursor: default;
+  }
+
+  .timetable-ticket-search.ticket-loading {
+    pointer-events: none;
+    user-select: none;
+  }
+  .timetable-ticket-search.ticket-loading::after {
+    content: "";
+    border-radius: 50%;
+    border: 1px solid #000;
+    position: absolute;
+    animation: spin 1s infinite;
+    right: 15px;
+    top: 10px;
+    width: 15px;
+    height: 10px;
+  }
+
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+.edit-time-sync-modal {
+  display: none;
+
+  div {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+
+    span {
+      margin: auto;
+      color: #fff;
+      font-size: 18px;
+
+      &:last-child {
+        margin-top: 10px;
+      }
+    }
+  }
+}
+
+.timetable-hours-left {
+  display: flex;
+  flex-direction: row;
+
+  div {
+    display: flex;
+    flex-direction: row;
+    height: 30px;
+    pointer-events: none;
+
+    span {
+      white-space: nowrap;
+      margin: auto 0px auto 5px;
+    }
+    input {
+      margin: auto 5px;
+      width: 23px !important;
+      padding: 0;
+      color: var(--primary-font-color);
+      opacity: 1 !important;
+      text-align: center;
+
+      &[data-value="0"] {
+        opacity: 0 !important;
+        user-select: none;
+      }
+    }
+  }
+}
+#timetable td.add-new {
+  padding: 0px;
+  font-family: inherit !important;
+  ~ td {
+    text-align: center;
+  }
+  .timetable-tomselect {
+    * {
+      font-size: var(--base-font-size);
+    }
+    div.ts-control {
+      border: none !important;
+      height: 50px;
+      box-shadow: none;
+
+      div.item {
+        background-color: #fff !important;
+        background-image: none;
+        color: #000;
+        border: none;
+        margin: auto 0;
+        box-shadow: none;
+        padding: 0 0 0 10px;
+        text-shadow: none;
+
+        &::after {
+          content: "/";
+          padding-left: 8px;
+        }
+      }
+
+      input#tomselect-1-ts-control {
+        font-size: 14px;
+        padding: 0 0 0 10px !important;
+
+        &::placeholder {
+          font-weight: bold;
+          color: var(--primary-color) !important;
+
+          opacity: 0.9;
+        }
+        &:focus::placeholder {
+          opacity: 0;
+        }
+      }
+    }
+  }
+}
+div.ts-dropdown-content {
+  margin: 0px !important;
+
+  option {
+    font-weight: bold;
+  }
+  div.option {
+    padding: 7px 12px;
+
+    &[data-value="add-new-ticket"] {
+      cursor: pointer;
+      color: #495c68;
+      font-weight: bold;
+      opacity: 1;
+    }
+    &[aria-disabled="true"] {
+      cursor: default;
+      color: #495c68;
+      font-weight: bold;
+      opacity: 1;
+    }
+    span {
+      span {
+        color: #64748b;
+      }
+    }
+  }
+}
+
+.timetable-sync-panel:empty {
+  display: none;
+}
+
+.timetable-sync-panel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  background-color: #fff;
+  right: -1px;
+  bottom: 0;
+  width: 125px;
+  height: 50px;
+  border-bottom-right-radius: 15px;
+}
+
+.timetable-sync-panel > div:first-child {
+  flex: 2;
+  cursor: pointer;
+}
+
+.timetable-sync-panel > div:first-child > button {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #999;
+  background-color: #111;
+  color: #fff !important;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.timetable-sync-panel > div:first-child > button > span {
+  border-bottom: 1px solid #000;
+  pointer-events: none;
+}
+
+.timetable-sync-panel > div:first-child > button > span > i {
+  margin-right: 5px;
+  pointer-events: none;
+}
+
+.timetable-sync-panel > div {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.timetable-sync-panel > div > span {
+  font-size: 11px;
+  margin: auto 0;
+  color: #000;
+}
+
+/**
+ * tom-select.css (v2.3.1)
+ * Copyright (c) contributors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the License at:
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ *
+ */
+.ts-control {
+  border: 1px solid #d0d0d0;
+  padding: 8px 8px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.ts-wrapper.multi.has-items .ts-control {
+  padding: calc(8px - 2px - 1px) 8px calc(8px - 2px - 3px - 1px);
+}
+.full .ts-control {
+  background-color: #fff;
+}
+.disabled .ts-control, .disabled .ts-control * {
+  cursor: default !important;
+}
+.focus .ts-control {
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+.ts-control > * {
+  vertical-align: baseline;
+  display: inline-block;
+}
+.ts-wrapper.multi .ts-control > div {
+  cursor: pointer;
+  margin: 0 3px 3px 0;
+  padding: 2px 6px;
+  background: #1da7ee;
+  color: #fff;
+  border: 1px solid #0073bb;
+}
+.ts-wrapper.multi .ts-control > div.active {
+  background: #92c836;
+  color: #fff;
+  border: 1px solid #00578d;
+}
+.ts-wrapper.multi.disabled .ts-control > div, .ts-wrapper.multi.disabled .ts-control > div.active {
+  color: white;
+  background: #d2d2d2;
+  border: 1px solid #aaaaaa;
+}
+.ts-control > input {
+  flex: 1 1 auto;
+  min-width: 7rem;
+  display: inline-block !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  text-indent: 0 !important;
+  border: 0 none !important;
+  background: none !important;
+  line-height: inherit !important;
+  -webkit-user-select: auto !important;
+     -moz-user-select: auto !important;
+      -ms-user-select: auto !important;
+          user-select: auto !important;
+  box-shadow: none !important;
+}
+.ts-control > input::-ms-clear {
+  display: none;
+}
+.ts-control > input:focus {
+  outline: none !important;
+}
+.has-items .ts-control > input {
+  margin: 0 4px !important;
+}
+.ts-control.rtl {
+  text-align: right;
+}
+.ts-control.rtl.single .ts-control:after {
+  left: 15px;
+  right: auto;
+}
+.ts-control.rtl .ts-control > input {
+  margin: 0 4px 0 -2px !important;
+}
+.disabled .ts-control {
+  opacity: 0.5;
+  background-color: #fafafa;
+}
+.input-hidden .ts-control > input {
+  opacity: 0;
+  position: absolute;
+  left: -10000px;
+}
+
+.ts-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  border: 1px solid #d0d0d0;
+  background: #fff;
+  margin: 0.25rem 0 0;
+  border-top: 0 none;
+  box-sizing: border-box;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 3px 3px;
+}
+.ts-dropdown [data-selectable] {
+  cursor: pointer;
+  overflow: hidden;
+}
+.ts-dropdown [data-selectable] .highlight {
+  background: rgba(125, 168, 208, 0.2);
+  border-radius: 1px;
+}
+.ts-dropdown .option,
+.ts-dropdown .optgroup-header,
+.ts-dropdown .no-results,
+.ts-dropdown .create {
+  padding: 5px 8px;
+}
+.ts-dropdown .option, .ts-dropdown [data-disabled], .ts-dropdown [data-disabled] [data-selectable].option {
+  cursor: inherit;
+  opacity: 0.5;
+}
+.ts-dropdown [data-selectable].option {
+  opacity: 1;
+  cursor: pointer;
+}
+.ts-dropdown .optgroup:first-child .optgroup-header {
+  border-top: 0 none;
+}
+.ts-dropdown .optgroup-header {
+  color: #303030;
+  background: #fff;
+  cursor: default;
+}
+.ts-dropdown .active {
+  background-color: #f5fafd;
+  color: #495c68;
+}
+.ts-dropdown .active.create {
+  color: #495c68;
+}
+.ts-dropdown .create {
+  color: rgba(48, 48, 48, 0.5);
+}
+.ts-dropdown .spinner {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin: 5px 8px;
+}
+.ts-dropdown .spinner::after {
+  content: " ";
+  display: block;
+  width: 24px;
+  height: 24px;
+  margin: 3px;
+  border-radius: 50%;
+  border: 5px solid #d0d0d0;
+  border-color: #d0d0d0 transparent #d0d0d0 transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.ts-dropdown-content {
+  overflow: hidden auto;
+  max-height: 200px;
+  scroll-behavior: smooth;
+}
+
+.ts-wrapper.plugin-drag_drop .ts-dragging {
+  color: transparent !important;
+}
+.ts-wrapper.plugin-drag_drop .ts-dragging > * {
+  visibility: hidden !important;
+}
+
+.plugin-checkbox_options:not(.rtl) .option input {
+  margin-right: 0.5rem;
+}
+
+.plugin-checkbox_options.rtl .option input {
+  margin-left: 0.5rem;
+}
+
+/* stylelint-disable function-name-case */
+.plugin-clear_button {
+  --ts-pr-clear-button: 1em;
+}
+.plugin-clear_button .clear-button {
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: calc(8px - 6px);
+  margin-right: 0 !important;
+  background: transparent !important;
+  transition: opacity 0.5s;
+  cursor: pointer;
+}
+.plugin-clear_button.form-select .clear-button, .plugin-clear_button.single .clear-button {
+  right: max(var(--ts-pr-caret), 8px);
+}
+.plugin-clear_button.focus.has-items .clear-button, .plugin-clear_button:not(.disabled):hover.has-items .clear-button {
+  opacity: 1;
+}
+
+.ts-wrapper .dropdown-header {
+  position: relative;
+  padding: 10px 8px;
+  border-bottom: 1px solid #d0d0d0;
+  background: color-mix(#fff, #d0d0d0, 85%);
+  border-radius: 3px 3px 0 0;
+}
+.ts-wrapper .dropdown-header-close {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  color: #303030;
+  opacity: 0.4;
+  margin-top: -12px;
+  line-height: 20px;
+  font-size: 20px !important;
+}
+.ts-wrapper .dropdown-header-close:hover {
+  color: black;
+}
+
+.plugin-dropdown_input.focus.dropdown-active .ts-control {
+  box-shadow: none;
+  border: 1px solid #d0d0d0;
+}
+.plugin-dropdown_input .dropdown-input {
+  border: 1px solid #d0d0d0;
+  border-width: 0 0 1px;
+  display: block;
+  padding: 8px 8px;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  background: transparent;
+}
+.plugin-dropdown_input .items-placeholder {
+  border: 0 none !important;
+  box-shadow: none !important;
+  width: 100%;
+}
+.plugin-dropdown_input.has-items .items-placeholder, .plugin-dropdown_input.dropdown-active .items-placeholder {
+  display: none !important;
+}
+
+.ts-wrapper.plugin-input_autogrow.has-items .ts-control > input {
+  min-width: 0;
+}
+.ts-wrapper.plugin-input_autogrow.has-items.focus .ts-control > input {
+  flex: none;
+  min-width: 4px;
+}
+.ts-wrapper.plugin-input_autogrow.has-items.focus .ts-control > input::-ms-input-placeholder {
+  color: transparent;
+}
+.ts-wrapper.plugin-input_autogrow.has-items.focus .ts-control > input::placeholder {
+  color: transparent;
+}
+
+.ts-dropdown.plugin-optgroup_columns .ts-dropdown-content {
+  display: flex;
+}
+.ts-dropdown.plugin-optgroup_columns .optgroup {
+  border-right: 1px solid #f2f2f2;
+  border-top: 0 none;
+  flex-grow: 1;
+  flex-basis: 0;
+  min-width: 0;
+}
+.ts-dropdown.plugin-optgroup_columns .optgroup:last-child {
+  border-right: 0 none;
+}
+.ts-dropdown.plugin-optgroup_columns .optgroup::before {
+  display: none;
+}
+.ts-dropdown.plugin-optgroup_columns .optgroup-header {
+  border-top: 0 none;
+}
+
+.ts-wrapper.plugin-remove_button .item {
+  display: inline-flex;
+  align-items: center;
+}
+.ts-wrapper.plugin-remove_button .item .remove {
+  color: inherit;
+  text-decoration: none;
+  vertical-align: middle;
+  display: inline-block;
+  padding: 0 6px;
+  border-radius: 0 2px 2px 0;
+  box-sizing: border-box;
+}
+.ts-wrapper.plugin-remove_button .item .remove:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+.ts-wrapper.plugin-remove_button.disabled .item .remove:hover {
+  background: none;
+}
+.ts-wrapper.plugin-remove_button .remove-single {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 23px;
+}
+
+.ts-wrapper.plugin-remove_button:not(.rtl) .item {
+  padding-right: 0 !important;
+}
+.ts-wrapper.plugin-remove_button:not(.rtl) .item .remove {
+  border-left: 1px solid #0073bb;
+  margin-left: 6px;
+}
+.ts-wrapper.plugin-remove_button:not(.rtl) .item.active .remove {
+  border-left-color: #00578d;
+}
+.ts-wrapper.plugin-remove_button:not(.rtl).disabled .item .remove {
+  border-left-color: #aaaaaa;
+}
+
+.ts-wrapper.plugin-remove_button.rtl .item {
+  padding-left: 0 !important;
+}
+.ts-wrapper.plugin-remove_button.rtl .item .remove {
+  border-right: 1px solid #0073bb;
+  margin-right: 6px;
+}
+.ts-wrapper.plugin-remove_button.rtl .item.active .remove {
+  border-right-color: #00578d;
+}
+.ts-wrapper.plugin-remove_button.rtl.disabled .item .remove {
+  border-right-color: #aaaaaa;
+}
+
+:root {
+  --ts-pr-clear-button: 0;
+  --ts-pr-caret: 0;
+  --ts-pr-min: .75rem;
+}
+
+.ts-wrapper.single .ts-control, .ts-wrapper.single .ts-control input {
+  cursor: pointer;
+}
+
+.ts-control:not(.rtl) {
+  padding-right: max(var(--ts-pr-min), var(--ts-pr-clear-button) + var(--ts-pr-caret)) !important;
+}
+
+.ts-control.rtl {
+  padding-left: max(var(--ts-pr-min), var(--ts-pr-clear-button) + var(--ts-pr-caret)) !important;
+}
+
+.ts-wrapper {
+  position: relative;
+}
+
+.ts-dropdown,
+.ts-control,
+.ts-control input {
+  color: #303030;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.ts-control,
+.ts-wrapper.single.input-active .ts-control {
+  background: #fff;
+  cursor: text;
+}
+
+.ts-hidden-accessible {
+  border: 0 !important;
+  clip: rect(0 0 0 0) !important;
+  -webkit-clip-path: inset(50%) !important;
+          clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  position: absolute !important;
+  width: 1px !important;
+  white-space: nowrap !important;
+}
+
+.ts-wrapper.single .ts-control {
+  --ts-pr-caret: 2rem;
+}
+.ts-wrapper.single .ts-control::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 50%;
+  margin-top: -3px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 5px 0 5px;
+  border-color: #808080 transparent transparent transparent;
+}
+.ts-wrapper.single .ts-control:not(.rtl)::after {
+  right: 15px;
+}
+.ts-wrapper.single .ts-control.rtl::after {
+  left: 15px;
+}
+.ts-wrapper.single.dropdown-active .ts-control::after {
+  margin-top: -4px;
+  border-width: 0 5px 5px 5px;
+  border-color: transparent transparent #808080 transparent;
+}
+.ts-wrapper.single.input-active .ts-control, .ts-wrapper.single.input-active .ts-control input {
+  cursor: text;
+}
+
+.ts-wrapper {
+  display: flex;
+  min-height: 36px;
+}
+.ts-wrapper.multi.has-items .ts-control {
+  padding-left: 5px;
+  --ts-pr-min: $padding-x;
+}
+.ts-wrapper.multi .ts-control [data-value] {
+  text-shadow: 0 1px 0 rgba(0, 51, 83, 0.3);
+  border-radius: 3px;
+  background-color: color-mix(#1da7ee, #178ee9, 60%);
+  background-image: linear-gradient(to bottom, #1da7ee, #178ee9);
+  background-repeat: repeat-x;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), inset 0 1px rgba(255, 255, 255, 0.03);
+}
+.ts-wrapper.multi .ts-control [data-value].active {
+  background-color: color-mix(#008fd8, #0075cf, 60%);
+  background-image: linear-gradient(to bottom, #008fd8, #0075cf);
+  background-repeat: repeat-x;
+}
+.ts-wrapper.multi.disabled .ts-control [data-value] {
+  color: #999;
+  text-shadow: none;
+  background: none;
+  box-shadow: none;
+}
+.ts-wrapper.multi.disabled .ts-control [data-value], .ts-wrapper.multi.disabled .ts-control [data-value] .remove {
+  border-color: #e6e6e6;
+}
+.ts-wrapper.multi.disabled .ts-control [data-value] .remove {
+  background: none;
+}
+.ts-wrapper.single .ts-control {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  background-color: color-mix(#fefefe, #f2f2f2, 60%);
+  background-image: linear-gradient(to bottom, #fefefe, #f2f2f2);
+  background-repeat: repeat-x;
+}
+
+.ts-wrapper.single .ts-control, .ts-dropdown.single {
+  border-color: #b8b8b8;
+}
+
+.dropdown-active .ts-control {
+  border-radius: 3px 3px 0 0;
+}
+
+.ts-dropdown .optgroup-header {
+  padding-top: 7px;
+  font-weight: bold;
+  font-size: 0.85em;
+}
+.ts-dropdown .optgroup {
+  border-top: 1px solid #f0f0f0;
+}
+.ts-dropdown .optgroup:first-child {
+  border-top: 0 none;
+}
