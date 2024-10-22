@@ -1,18 +1,15 @@
-import TimeTableApiHandler from "./plugin-timeTableApiHandler.js?v=%%VERSION%%";
+import TomSelect from "tom-select";
+import "tom-select";
+import "tom-select/dist/css/tom-select.default.css";
+import TimeTableApiHandler from "./timeTableApiHandler";
 
 jQuery(document).ready(function ($) {
   class TimeTable {
     constructor() {
-      this.activeTicketIds = new Set(
-        $('input[name="timetable-ticket-ids"]').val().split(","),
-        (this.currentViewWeek = $(
-          "input[name='timetable-current-week']",
-        ).val()),
-        (this.currentViewFirstDay = $(
-          "input[name='timetable-current-week-first-day']",
-        ).val()),
-      );
-
+      this.currentViewWeek = $("input[name='timetable-current-week']").val();
+      this.currentViewFirstDay = $(
+        "input[name='timetable-current-week-first-day']",
+      ).val();
       // General selectors
       this.prevWeekButton = $("button.timetable-week-prev");
       this.nextWeekButton = $("button.timetable-week-next");
@@ -38,6 +35,9 @@ jQuery(document).ready(function ($) {
       );
       this.modalInputHours = this.timeEditModal.find(
         'input[name="timesheet-hours"]',
+      );
+      this.modalInputHoursLeft = this.timeEditModal.find(
+        'input[name="timesheet-hours-left"]',
       );
       this.modalTextareaDescription = this.timeEditModal.find(
         'textarea[name="timesheet-description"]',
@@ -79,6 +79,7 @@ jQuery(document).ready(function ($) {
       TimeTableApiHandler.fetchTicketData().then((availableTags) => {
         this.isFetching = false;
         this.populateLastUpdated();
+        this.initTicketSearch();
       });
     }
 
@@ -112,10 +113,11 @@ jQuery(document).ready(function ($) {
         }
       });
       // Edit entry
-      this.editEntryCell.click((e) => {
+      $(document).on("click", "td.timetable-edit-entry", (e) => {
         const id = e.target.dataset.id ?? null;
         const ticketId = e.target.dataset.ticketid ?? null;
         const hours = e.target.dataset.hours ?? null;
+        const hoursLeft = e.target.dataset.hoursleft ?? null;
         const description = e.target.dataset.description ?? null;
         const date = e.target.dataset.date ?? null;
 
@@ -123,11 +125,18 @@ jQuery(document).ready(function ($) {
           let intervalId = setInterval(() => {
             if (!this.isFetching) {
               clearInterval(intervalId);
-              this.editTimeEntry(id, ticketId, hours, description, date);
+              this.editTimeEntry(
+                id,
+                ticketId,
+                hours,
+                hoursLeft,
+                description,
+                date,
+              );
             }
           }, 500);
         } else {
-          this.editTimeEntry(id, ticketId, hours, description, date);
+          this.editTimeEntry(id, ticketId, hours, hoursLeft, description, date);
         }
       });
 
@@ -143,10 +152,6 @@ jQuery(document).ready(function ($) {
 
       this.boundClickOutsideModalHandler = (e) =>
         this.clickOutsideModalHandler(e);
-
-      this.modalInputDate.change((e) =>
-        this.getActiveTicketsOfWeek(e.target.value),
-      );
 
       $("#modal-form").on("submit", (e) => {
         this.modalSubmitButton.attr("disabled", "disabled");
@@ -164,43 +169,8 @@ jQuery(document).ready(function ($) {
           this.changeWeek(oppositeOffset);
         }
       });
-    }
 
-    getActiveTicketsOfWeek(dateString) {
-      if (this.modalInputTimesheetId.val()) {
-        return false;
-      }
-      let selectedDateTimestamp = new Date(dateString).getTime();
-      let day = new Date(dateString).getDay();
-
-      let diffToMonday = ((day === 0 ? -6 : 1) - day) * 24 * 60 * 60 * 1000;
-
-      let monday = new Date(selectedDateTimestamp + diffToMonday);
-      let sunday = new Date(
-        selectedDateTimestamp + diffToMonday + 6 * 24 * 60 * 60 * 1000,
-      );
-
-      $(this.modalTicketInput)
-        .val("")
-        .attr("placeholder", () => {
-          return $(this.modalTicketInput).attr("data-loading");
-        });
-
-      $(this.modalTicketSearch).addClass("ticket-loading");
-      // Reset search
-      this.modalTicketResults.empty();
-      TimeTableApiHandler.getActiveTicketIdsOfPeriod(monday, sunday).then(
-        (activeTicketIds) => {
-          activeTicketIds = JSON.parse(activeTicketIds);
-          this.activeTicketIds = new Set(activeTicketIds);
-          $(this.modalTicketSearch).removeClass("ticket-loading");
-          $(this.modalTicketInput)
-            .val("")
-            .attr("placeholder", () => {
-              return $(this.modalTicketInput).attr("data-placeholder");
-            });
-        },
-      );
+      this.syncButton.click(() => this.refreshButtonPress());
     }
 
     /**
@@ -244,12 +214,13 @@ jQuery(document).ready(function ($) {
     selectTicket(target) {
       const {
         innerText: taskName,
-        dataset: { value: taskId },
+        dataset: { value: taskId, hoursleft: hoursLeft },
       } = target;
 
       // Set values from selected ticket
       this.modalTicketInput.val(taskName);
       this.modalTicketIdInput.val(taskId);
+      this.modalInputHoursLeft.val(hoursLeft).attr("data-value", hoursLeft);
 
       // Reset search
       this.modalTicketResults.empty();
@@ -298,9 +269,7 @@ jQuery(document).ready(function ($) {
         "text" in obj &&
         typeof text === "string" &&
         (text.toLowerCase().includes(lowerCaseQuery) ||
-          (id && id.toString().toLowerCase().includes(lowerCaseQuery))) &&
-        !this.activeTicketIds.has(String(obj.id)) &&
-        !this.activeTicketIds.has(Number(obj.id))
+          (id && id.toString().toLowerCase().includes(lowerCaseQuery)))
       ) {
         const index = text.toLowerCase().indexOf(lowerCaseQuery);
         const relevance = index === -1 ? 0 : text.length - index;
@@ -323,9 +292,9 @@ jQuery(document).ready(function ($) {
           `<div class="timetable-ticket-result-item-no-results" data-value="">No results</div>`,
         );
       }
-      results.forEach(({ id, text, projectName }) => {
+      results.forEach(({ id, text, projectName, hoursLeft }) => {
         this.modalTicketResults.append(
-          `<div class="timetable-ticket-result-item" data-project="${projectName}" data-value="${id}"><span>${text}</span></div>`,
+          `<div class="timetable-ticket-result-item" data-project="${projectName}" data-hoursleft="${hoursLeft}" data-value="${id}"><span>${text}</span></div>`,
         );
       });
       return results;
@@ -342,7 +311,7 @@ jQuery(document).ready(function ($) {
      * @param {number} offset
      * @return {boolean}
      */
-    editTimeEntry(id, ticketId, hours, description, date, offset) {
+    editTimeEntry(id, ticketId, hours, hoursLeft, description, date, offset) {
       // Find ticket in cache
       const ticket = TimeTableApiHandler.getTicketDataFromCache(
         parseInt(ticketId),
@@ -352,12 +321,19 @@ jQuery(document).ready(function ($) {
         this.openEditTimeSyncModal();
         TimeTableApiHandler.fetchTicketDatum(ticketId).then((availableTags) => {
           this.closeEditTimeSyncModal();
-          this.editTimeEntry(id, ticketId, hours, description, date, offset);
+          this.editTimeEntry(
+            id,
+            ticketId,
+            hours,
+            hoursLeft,
+            description,
+            date,
+            offset,
+          );
         });
         return false;
       }
 
-      this.populateLastUpdated();
       this.openEditTimeLogModal();
 
       if (id) {
@@ -370,6 +346,7 @@ jQuery(document).ready(function ($) {
       this.modalInputTicketId.val(ticket.id);
       this.modalInputTicketName.val(ticket.text).attr("disabled", "disabled");
       this.modalInputHours.val(hours);
+      this.modalInputHoursLeft.val(hoursLeft).attr("data-value", hoursLeft);
       this.modalTextareaDescription.val(description);
       this.modalInputDate.val(date);
 
@@ -503,7 +480,6 @@ jQuery(document).ready(function ($) {
             alert("An error has occurred");
           }
         });
-      console.log(timesheetId);
     }
 
     /**
@@ -514,6 +490,7 @@ jQuery(document).ready(function ($) {
     closeEditTimeLogModal() {
       $(this.timeEditModal).hide().find("input, textarea").val("");
       $(this.modalTicketResults).empty();
+      $(this.modalInputHoursLeft).removeAttr("data-value");
       $(document).off("mousedown", this.boundClickOutsideModalHandler);
     }
 
@@ -546,9 +523,194 @@ jQuery(document).ready(function ($) {
       if ($(event.target).find(this.timeEditForm).length > 0) {
         this.closeEditTimeLogModal();
       }
-      if ($(event.target).hasClass("timetable-sync-tickets")) {
-        this.refreshButtonPress();
+    }
+
+    initTicketSearch(autofocus = false) {
+      let {
+        data: { children: tickets },
+      } = TimeTableApiHandler.readFromCache("tickets");
+      let {
+        data: { children: projects },
+      } = TimeTableApiHandler.readFromCache("projects");
+
+      const pageSize = 50;
+      const userId = $("div.timetable").attr("data-userid");
+
+      // Sort tickets by editorId and created date.
+      tickets.sort((a, b) => {
+        if (a.editorId === userId && b.editorId !== userId) {
+          return -1;
+        } else if (b.editorId === userId && a.editorId !== userId) {
+          return 1;
+        } else {
+          const dateA = new Date(a.createdDate);
+          const dateB = new Date(b.createdDate);
+          return dateB - dateA;
+        }
+      });
+
+      // Exclude tickets that are already present in the table.
+
+      const activeTicketIds = $("#timetable > tbody > tr[data-ticketid]")
+        .map(function () {
+          return $(this).data("ticketid");
+        })
+        .get();
+
+      const options = tickets
+        .filter((child) => !activeTicketIds.includes(child.id))
+        .map((child) => {
+          return {
+            value: child.id,
+            text: child.text,
+            projectName: child.projectName,
+            editorId: child.editorId,
+          };
+        });
+
+      // Init tomselect
+      let tomselect = new TomSelect(".timetable-tomselect", {
+        options: options,
+        searchField: ["text", "value", "projectName"],
+        loadingClass: "ts-loading",
+        placeholder: "+ New registration",
+        create: function (input) {
+          return { value: input, text: input };
+        },
+        render: {
+          item: function (item, escape) {
+            return `<div><span>${escape(item.text)} <span>${escape(item.projectName)} <small>(${escape(item.value)})</small></span></span></div>`;
+          },
+          option: function (item, escape) {
+            return `<div><span>${escape(item.text)} <span>${escape(item.projectName)} <small>(${escape(item.value)})</small></span></span></div>`;
+          },
+          option_create: function (data, escape) {
+            return `<option data-value="add-new-ticket" class="create">+ Create new ticket: <strong>${escape(data.input)}</strong>&hellip;</option>`;
+          },
+        },
+        load: function (query, callback) {
+          if (!query.length) return callback();
+          const term = query.toUpperCase();
+          let results = options.filter(
+            (e) =>
+              (e.text && e.text.toUpperCase().includes(term)) ||
+              (typeof e.value === "string" && e.value.toUpperCase() === term) ||
+              (e.projectName && e.projectName.toUpperCase().includes(term)),
+          );
+          callback(results.slice(0, pageSize));
+        },
+        onChange: function (value) {
+          const selectedOption = this.options[value];
+
+          // Check if selected option is the "create new" one
+          if (
+            selectedOption.text === selectedOption.value &&
+            typeof selectedOption.projectName === "undefined"
+          ) {
+            const projectOptions = [
+              {
+                value: "Select a project:",
+                text: "Select a project:",
+                disabled: "disabled",
+              },
+              { value: selectedOption.value, text: selectedOption.value },
+              ...projects
+                .filter((project) => project.text.trim() !== "")
+                .map((project) => ({ value: project.id, text: project.text })),
+            ];
+
+            // Destroy select and populate with projects for the new ticket to be created in
+            this.destroy();
+            tomselect = new TomSelect(".timetable-tomselect", {
+              options: projectOptions,
+              onItemRemove: function () {
+                // Reactivate the ticket search upon item removal
+                this.destroy();
+                timeTable.initTicketSearch(true);
+              },
+              onChange: function (value) {
+                const selectedValues = this.getValue();
+                const resultArray = selectedValues.split(",");
+                if (resultArray.length === 2) {
+                  const ticketName = resultArray[0];
+                  const projectId = resultArray[1];
+                  const projectName = tomselect.options[projectId].text;
+                  let result = TimeTableApiHandler.createNewTicket(
+                    ticketName,
+                    projectId,
+                    userId,
+                  );
+                  result.then((data) => {
+                    const ticketId = data.result[0];
+                    if (ticketId && ticketName && projectName) {
+                      timeTable.addRowToTimetable(
+                        ticketId,
+                        ticketName,
+                        projectName,
+                      );
+                      this.destroy();
+                      timeTable.initTicketSearch();
+                      TimeTableApiHandler.fetchTicketDatum(ticketId);
+                    }
+                  });
+                }
+              },
+            });
+            tomselect.open();
+            return;
+          }
+          timeTable.addRowToTimetable(
+            value,
+            selectedOption.text,
+            selectedOption.projectName,
+          );
+          this.clear();
+        },
+      });
+
+      if (autofocus) {
+        tomselect.focus();
+        tomselect.open();
       }
+    }
+
+    addRowToTimetable(ticketId, ticketText, projectName) {
+      const firstDateOfWeek = new Date(
+        $("input[name='timetable-current-week-first-day']").val(),
+      );
+
+      // Create a new date object to ensure the original date is preserved
+      let dateIterator = new Date(firstDateOfWeek.getTime());
+
+      const newRow = `
+    <tr class="newly-added-tr">
+        <td class="ticket-title" scope="row">
+            <a href="?showTicketModal=${ticketId}#/tickets/showTicket/${ticketId}">${ticketText}</a>
+            <span>${projectName}</span>
+        </td>
+        ${Array.from({ length: 7 })
+          .map((_, i) => {
+            // Increment date
+            if (i > 0) {
+              dateIterator.setDate(dateIterator.getDate() + 1);
+            }
+
+            // Format date in YYYY-MM-DD format
+            const formattedDate = dateIterator.toISOString().slice(0, 10);
+
+            // Depending on the day of the week, add 'weekend' class
+            const weekendClass = i === 5 || i === 6 ? "weekend" : "";
+
+            return `<td scope="row" class="timetable-edit-entry ${weekendClass}" data-ticketid=${ticketId} data-date="${formattedDate}" title="">
+                        <span></span>
+                    </td>`;
+          })
+          .join("")}
+        <td></td>
+    </tr>
+`;
+
+      $("td.add-new").parent().before(newRow);
     }
   }
 

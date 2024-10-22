@@ -41,7 +41,7 @@ class Settings extends Controller
     public function get(): Response
     {
         try {
-            $ticketCacheExpiration = (int) ($this->settingsRepo->getSetting('itk-leantime-timetable.ticketCacheExpiration') ?: 1200);
+            $ticketCacheExpiration = (int) ($this->settingsRepo->getSetting('itk-leantime-timetable.ticketCacheExpiration') ?: 120);
             $this->template->assign('ticketCacheExpiration', $ticketCacheExpiration);
         } catch (\Exception $e) {
             $this->template->setNotification('An error occurred while saving the settings. ' . $e, 'error');

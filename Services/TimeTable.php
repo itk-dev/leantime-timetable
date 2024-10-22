@@ -17,8 +17,7 @@ class TimeTable
      */
     private static array $assets = [
         // source => target
-        __DIR__ . '/../assets/timeTableApiHandler.js' => APP_ROOT . '/public/dist/js/plugin-timeTableApiHandler.js',
-        __DIR__ . '/../assets/timeTable.js' => APP_ROOT . '/public/dist/js/plugin-timeTable.js',
+        __DIR__ . '/../dist/js/timeTable.js' => APP_ROOT . '/public/dist/js/plugin-timeTable.js',
         __DIR__ . '/../assets/timeTable.css' => APP_ROOT . '/public/dist/css/plugin-timeTable.css',
     ];
 
@@ -93,19 +92,8 @@ class TimeTable
      * @param array<string, mixed> $values
      * @return void
      */
-    public function logTimeOnTicket(array $values): void
+    public function updateOrAddTimelogOnTicket(array $values, int $originalId): void
     {
-        $this->timeTableRepo->logTimeOnTicket($values);
-    }
-
-    /**
-     * updateTime - update specific time entry
-     * @param array<string, mixed> $values
-     *
-     * @return void
-     */
-    public function updateTime(array $values): void
-    {
-        $this->timeTableRepo->updateTime($values);
+        $this->timeTableRepo->updateOrAddTimelogOnTicket($values, $originalId);
     }
 }

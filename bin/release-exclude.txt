@@ -13,3 +13,5 @@ package.json
 phpcs.xml
 phpstan.dist.neon
 vendor
+webpack.config.js
+Dockerfile

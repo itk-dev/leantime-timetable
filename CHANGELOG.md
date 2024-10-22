@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+* [PR-25](https://github.com/ITK-Leantime/leantime-timetable/pull/25)
+  * Added quick-add ticket to timetable
+  * Added possibility to add a ticket via API
+
+* [PR-24](https://github.com/ITK-Leantime/leantime-timetable/pull/24)
+  * Hide vertical scrollbar on description field on windows
+  * Remove concept of filtering tickets
+  * Removed time logging restrictions and now merge logs if one already exists
 * [PR-23](https://github.com/ITK-Leantime/leantime-timetable/pull/23)
   * Add linting of `*.blade.php` files
 
