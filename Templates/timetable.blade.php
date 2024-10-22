@@ -200,12 +200,10 @@
                     class="timetable-modal-submit btn btn-primary">{{ __('timeTable.button_modal_save') }}</button>
             </div>
         </form>
-
     </div>
     <div id="edit-time-sync-modal" class="nyroModalBg edit-time-sync-modal">
         <div><span><i
                     class="fa-solid fa-spinner fa-2xl fa-spin"></i></span><span>{{ __('timeTable.synchronizing') }}</span>
         </div>
     </div>
-
 @endsection
