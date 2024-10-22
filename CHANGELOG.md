@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+* [PR-23](https://github.com/ITK-Leantime/leantime-timetable/pull/23)
+  * Add linting of `*.blade.php` files
+
 ## [1.2.0] - 2024-10-17
 
 * [PR-21](https://github.com/ITK-Leantime/leantime-timetable/pull/21)
