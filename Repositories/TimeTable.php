@@ -101,7 +101,7 @@ class TimeTable
     /**
      * updateOrAddTimelogOnTicket - Updates or adds a timelog entry for a ticket
      *
-     * @param array    $values     An array containing the values for the timelog entry
+     * @param array<string, mixed> $values     An array containing the values for the timelog entry
      * @param int|null $originalId (Optional) The original timelog id to check for updates or deletion
      *
      * @return void
