@@ -159,6 +159,7 @@ class TimeTable extends Controller
             $timesheetsByTicket[$ticket['ticketId']] = $timesheetsSortedByWeekdate;
         }
         // All tickets assignet to the template
+        $this->template->assign('userId', session('userdata.id'));
         $this->template->assign('ticketIds', implode(',', $ticketIds));
         $this->template->assign('timesheetsByTicket', $timesheetsByTicket);
         $this->template->assign('weekDays', $days);
