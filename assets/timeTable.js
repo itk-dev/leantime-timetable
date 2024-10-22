@@ -393,7 +393,6 @@ jQuery(document).ready(function ($) {
      * @return {boolean}
      */
     refreshButtonPress() {
-      console.log("hallo");
       const loadingHTML =
         '<i class="fa-solid fa-arrows-rotate fa-spin"></i>Syncing data';
       if (this.isFetching) {
@@ -481,7 +480,6 @@ jQuery(document).ready(function ($) {
             alert("An error has occurred");
           }
         });
-      console.log(timesheetId);
     }
 
     /**
