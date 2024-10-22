@@ -5,6 +5,8 @@
 * [PR-23](https://github.com/ITK-Leantime/leantime-timetable/pull/23)
   * Add linting of `*.blade.php` files
 
+## [1.2.0] - 2024-10-17
+
 * [PR-21](https://github.com/ITK-Leantime/leantime-timetable/pull/21)
   * Add functionality and translation to button provided in #19
 * [PR-19](https://github.com/ITK-Leantime/leantime-timetable/pull/19)
@@ -85,7 +87,8 @@
 * [PR-1](https://github.com/ITK-Leantime/leantime-timetable/pull/1)
   * Foundation for further development
 
-[Unreleased]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.1.0...HEAD
+[Unreleased]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.2.0...HEAD
+[1.2.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.0.2...1.1.0
 [1.0.2]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.0.0...1.0.1
