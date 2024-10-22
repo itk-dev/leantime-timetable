@@ -18,35 +18,35 @@ export default class TimeTableApiHandler {
     let projectPromise;
     let ticketPromise;
 
-      let projectCacheData = this.getCacheData('projects');
+    let projectCacheData = this.getCacheData("projects");
 
-      if (projectCacheData) {
-          projectPromise = Promise.resolve(projectCacheData);
-      } else {
-          projectPromise = this.getAllProjects().then((data) => {
-              var projects = data.result;
-              const projectGroup = {
-                  id: 'project',
-                  text: 'Projects',
-                  children: [],
-                  index: 1,
-              };
-              projects.forEach((project) => {
-                  let option = {
-                      id: project.id,
-                      text: project.name,
-                      type: 'project',
-                      client: project.clientName,
-                  };
-                  projectGroup.children.push(option);
-              });
-              this.writeToCache('projects', {
-                  data: projectGroup,
-                  expiration: Date.now(),
-              });
-              return projectGroup;
-          });
-      }
+    if (projectCacheData) {
+      projectPromise = Promise.resolve(projectCacheData);
+    } else {
+      projectPromise = this.getAllProjects().then((data) => {
+        var projects = data.result;
+        const projectGroup = {
+          id: "project",
+          text: "Projects",
+          children: [],
+          index: 1,
+        };
+        projects.forEach((project) => {
+          let option = {
+            id: project.id,
+            text: project.name,
+            type: "project",
+            client: project.clientName,
+          };
+          projectGroup.children.push(option);
+        });
+        this.writeToCache("projects", {
+          data: projectGroup,
+          expiration: Date.now(),
+        });
+        return projectGroup;
+      });
+    }
 
     let ticketCacheData = this.getCacheData("tickets");
     if (ticketCacheData && !reload) {
@@ -147,7 +147,9 @@ export default class TimeTableApiHandler {
   }
 
   static async createNewTicket(ticketName, projectId) {
-      return this.callApi("leantime.rpc.tickets.addTicket", { values: {headline: ticketName, projectId: projectId}  });
+    return this.callApi("leantime.rpc.tickets.addTicket", {
+      values: { headline: ticketName, projectId: projectId },
+    });
   }
 
   /**
@@ -204,10 +206,9 @@ export default class TimeTableApiHandler {
     return cacheDataExpired ? false : cacheData.data;
   }
 
-
-    static getAllProjects() {
-        return this.callApi('leantime.rpc.projects.getAll', {});
-    }
+  static getAllProjects() {
+    return this.callApi("leantime.rpc.projects.getAll", {});
+  }
   /**
    * Retrieves all tickets from the LeanTime API.
    * @return {Promise} - Retrieved tickets or error message
