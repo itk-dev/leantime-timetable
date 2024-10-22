@@ -1,6 +1,8 @@
 /* Todo scope css better so it doesnt "ruin" leantime again */
 /* Todo streamline kebab case / camelcase stuff */
-
+.maincontentinner {
+  padding-bottom: 50px;
+}
 .timetable {
   --itk-color-primary: hsla(200, 98%, 39%, 1);
   --itk-color-primary-50: hsla(204, 100%, 97%, 1);
@@ -31,6 +33,14 @@
 
   #timetable {
     background-color: var(--itk-color-white);
+
+    tbody {
+      tr.newly-added-tr {
+        td:not(:last-child) {
+          background-color: var(--itk-color-primary-50) !important;
+        }
+      }
+    }
   }
 
   .timetable-container {
@@ -181,7 +191,7 @@
     border: 1px solid var(--itk-border-color);
     padding: var(--itk-spacing-md);
 
-    &:last-child&:not([colspan="9"]) {
+    &:last-child&:not([colspan="9"]):not(.add-new) {
       color: var(--itk-color-gray-500);
       background-color: var(--itk-color-gray-100);
     }
@@ -262,7 +272,7 @@
     padding: 10px;
     box-sizing: border-box;
   }
-  .table td input {
+  .table td input:not(#tomselect-1-ts-control) {
     all: unset;
     position: absolute;
     display: block;
@@ -594,60 +604,6 @@
     border: 1px solid var(--itk-color-gray-100);
   }
 
-  .timetable-sync-panel:empty {
-    display: none;
-  }
-
-  .timetable-sync-panel {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    background-color: #fff;
-    right: 0;
-    bottom: 0;
-    width: 225px;
-    height: 50px;
-  }
-
-  .timetable-sync-panel > div:first-child {
-    flex: 2;
-    cursor: pointer;
-  }
-
-  .timetable-sync-panel > div:first-child > button {
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid #999;
-    background-color: #111;
-    color: #fff !important;
-    font-size: 13px;
-    cursor: pointer;
-  }
-
-  .timetable-sync-panel > div:first-child > button > span {
-    border-bottom: 1px solid #000;
-    pointer-events: none;
-  }
-
-  .timetable-sync-panel > div:first-child > button > span > i {
-    margin-right: 5px;
-    pointer-events: none;
-  }
-
-  .timetable-sync-panel > div {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-  }
-
-  .timetable-sync-panel > div > span {
-    font-size: 11px;
-    margin: auto 0;
-    color: #000;
-  }
-
   .ticket-title span {
     color: #666;
     cursor: default;
@@ -723,4 +679,135 @@
       }
     }
   }
+}
+#timetable td.add-new {
+  padding: 0px;
+  font-family: inherit !important;
+  ~ td {
+    text-align: center;
+  }
+  .timetable-tomselect {
+    * {
+      font-size: var(--base-font-size);
+    }
+    div.ts-control {
+      border: none !important;
+      height: 50px;
+      box-shadow: none;
+
+      div.item {
+        background-color: #fff !important;
+        background-image: none;
+        color: #000;
+        border: none;
+        margin: auto 0;
+        box-shadow: none;
+        padding: 0 0 0 10px;
+        text-shadow: none;
+
+        &::after {
+          content: "/";
+          padding-left: 8px;
+        }
+      }
+
+      input#tomselect-1-ts-control {
+        font-size: 14px;
+        padding: 0 0 0 10px !important;
+
+        &::placeholder {
+          font-weight: bold;
+          color: var(--primary-color) !important;
+
+          opacity: 0.9;
+        }
+        &:focus::placeholder {
+          opacity: 0;
+        }
+      }
+    }
+  }
+}
+div.ts-dropdown-content {
+  margin: 0px !important;
+
+  option {
+    font-weight: bold;
+  }
+  div.option {
+    padding: 7px 12px;
+
+    &[data-value="add-new-ticket"] {
+      cursor: pointer;
+      color: #495c68;
+      font-weight: bold;
+      opacity: 1;
+    }
+    &[aria-disabled="true"] {
+      cursor: default;
+      color: #495c68;
+      font-weight: bold;
+      opacity: 1;
+    }
+    span {
+      span {
+        color: #64748b;
+      }
+    }
+  }
+}
+
+.timetable-sync-panel:empty {
+  display: none;
+}
+
+.timetable-sync-panel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  background-color: #fff;
+  right: -1px;
+  bottom: 0;
+  width: 125px;
+  height: 50px;
+  border-bottom-right-radius: 15px;
+}
+
+.timetable-sync-panel > div:first-child {
+  flex: 2;
+  cursor: pointer;
+}
+
+.timetable-sync-panel > div:first-child > button {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #999;
+  background-color: #111;
+  color: #fff !important;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.timetable-sync-panel > div:first-child > button > span {
+  border-bottom: 1px solid #000;
+  pointer-events: none;
+}
+
+.timetable-sync-panel > div:first-child > button > span > i {
+  margin-right: 5px;
+  pointer-events: none;
+}
+
+.timetable-sync-panel > div {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.timetable-sync-panel > div > span {
+  font-size: 11px;
+  margin: auto 0;
+  color: #000;
 }
