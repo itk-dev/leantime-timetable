@@ -29,14 +29,14 @@ module.exports = {
         }),
         new MiniCssExtractPlugin({ filename: '../css/timeTable.css' }), // Added plugin configuration
     ],
-    module: {
-        rules: [
-            {
-                test: /\.css$/,
-                use: [MiniCssExtractPlugin.loader, 'css-loader'],  // updated rule to handle CSS files
-            },
-            // add additional rules for your project as needed
-        ],
+module: {
+    rules: [
+        {
+            test: /\.css$/,
+            use: [MiniCssExtractPlugin.loader, 'css-loader'],  // updated rule to handle CSS files
+    },
+        // add additional rules for your project as needed
+    ],
     },
     mode: 'production',
 };
