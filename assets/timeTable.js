@@ -580,10 +580,10 @@ jQuery(document).ready(function ($) {
         },
         render: {
           item: function (item, escape) {
-            return `<div><span>${escape(item.text)} <span>${escape(item.projectName)} <small>(${escape(item.value)})</small></span></span></div>`;
+            return `<div><span>${escape(item.text)} <span><i class="fa fa-angle-right fa-xs"></i> ${escape(item.projectName)} <small>(${escape(item.value)})</small></span></span></div>`;
           },
           option: function (item, escape) {
-            return `<div><span>${escape(item.text)} <span>${escape(item.projectName)} <small>(${escape(item.value)})</small></span></span></div>`;
+            return `<div><span>${escape(item.text)} <span><i class="fa fa-angle-right fa-xs"></i> ${escape(item.projectName)} <small>(${escape(item.value)})</small></span></span></div>`;
           },
           option_create: function (data, escape) {
             return `<option data-value="add-new-ticket" class="create">+ Create new ticket: <strong>${escape(data.input)}</strong>&hellip;</option>`;
