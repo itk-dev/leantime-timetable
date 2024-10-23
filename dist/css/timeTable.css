@@ -753,6 +753,9 @@ div.ts-dropdown-content {
           color: #303030;
       }
     span {
+        i {
+            vertical-align: 0.05em;
+        }
       span {
         color: #64748b;
       }
