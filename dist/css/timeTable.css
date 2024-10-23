@@ -687,7 +687,7 @@
     text-align: center;
   }
   .timetable-tomselect {
-    * {
+    *:not(.fa) {
       font-size: var(--base-font-size);
     }
     div.ts-control {
@@ -749,6 +749,9 @@ div.ts-dropdown-content {
       font-weight: bold;
       opacity: 1;
     }
+      &.active {
+          color: #303030;
+      }
     span {
       span {
         color: #64748b;
