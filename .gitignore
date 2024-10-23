@@ -1,9 +1,10 @@
 composer.lock
 vendor
-dist
 .DS_Store
 *.cache
 node_modules
+package-lock.json
+.idea/
 
 # Release artifacts
 release/

@@ -52,8 +52,6 @@ if (class_exists(EventDispatcher::class)) {
         'leantime.core.template.tpl.*.afterScriptLibTags',
         function () {
             if (null !== (session('userdata.id')) && str_contains($_SERVER['REQUEST_URI'], '/TimeTable/TimeTable')) {
-                $apiHandlerUrl = '/dist/js/plugin-timeTableApiHandler.js?' . http_build_query(['v' => '%%VERSION%%']);
-                echo '<script type="module" src="' . htmlspecialchars($apiHandlerUrl) . '"></script>';
                 $timeTableUrl = '/dist/js/plugin-timeTable.js?' . http_build_query(['v' => '%%VERSION%%']);
                 echo '<script type="module" src="' . htmlspecialchars($timeTableUrl) . '"></script>';
                 $timeTableStyle = '/dist/css/plugin-timeTable.css?' . http_build_query(['v' => '%%VERSION%%']);
