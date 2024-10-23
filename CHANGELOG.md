@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+* [PR-27](https://github.com/ITK-Leantime/leantime-timetable/pull/27)
+  * Fixed build process and script
+
 ## [2.0.0] - 2024-10-22
 
 * [PR-25](https://github.com/ITK-Leantime/leantime-timetable/pull/25)
