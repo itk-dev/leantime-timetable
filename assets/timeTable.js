@@ -428,6 +428,7 @@ jQuery(document).ready(function ($) {
         TimeTableApiHandler.fetchTicketData().then((availableTags) => {
           this.isFetching = false;
           this.populateLastUpdated();
+          this.initTicketSearch();
         });
       }
     }
