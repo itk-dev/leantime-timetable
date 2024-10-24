@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [2.0.1] - 2024-10-23
+
 * [PR-27](https://github.com/ITK-Leantime/leantime-timetable/pull/27)
   * Fixed build process and script
 
@@ -100,7 +102,8 @@
 * [PR-1](https://github.com/ITK-Leantime/leantime-timetable/pull/1)
   * Foundation for further development
 
-[Unreleased]: https://github.com/ITK-Leantime/leantime-timetable/compare/2.0.0...HEAD
+[Unreleased]: https://github.com/ITK-Leantime/leantime-timetable/compare/2.0.1...HEAD
+[2.0.1]: https://github.com/ITK-Leantime/leantime-timetable/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.2.0...2.0.0
 [1.2.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/1.0.2...1.1.0

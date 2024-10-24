@@ -749,13 +749,13 @@ div.ts-dropdown-content {
       font-weight: bold;
       opacity: 1;
     }
-      &.active {
-          color: #303030;
-      }
+    &.active {
+      color: #303030;
+    }
     span {
-        i {
-            vertical-align: 0.05em;
-        }
+      i {
+        vertical-align: 0.05em;
+      }
       span {
         color: #64748b;
       }
