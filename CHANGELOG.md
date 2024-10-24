@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+* [PR-29](https://github.com/ITK-Leantime/leantime-timetable/pull/29)
+  * Fixed user specificity in timetable update sql
+
 ## [2.0.1] - 2024-10-23
 
 * [PR-27](https://github.com/ITK-Leantime/leantime-timetable/pull/27)

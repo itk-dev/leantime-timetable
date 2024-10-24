@@ -109,11 +109,12 @@ class TimeTable
      */
     public function updateOrAddTimelogOnTicket(array $values, int $originalId = null): void
     {
-        $sql = 'SELECT * FROM zp_timesheets WHERE ticketId = :ticketId AND workDate = :date';
+        $sql = 'SELECT * FROM zp_timesheets WHERE ticketId = :ticketId AND workDate = :date AND userId = :userId';
 
         $stmn = $this->db->database->prepare($sql);
         $stmn->bindValue(':ticketId', $values['ticketId']);
         $stmn->bindValue(':date', $values['workDate']);
+        $stmn->bindValue(':userId', $values['userId'], PDO::PARAM_INT);
         $stmn->execute();
 
         $timesheet = $stmn->fetch(PDO::FETCH_ASSOC);
@@ -121,14 +122,15 @@ class TimeTable
 
         if ($timesheet) {
             if ($originalId && $originalId == $timesheet['id']) {
-                $sql = 'UPDATE zp_timesheets SET hours = :hours, description = :description WHERE id = :id';
+                $sql = 'UPDATE zp_timesheets SET hours = :hours, description = :description WHERE id = :id AND userId = :userId';
             } else {
-                $sql = 'UPDATE zp_timesheets SET hours = hours + :hours, description = CONCAT(description, " ", :description) WHERE id = :id';
+                $sql = 'UPDATE zp_timesheets SET hours = hours + :hours, description = CONCAT(description, " ", :description) WHERE id = :id AND userId = :userId';
             }
 
             $stmn = $this->db->database->prepare($sql);
             $stmn->bindValue(':id', $timesheet['id'], PDO::PARAM_INT);
             $stmn->bindValue(':hours', $values['hours']);
+            $stmn->bindValue(':userId', $values['userId'], PDO::PARAM_INT);
             $stmn->bindValue(':description', $values['description']);
         } else {
             // else, insert new record
@@ -160,9 +162,10 @@ class TimeTable
         $stmn->closeCursor();
 
         if ($originalId && (empty($timesheet) || $values['workDate'] == $timesheet['workDate'] && $values['timesheetId'] != $timesheet['id'])) {
-            $sql = 'DELETE FROM zp_timesheets WHERE id = :id';
+            $sql = 'DELETE FROM zp_timesheets WHERE id = :id AND userId = :userId';
             $stmn = $this->db->database->prepare($sql);
             $stmn->bindValue(':id', $originalId, PDO::PARAM_INT);
+            $stmn->bindValue(':userId', $values['userId'], PDO::PARAM_INT);
             $stmn->execute();
             $stmn->closeCursor();
         }
