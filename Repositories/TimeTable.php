@@ -57,6 +57,7 @@ class TimeTable
      */
     public function getTimesheetByTicketIdAndWorkDate(string $ticketId, CarbonImmutable $workDate, ?string $searchTerm): array
     {
+
         $searchTermQuery = isset($searchTerm)
             ? " AND
         (zp_tickets.id LIKE CONCAT( '%', :searchTerm, '%') OR
@@ -71,6 +72,7 @@ class TimeTable
         timesheet.ticketId,
         zp_tickets.headline,
         zp_tickets.id as ticketId,
+        zp_tickets.type as ticketType,
         zp_tickets.hourRemaining,
         zp_projects.name
         FROM zp_timesheets AS timesheet
