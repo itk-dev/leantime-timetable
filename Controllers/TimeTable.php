@@ -5,7 +5,7 @@ namespace Leantime\Plugins\TimeTable\Controllers;
 use Carbon\CarbonImmutable;
 use Leantime\Core\Controller\Controller;
 use Leantime\Core\Controller\Frontcontroller;
-use mysql_xdevapi\Exception;
+use Leantime\Plugins\TimeTable\Helpers\TimeTableActionHandler;
 use Symfony\Component\HttpFoundation\Response;
 use Leantime\Plugins\TimeTable\Services\TimeTable as TimeTableService;
 use Leantime\Core\Language as LanguageCore;
@@ -54,40 +54,21 @@ class TimeTable extends Controller
         if (!AuthService::userIsAtLeast(Roles::$editor)) {
             return $this->template->displayJson(['Error' => 'Not Authorized'], 403);
         }
-        $jsonPayload = json_decode(file_get_contents('php://input'), true);
-        if (isset($jsonPayload['action']) && $jsonPayload['action'] === 'delete') {
-            $timesheetId = $jsonPayload['timesheetId'];
-            if ($timesheetId) {
-                try {
-                    $this->timesheetRepository->deleteTime($timesheetId);
-                    exit(json_encode(['status' => 'success']));
-                } catch (Exception $e) {
-                    exit(json_encode(['status' => 'error', 'error' => $e->getMessage()]));
-                }
+        $redirectUrl = BASE_URL . '/TimeTable/TimeTable';
+        $actionHandler = new TimeTableActionHandler($this->timeTableService, $this->timesheetRepository);
+
+        if (isset($_POST['action'])) {
+            switch ($_POST['action']) {
+                case 'adjustPeriod':
+                    $redirectUrl = $actionHandler->adjustPeriod($_POST, $redirectUrl);
+                    break;
+                case 'saveTicket':
+                    $redirectUrl = $actionHandler->saveTicket($_POST, $redirectUrl);
+                    break;
             }
         }
 
-        $timesheetId = isset($_POST['timesheet-id']) ? (int) $_POST['timesheet-id'] : 0;
-        $workDate = new CarbonImmutable($_POST['timesheet-date'], session('usersettings.timezone'));
-            $workDate = $workDate->setToDbTimezone();
-
-            $values = [
-                'timesheetId' => $_POST['timesheet-id'],
-                'userId' => session('userdata.id'),
-                'hours' => $_POST['timesheet-hours'],
-                'workDate' => $workDate,
-                'ticketId' => $_POST['timesheet-ticket-id'],
-                'description' => $_POST['timesheet-description'],
-                'kind' => 'GENERAL_BILLABLE',
-            ];
-            $this->timeTableService->updateOrAddTimelogOnTicket($values, $timesheetId);
-
-            $redirectUrl = BASE_URL . '/TimeTable/TimeTable';
-            if (isset($_GET['offset'])) {
-                $redirectUrl = $redirectUrl . '?offset=' . $_GET['offset'];
-            }
-
-            return Frontcontroller::redirect($redirectUrl);
+        return Frontcontroller::redirect($redirectUrl);
     }
 
     /**
@@ -109,31 +90,71 @@ class TimeTable extends Controller
             $searchTerm = $_GET['searchTerm'];
         }
 
-        if (isset($_GET['offset'])) {
-            // Multiply offset by 7 days.
-            if ((int) $_GET['offset'] > 0) {
-                $now = $now->addDays((int) $_GET['offset'] * 7);
+
+        try {
+            if (isset($_GET['fromDate']) && $_GET['fromDate'] !== '') {
+                if ($_GET['fromDate'][0] === '+' || $_GET['fromDate'][0] === '-') {
+                    // If relative date format
+
+                    $fromDate = CarbonImmutable::now()->startOfDay()->modify($_GET['fromDate']);
+                } else {
+                    // Try specific date format
+                    $fromDate = CarbonImmutable::createFromFormat('Y-m-d', $_GET['fromDate'])->startOfDay();
+                    if ($fromDate === false) {
+                        // If 'Y-m-d' format fails, try 'd/m/Y' format
+                        $fromDate = CarbonImmutable::createFromFormat('d/m/Y', $_GET['fromDate'])->startOfDay();
+                    }
+                }
             } else {
-                $now = $now->subDays(abs((int) $_GET['offset']) * 7);
+                // Default to start of current week
+                $fromDate = CarbonImmutable::now()->startOfWeek()->startOfDay();
             }
-        }
-        if (isset($_GET['searchTerm']) && $_GET['searchTerm'] !== '') {
-            $searchTermForFilter = $_GET['searchTerm'];
+
+            if (isset($_GET['toDate']) && $_GET['toDate'] !== '') {
+                if ($_GET['toDate'][0] === '+' || $_GET['toDate'][0] === '-') {
+                    // If relative date format
+
+                    $toDate = CarbonImmutable::now()->startOfDay()->modify($_GET['toDate']);
+                } else {
+                    // Try specific date format
+                    $toDate = CarbonImmutable::createFromFormat('Y-m-d', $_GET['toDate'])->startOfDay();
+                    if ($toDate === false) {
+                        // If 'Y-m-d' format fails, try 'd/m/Y' format
+                        $toDate = CarbonImmutable::createFromFormat('d/m/Y', $_GET['toDate'])->startOfDay();
+                    }
+                }
+            } else {
+                // Default to end of current week
+                $toDate = CarbonImmutable::now()->endOfWeek()->startOfDay();
+            }
+        } catch (InvalidArgumentException $e) {
+            // Handle exception
+            echo 'Invalid Date: ' . $e->getMessage();
         }
 
-        $weekStartDateDb = $now->startOfWeek()->setToDbTimezone();
-        $weekEndDateDb = $now->endOfWeek()->setToDbTimezone();
-        $weekStartDateFrontend = $now->startOfWeek()->setToUserTimezone();
+        $weekStartDateDb = $fromDate->setToDbTimezone();
+        $weekEndDateDb = $toDate->setToDbTimezone();
 
         $this->template->assign('currentSearchTerm', $searchTermForFilter);
 
-        $days = explode(',', $this->language->__('language.dayNames'));
-        // Make the first day of week monday, by shifting sunday to the back of the array.
+        $days = explode(',', mb_strtolower($this->language->__('language.dayNames')));
         $days[] = array_shift($days);
+
         $weekDates = [];
-        foreach ($days as $key => $day) {
-            $weekDates[$key] = $weekStartDateFrontend->addDays($key);
+        $dateIterator = $fromDate->setToUserTimezone()->copy();
+
+        while ($dateIterator <= $toDate) {
+            $dayOfWeek = $dateIterator->locale('da_DK')->dayName;
+
+            // If the day is a part of the week
+            if (in_array($dayOfWeek, $days)) {
+                $weekDates[$dateIterator->format('d-m-Y')] = $dateIterator->copy();
+            }
+
+            // Move on to the next day
+            $dateIterator = $dateIterator->addDay();
         }
+
         $relevantTicketIds = $this->timeTableService->getUniqueTicketIds($weekStartDateDb, $weekEndDateDb);
 
         $timesheetsByTicket = [];
@@ -146,12 +167,12 @@ class TimeTable extends Controller
             $timesheetsSortedByWeekdate = [];
             foreach ($weekDates as $weekDate) {
                 $timesheetsByTicketAndDate = $this->timeTableService->getTimesheetByTicketIdAndWorkDate($ticket['ticketId'], $weekDate->setToDbTimezone(), $searchTermForFilter);
-
                 $timesheetsSortedByWeekdate[$weekDate->format('Y-m-d')] = $timesheetsByTicketAndDate;
                 if (count($timesheetsByTicketAndDate) > 0) {
                     $timesheetsSortedByWeekdate['ticketTitle'] = $timesheetsByTicketAndDate[0]['headline'];
                     $timesheetsSortedByWeekdate['ticketLink'] = '?showTicketModal=' . $timesheetsByTicketAndDate[0]['ticketId'] . '#/tickets/showTicket/' . $timesheetsByTicketAndDate[0]['ticketId'];
                     $timesheetsSortedByWeekdate['projectName'] = $timesheetsByTicketAndDate[0]['name'];
+                    $timesheetsSortedByWeekdate['ticketType'] = $timesheetsByTicketAndDate[0]['ticketType'];
                     $timesheetsSortedByWeekdate['ticketId'] = $timesheetsByTicketAndDate[0]['ticketId'];
                 }
             }
@@ -165,7 +186,8 @@ class TimeTable extends Controller
         $this->template->assign('weekDays', $days);
         $this->template->assign('weekDates', $weekDates);
         $this->template->assign('ticketCacheExpiration', $ticketCacheExpiration);
-
+        $this->template->assign('fromDate', $fromDate);
+        $this->template->assign('toDate', $toDate);
         return $this->template->display('TimeTable.timetable');
     }
 }
