@@ -1,22 +1,22 @@
 import TomSelect from "tom-select";
-import "tom-select";
+import flatpickr from 'flatpickr';
+import { Danish } from "flatpickr/dist/l10n/da.js"
 import "tom-select/dist/css/tom-select.default.css";
+import 'flatpickr/dist/flatpickr.min.css';
 import TimeTableApiHandler from "./timeTableApiHandler";
+
+
 
 jQuery(document).ready(function ($) {
   class TimeTable {
     constructor() {
+        this.tomselect = null;
       this.currentViewWeek = $("input[name='timetable-current-week']").val();
       this.currentViewFirstDay = $(
         "input[name='timetable-current-week-first-day']",
       ).val();
       // General selectors
-      this.prevWeekButton = $("button.timetable-week-prev");
-      this.nextWeekButton = $("button.timetable-week-next");
-      this.todayButton = $("button.timetable-to-today");
-      this.searchInput = $("input.timetable-search");
       this.newEntryButton = $("button.timetable-new-entry");
-      this.editEntryCell = $("td.timetable-edit-entry");
       this.syncButton = $("button.timetable-sync-tickets");
       this.refreshPanel = $(".timetable-sync-panel");
 
@@ -62,9 +62,6 @@ jQuery(document).ready(function ($) {
       this.modalInputDate = this.timeEditModal.find(
         'input[name="timesheet-date"]',
       );
-      this.modalTicketSearch = this.timeEditModal.find(
-        ".timetable-ticket-search",
-      );
       this.modalTicketInput = this.timeEditModal.find(
         ".timetable-ticket-input",
       );
@@ -75,12 +72,27 @@ jQuery(document).ready(function ($) {
       // Register event handlers
       this.registerEventHandlers();
 
+      this.toggleVisualLoaders();
       this.isFetching = true;
-      TimeTableApiHandler.fetchTicketData().then((availableTags) => {
+      TimeTableApiHandler.fetchTicketData().then(() => {
         this.isFetching = false;
         this.populateLastUpdated();
         this.initTicketSearch();
       });
+
+        flatpickr("#dateRange", {
+            mode: "range",
+            dateFormat: 'd-m-Y',
+            allowInput: false,
+            readonly: false,
+            weekNumbers: true,
+            locale: Danish,
+            onChange: function(selectedDates, dateStr, instance) {
+                if (selectedDates && selectedDates.length === 2) {
+                    instance.element.form.submit();
+                }
+            },
+        });
     }
 
     /**
@@ -91,14 +103,6 @@ jQuery(document).ready(function ($) {
      * @returns {void}
      */
     registerEventHandlers() {
-      // Week back
-      this.prevWeekButton.click(() => this.changeWeek(-1));
-      // Week forward
-      this.nextWeekButton.click(() => this.changeWeek(1));
-      // Filter tickets
-      this.searchInput.change((e) =>
-        this.updateLocation("searchTerm", e.target.value),
-      );
       // New entry
       this.newEntryButton.click(() => {
         if (this.isFetching) {
@@ -153,24 +157,16 @@ jQuery(document).ready(function ($) {
       this.boundClickOutsideModalHandler = (e) =>
         this.clickOutsideModalHandler(e);
 
-      $("#modal-form").on("submit", (e) => {
-        this.modalSubmitButton.attr("disabled", "disabled");
+      $(this.timeEditForm).on("submit", () => {
+          this.modalSubmitButton.html('<i class="fa-solid fa-arrows-rotate fa-spin"></i>');
+          this.modalSubmitButton.attr("disabled", "disabled");
       });
 
       // Delete timeentry
       this.modalDeleteButton.click(() => this.deleteTimeEntry());
 
-      // Return to current week.
-      this.todayButton.click(() => {
-        const params = new URLSearchParams(document.location.search);
-        const offset = params.get("offset");
-        if (offset) {
-          const oppositeOffset = offset * -1;
-          this.changeWeek(oppositeOffset);
-        }
-      });
-
       this.syncButton.click(() => this.refreshButtonPress());
+
     }
 
     /**
@@ -244,7 +240,7 @@ jQuery(document).ready(function ($) {
 
       // Perform search
       if (value.length > 1) {
-        const { data: tickets } = TimeTableApiHandler.readFromCache("tickets");
+        const { data: tickets } = TimeTableApiHandler.readFromCache("timetable_tickets");
         this.ticketSearch(tickets, value);
       }
     }
@@ -303,11 +299,12 @@ jQuery(document).ready(function ($) {
     /**
      * Updates a time entry.
      *
-     * @param {number} id Time entry ID.
-     * @param {string} ticketId Ticket ID.
-     * @param {number} hours Hours spent.
-     * @param {string} description Work done.
-     * @param {string} date Work date.
+     * @param {number} id - Time entry ID.
+     * @param {string} ticketId - Ticket ID.
+     * @param {number} hours - Hours spent.
+     * @param {number} hoursLeft - Hours left.
+     * @param {string} description - Work done.
+     * @param {string} date - Work date.
      * @param {number} offset
      * @return {boolean}
      */
@@ -319,7 +316,7 @@ jQuery(document).ready(function ($) {
 
       if (!ticket) {
         this.openEditTimeSyncModal();
-        TimeTableApiHandler.fetchTicketDatum(ticketId).then((availableTags) => {
+        TimeTableApiHandler.fetchTicketDatum(ticketId).then(() => {
           this.closeEditTimeSyncModal();
           this.editTimeEntry(
             id,
@@ -354,52 +351,23 @@ jQuery(document).ready(function ($) {
     }
 
     /**
-     * Changes the week offset based on the provided value.
-     *
-     * @param {number} offset - The value to offset the week.
-     * @return {void}
-     */
-    changeWeek(offset) {
-      let params = new URLSearchParams(document.location.search);
-      if (params.get("offset")) {
-        offset += parseInt(params.get("offset"));
-      }
-      offset === ""
-        ? this.updateLocation("offset", "")
-        : this.updateLocation("offset", offset);
-    }
-
-    /**
-     * Update the URL location with the given key-value pair.
-     *
-     * @param {string} key - The key corresponding to the value to be updated or deleted.
-     * @param {string} value - The new value to be added or updated. Use an empty string to delete the key-value pair.
-     * @return {void}
-     */
-    updateLocation(key, value) {
-      let params = new URLSearchParams(document.location.search);
-      if (params.has(key)) {
-        params.delete(key);
-      }
-      if (value !== "") {
-        params.append(key, value);
-      }
-      window.location = `?${params.toString()}`;
-    }
-
-    /**
      * This method handles the button press event for refreshing data.
      *
      * @return {boolean}
      */
     refreshButtonPress() {
-      const loadingHTML =
-        '<i class="fa-solid fa-arrows-rotate fa-spin"></i>Syncing data';
-      if (this.isFetching) {
-        return false;
-      }
-      $(this.syncButton).children("span").html(loadingHTML);
+        this.toggleVisualLoaders();
       this.refreshTicketSearch();
+    }
+
+    toggleVisualLoaders() {
+        if (this.isFetching) {
+            return false;
+        }
+        const syncButtonHtml =
+                '<i class="fa-solid fa-arrows-rotate fa-spin"></i>Syncing data';
+
+        $(this.syncButton).children("span").html(syncButtonHtml);
     }
 
     /**
@@ -408,7 +376,7 @@ jQuery(document).ready(function ($) {
      * @return {void}
      */
     refreshTicketSearch() {
-      TimeTableApiHandler.removeFromCache("tickets");
+      TimeTableApiHandler.removeFromCache("timetable_tickets");
       this.setTicketData();
     }
 
@@ -425,7 +393,7 @@ jQuery(document).ready(function ($) {
         }, 500);
       } else {
         this.isFetching = true;
-        TimeTableApiHandler.fetchTicketData().then((availableTags) => {
+        TimeTableApiHandler.fetchTicketData().then(() => {
           this.isFetching = false;
           this.populateLastUpdated();
           this.initTicketSearch();
@@ -440,7 +408,7 @@ jQuery(document).ready(function ($) {
      */
     populateLastUpdated() {
       let ticketsLastUpdated =
-        TimeTableApiHandler.readFromCache("tickets").expiration;
+        TimeTableApiHandler.readFromCache("timetable_tickets").expiration;
 
       let ticketsLastUpdatedElement =
         "<span>Tickets: " +
@@ -450,7 +418,7 @@ jQuery(document).ready(function ($) {
       $(this.syncButton)
         .children("span")
         .html(
-          '<span><i className="fa-solid fa-arrows-rotate"></i>Sync data</span>',
+          '<span><i class="fa-solid fa-arrows-rotate"></i> Sync data</span>',
         );
       $(this.refreshPanel)
         .children("div")
@@ -529,10 +497,10 @@ jQuery(document).ready(function ($) {
     initTicketSearch(autofocus = false) {
       let {
         data: { children: tickets },
-      } = TimeTableApiHandler.readFromCache("tickets");
+      } = TimeTableApiHandler.readFromCache("timetable_tickets");
       let {
         data: { children: projects },
-      } = TimeTableApiHandler.readFromCache("projects");
+      } = TimeTableApiHandler.readFromCache("timetable_projects");
 
       const pageSize = 50;
       const userId = $("div.timetable").attr("data-userid");
@@ -564,13 +532,18 @@ jQuery(document).ready(function ($) {
           return {
             value: child.id,
             text: child.text,
+            type: child.type,
             projectName: child.projectName,
             editorId: child.editorId,
           };
         });
 
+
+      if (this.tomselect) {
+          this.tomselect.destroy();
+      }
       // Init tomselect
-      let tomselect = new TomSelect(".timetable-tomselect", {
+        this.tomselect = new TomSelect(".timetable-tomselect", {
         options: options,
         searchField: ["text", "value", "projectName"],
         loadingClass: "ts-loading",
@@ -580,11 +553,22 @@ jQuery(document).ready(function ($) {
         },
         render: {
           item: function (item, escape) {
-            return `<div><span>${escape(item.text)} <span><i class="fa fa-angle-right fa-xs"></i> ${escape(item.projectName)} <small>(${escape(item.value)})</small></span></span></div>`;
+              return `
+<div>
+    <span>
+        ${escape(item.text)}
+        <span>
+            <i class="fa fa-angle-right fa-xs"></i> ${escape(item.projectName)}
+            <small>(${escape(item.value)})</small>
+
+            ${item.type !== "task" ? `<small>(${escape(item.type)})</small>` : ""}
+        </span>
+    </span>
+</div>`;
           },
-          option: function (item, escape) {
-            return `<div><span>${escape(item.text)} <span><i class="fa fa-angle-right fa-xs"></i> ${escape(item.projectName)} <small>(${escape(item.value)})</small></span></span></div>`;
-          },
+            option: function (item, escape) {
+                return `<div><span>${escape(item.text)} <span><i class="fa fa-angle-right fa-xs"></i> ${escape(item.projectName)} <small>(${escape(item.value)})</small> <small style="float: right;">(${escape(item.type)})</small></span></span></div>`;
+            },
           option_create: function (data, escape) {
             return `<option data-value="add-new-ticket" class="create">+ Create new ticket: <strong>${escape(data.input)}</strong>&hellip;</option>`;
           },
@@ -622,14 +606,15 @@ jQuery(document).ready(function ($) {
 
             // Destroy select and populate with projects for the new ticket to be created in
             this.destroy();
-            tomselect = new TomSelect(".timetable-tomselect", {
+            this.tomselect = new TomSelect(".timetable-tomselect", {
               options: projectOptions,
               onItemRemove: function () {
+                  console.log('hallo?');
                 // Reactivate the ticket search upon item removal
                 this.destroy();
                 timeTable.initTicketSearch(true);
               },
-              onChange: function (value) {
+              onChange: function () {
                 const selectedValues = this.getValue();
                 const resultArray = selectedValues.split(",");
                 if (resultArray.length === 2) {
@@ -685,7 +670,7 @@ jQuery(document).ready(function ($) {
 
       const newRow = `
     <tr class="newly-added-tr">
-        <td class="ticket-title" scope="row">
+        <td class="ticket-title">
             <a href="?showTicketModal=${ticketId}#/tickets/showTicket/${ticketId}">${ticketText}</a>
             <span>${projectName}</span>
         </td>
@@ -702,7 +687,7 @@ jQuery(document).ready(function ($) {
             // Depending on the day of the week, add 'weekend' class
             const weekendClass = i === 5 || i === 6 ? "weekend" : "";
 
-            return `<td scope="row" class="timetable-edit-entry ${weekendClass}" data-ticketid=${ticketId} data-date="${formattedDate}" title="">
+            return `<td class="timetable-edit-entry ${weekendClass}" data-ticketid=${ticketId} data-date="${formattedDate}" title="">
                         <span></span>
                     </td>`;
           })

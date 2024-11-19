@@ -18,7 +18,7 @@ export default class TimeTableApiHandler {
     let projectPromise;
     let ticketPromise;
 
-    let projectCacheData = this.getCacheData("projects");
+    let projectCacheData = this.getCacheData("timetable_projects");
 
     if (projectCacheData) {
       projectPromise = Promise.resolve(projectCacheData);
@@ -40,7 +40,7 @@ export default class TimeTableApiHandler {
           };
           projectGroup.children.push(option);
         });
-        this.writeToCache("projects", {
+        this.writeToCache("timetable_projects", {
           data: projectGroup,
           expiration: Date.now(),
         });
@@ -48,7 +48,7 @@ export default class TimeTableApiHandler {
       });
     }
 
-    let ticketCacheData = this.getCacheData("tickets");
+    let ticketCacheData = this.getCacheData("timetable_tickets");
     if (ticketCacheData && !reload) {
       ticketPromise = Promise.resolve(ticketCacheData);
     } else {
@@ -90,7 +90,7 @@ export default class TimeTableApiHandler {
         ticketGroup.children = [...childrenForTicketGroup].sort(
           (a, b) => Number(a.isDone) - Number(b.isDone),
         );
-        this.writeToCache("tickets", {
+        this.writeToCache("timetable_tickets", {
           data: ticketGroup,
           expiration: Date.now(),
         });
@@ -117,7 +117,7 @@ export default class TimeTableApiHandler {
    */
   static async fetchTicketDatum(ticketId) {
     let ticketPromise;
-    let ticketCacheData = this.getCacheData("tickets");
+    let ticketCacheData = this.getCacheData("timetable_tickets");
     ticketPromise = this.getTicket(ticketId).then((ticket) => {
       ticket = ticket.result;
       const ticketData = {
@@ -134,7 +134,7 @@ export default class TimeTableApiHandler {
         createdDate: ticket.date,
       };
       ticketCacheData["children"].push(ticketData);
-      this.writeToCache("tickets", {
+      this.writeToCache("timetable_tickets", {
         data: ticketCacheData,
         expiration: Date.now(),
       });
@@ -257,7 +257,7 @@ export default class TimeTableApiHandler {
    * @return {object|null} - The ticket data if found in cache, otherwise null.
    */
   static getTicketDataFromCache(ticketId) {
-    let cacheTickets = this.readFromCache("tickets");
+    let cacheTickets = this.readFromCache("timetable_tickets");
     if (!cacheTickets) {
       this.fetchTicketData().then((availableTags) => {
         this.getTicketDataFromCache();
