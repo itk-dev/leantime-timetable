@@ -2,7 +2,7 @@
 
 namespace Leantime\Plugins\TimeTable\Controllers;
 
-use Leantime\Core\Template;
+use Leantime\Core\UI\Template;
 use Leantime\Core\Controller\Controller;
 use Leantime\Core\Controller\Frontcontroller;
 use Symfony\Component\HttpFoundation\RedirectResponse;

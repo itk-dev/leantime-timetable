@@ -13,7 +13,7 @@ use Leantime\Domain\Auth\Models\Roles;
 use Leantime\Domain\Auth\Services\Auth as AuthService;
 use Leantime\Domain\Setting\Repositories\Setting as SettingRepository;
 use Leantime\Domain\Timesheets\Repositories\Timesheets as TimesheetRepository;
-use Leantime\Core\Template;
+use Leantime\Core\UI\Template;
 
 /**
  * TimeTable controller.
