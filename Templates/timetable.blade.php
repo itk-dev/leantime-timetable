@@ -42,11 +42,13 @@
                                     @php
                                         $weekendClass = $day->isWeekend() ? 'weekend' : '';
                                         $todayClass = $day->isToday() ? 'today' : '';
-                                        $classes = trim("$weekendClass $todayClass");
+                                        $newWeekClass = $day->isMonday() ? 'new-week' : '';
+                                        $classes = trim("$weekendClass $todayClass $newWeekClass");
                                     @endphp
-                                    <th @if ($classes) class="{{ $classes }}" @endif>
-                                        <small>{{ $day->format('d/n') }}</small>
-                                        <span>{{ $day->format('D') }}</span>
+                                    <th @if ($classes) class="{{ $classes }}" @endif
+                                    @if ($day->isMonday()) data-week="{{ $day->weekOfYear }}" @endif>
+                                       <div> <small>{{ $day->format('d/n') }}</small>
+                                        <span>{{ $day->format('D') }}</span></div>
                                     </th>
                                 @endforeach
                                 <th scope="col"><span>Total</span></th> <!-- Total Column Header -->
@@ -68,7 +70,6 @@
                                         <?php $rowTotal = 0; ?>
                                         <!-- initializing row total -->
                                     @foreach ($weekDates as $weekDate)
-
                                             <?php
                                             $weekDateAccessor = isset($weekDate) ? $weekDate->format('Y-m-d') : null;
                                             $timesheetDate = isset($timesheet) ? $timesheet[$weekDateAccessor] : null;
@@ -90,9 +91,10 @@
 
                                             $weekendClass = isset($weekDate) && $weekDate->isWeekend() ? 'weekend' : '';
                                             $todayClass = isset($weekDate) && $weekDate->isToday() ? 'today' : '';
+                                            $newWeekClass = isset($weekDate) && $weekDate->isMonday() ? 'new-week' : ''; // Add new-week class for Mondays
                                             ?>
                                         <td scope="row"
-                                            class="timetable-edit-entry {{ $weekendClass }} {{ $todayClass }} {{ $isMissingDescription ? 'description-missing' : '' }}"
+                                            class="timetable-edit-entry {{ $weekendClass }} {{ $todayClass }} {{ $newWeekClass }} {{ $isMissingDescription ? 'description-missing' : '' }}"
                                             data-id="{{ $id }}" data-ticketid="{{ $ticketId }}"
                                             data-hours="{{ $hours }}" data-hoursleft="{{ $hoursLeft }}"
                                             data-description="{{ $description }}"
@@ -108,7 +110,7 @@
                                 <td class="add-new"><input class="timetable-tomselect form-control-lg"
                                                            placeholder="Syncing data"/></td>
                                 @foreach ($weekDates as $date)
-                                    <td>—</td>
+                                    <td class="{{ $date->isMonday() ? 'new-week' : '' }}">—</td>
                                 @endforeach
                                 <td>—</td>
                             </tr>
@@ -132,7 +134,9 @@
                         <tr class="tr-total">
                             <td scope="row">Total</td>
                             @foreach ($weekDates as $weekDate)
-                                <td> {{ $totalHours[$weekDate->format('Y-m-d')] ?? 0 }} </td>
+                                <td class="{{ $weekDate->isMonday() ? 'new-week' : '' }}">
+                                    {{ $totalHours[$weekDate->format('Y-m-d')] ?? 0 }}
+                                </td>
                             @endforeach
                             <td>{{ array_sum($totalHours) }}</td> <!-- Grand Total Column -->
                         </tr>
