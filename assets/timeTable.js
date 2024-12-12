@@ -8,8 +8,14 @@ import TimeTableApiHandler from "./timeTableApiHandler";
 
 
 jQuery(document).ready(function ($) {
+    const pluginSettings = {
+        userId: timetableSettings.settings.userId,
+        ticketCacheTimeout: parseFloat(timetableSettings.settings.ticketCacheExpiration),
+    };
   class TimeTable {
     constructor() {
+
+        console.log(pluginSettings);
         this.tomselect = null;
       this.currentViewWeek = $("input[name='timetable-current-week']").val();
       this.currentViewFirstDay = $(
@@ -503,7 +509,7 @@ jQuery(document).ready(function ($) {
       } = TimeTableApiHandler.readFromCache("timetable_projects");
 
       const pageSize = 50;
-      const userId = $("div.timetable").attr("data-userid");
+      const userId = pluginSettings.userId;
 
       // Sort tickets by editorId and created date.
       tickets.sort((a, b) => {
