@@ -30,13 +30,65 @@
   --itk-spacing-md: var(--itk-spacing);
   --itk-spacing-lg: calc(var(--itk-spacing) * 1.5);
   --itk-spacing-xl: calc(var(--itk-spacing) * 2);
-    .timetable-scroll-container {
-        overflow: auto;
+
+    .timetable-scroll-container{
+        overflow-x: auto;
     }
   #timetable {
     background-color: var(--itk-color-white);
 
+
+      th:first-child {
+          position: sticky;
+          left: 0;
+          z-index: 1;
+          background-color: white;
+      }
+      th:last-child {
+          position: sticky;
+          right: 0;
+          z-index: 1;
+          background-color: white;
+          border-left: 1px solid var(--itk-border-color);
+      }
+
+      th:first-child::after,
+      td:first-child::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 1px;
+          height: 100%;
+          background-color: var(--itk-border-color);
+          z-index: 2;
+      }
+
+      th:last-child::before,
+      td:last-child::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 1px;
+          height: 100%;
+          background-color: var(--itk-border-color);
+          z-index: 2;
+      }
+
     tbody {
+        td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 1;
+            background-color: white;
+        }
+        td:last-child {
+            position: sticky;
+            right: 0;
+            z-index: 1;
+            background-color: white;
+        }
       tr.newly-added-tr {
         td:not(:last-child) {
           background-color: var(--itk-color-primary-50) !important;
@@ -201,11 +253,11 @@
     border: 1px solid var(--itk-border-color);
     padding: var(--itk-spacing-md);
 
-    &:last-child&:not([colspan="9"]):not(.add-new) {
-      color: var(--itk-color-gray-500);
-      background-color: var(--itk-color-gray-100);
-    }
   }
+  .table .empty-row {
+        background-color: var(--itk-color-white);
+      padding: 30px 20px;
+    }
   .table .tr-total {
     color: var(--itk-color-gray-500);
     background-color: var(--itk-color-gray-100);
@@ -696,6 +748,7 @@
   ~ td {
     text-align: center;
   }
+
   .timetable-tomselect {
     *:not(.fa) {
       font-size: var(--base-font-size);
