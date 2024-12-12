@@ -80,16 +80,9 @@ class TimeTable extends Controller
      */
     public function get(): Response
     {
-        // Filters for the sql select
-        $userIdForFilter = null;
         $searchTermForFilter = null;
         $now = CarbonImmutable::now();
         $ticketCacheExpiration = $this->settings->getSetting('itk-leantime-timetable.ticketCacheExpiration') ?? 1200;
-
-        if (isset($_GET['searchTerm'])) {
-            $searchTerm = $_GET['searchTerm'];
-        }
-
 
         try {
             if (isset($_GET['fromDate']) && $_GET['fromDate'] !== '') {
@@ -144,7 +137,7 @@ class TimeTable extends Controller
         $dateIterator = $fromDate->setToUserTimezone()->copy();
 
         while ($dateIterator <= $toDate) {
-            $dayOfWeek = $dateIterator->locale('da_DK')->dayName;
+            $dayOfWeek = strtolower($dateIterator->locale(session('usersettings.language'))->dayName);
 
             // If the day is a part of the week
             if (in_array($dayOfWeek, $days)) {
