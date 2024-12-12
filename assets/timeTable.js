@@ -10,12 +10,9 @@ import TimeTableApiHandler from "./timeTableApiHandler";
 jQuery(document).ready(function ($) {
     const pluginSettings = {
         userId: timetableSettings.settings.userId,
-        ticketCacheTimeout: parseFloat(timetableSettings.settings.ticketCacheExpiration),
     };
   class TimeTable {
     constructor() {
-
-        console.log(pluginSettings);
         this.tomselect = null;
       this.currentViewWeek = $("input[name='timetable-current-week']").val();
       this.currentViewFirstDay = $(
