@@ -30,7 +30,9 @@
   --itk-spacing-md: var(--itk-spacing);
   --itk-spacing-lg: calc(var(--itk-spacing) * 1.5);
   --itk-spacing-xl: calc(var(--itk-spacing) * 2);
-
+    .timetable-scroll-container {
+        overflow: auto;
+    }
   #timetable {
     background-color: var(--itk-color-white);
 
@@ -827,7 +829,7 @@ div.ts-dropdown-content {
 }
 
 /**
- * tom-select.css (v2.3.1)
+ * tom-select.css (v2.4.1)
  * Copyright (c) contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
