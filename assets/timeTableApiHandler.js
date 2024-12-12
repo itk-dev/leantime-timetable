@@ -1,12 +1,16 @@
 /**
  * Class handles API requests for time table data.
  */
-const ticketCacheExpiration = document.getElementById(
+
+/*const ticketCacheExpiration = document.getElementById(
   "timetable-ticketCacheExpiration",
-).value;
+).value;*/
+const pluginSettings = {
+    ticketCacheTimeout: parseFloat(timetableSettings.settings.ticketCacheExpiration),
+};
 export default class TimeTableApiHandler {
   static cacheTimeouts = {
-    tickets: parseFloat(ticketCacheExpiration),
+    timetable_tickets: parseFloat(pluginSettings.ticketCacheTimeout),
   };
 
   /**
@@ -19,7 +23,6 @@ export default class TimeTableApiHandler {
     let ticketPromise;
 
     let projectCacheData = this.getCacheData("timetable_projects");
-
     if (projectCacheData) {
       projectPromise = Promise.resolve(projectCacheData);
     } else {
@@ -201,6 +204,7 @@ export default class TimeTableApiHandler {
     }
 
     const cacheDataExpiration = cacheData.expiration ?? 0;
+
     // Convert minutes to ms
     const cacheTimeoutMs = this.cacheTimeouts[item] * 60000;
     const cacheDataExpired = Date.now() - cacheDataExpiration > cacheTimeoutMs;
