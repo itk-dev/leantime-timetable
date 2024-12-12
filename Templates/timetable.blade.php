@@ -11,7 +11,7 @@
     <!-- page header -->
     <div class="maincontent">
         <div class="maincontentinner">
-            <div class="timetable" data-userId="{{ $userId }}">
+            <div class="timetable">
                 <input type="hidden" id="timetable-ticketCacheExpiration" name="timetable-ticket-cache"/>
 
                 <form method="POST">
@@ -30,6 +30,7 @@
                     </div>
 
                 </form>
+                <div class="timetable-scroll-container">
 
             <table id="timetable" class="table">
                 <thead>
@@ -141,6 +142,8 @@
                 </tr>
                 </tbody>
             </table>
+                </div>
+
         </div>
         <div class="timetable-sync-panel">
             <div>
