@@ -30,7 +30,9 @@
   --itk-spacing-md: var(--itk-spacing);
   --itk-spacing-lg: calc(var(--itk-spacing) * 1.5);
   --itk-spacing-xl: calc(var(--itk-spacing) * 2);
-
+    .timetable-scroll-container {
+        overflow: auto;
+    }
   #timetable {
     background-color: var(--itk-color-white);
 
