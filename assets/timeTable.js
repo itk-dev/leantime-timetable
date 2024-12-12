@@ -170,6 +170,22 @@ jQuery(document).ready(function ($) {
 
       this.syncButton.click(() => this.refreshButtonPress());
 
+
+        const weekNumbers = document.querySelectorAll('th.new-week');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                const target = entry.target;
+
+                if (entry.isIntersecting) {
+                    target.classList.remove('sticky');
+                } else {
+                    target.classList.add('sticky');
+                }
+            });
+        }, { root: document.querySelector('.timetable-scroll-container'), threshold: 1, rootMargin: "0% 0% 0% -400px" });
+
+        weekNumbers.forEach((weekNumber) => observer.observe(weekNumber));
     }
 
     /**
