@@ -76,8 +76,8 @@ class TimeTableActionHandler
      * Processes the ticket data and updates or adds a time log entry in the system.
      * Redirects with updated query parameters if applicable.
      *
-     * @param array<string, mixed> $postData The data for the ticket including timesheet details, user information, and other parameters
-     * @param string $redirectUrl The URL to redirect to after processing
+     * @param array<string, mixed> $postData    The data for the ticket including timesheet details, user information, and other parameters
+     * @param string               $redirectUrl The URL to redirect to after processing
      * @return string The updated redirect URL with query parameters if applicable
      * @throws BindingResolutionException
      */
