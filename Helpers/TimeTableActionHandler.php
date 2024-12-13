@@ -94,7 +94,7 @@ class TimeTableActionHandler
                 try {
                     $this->timesheetRepository->deleteTime($timesheetId);
                     exit(json_encode(['status' => 'success']));
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     exit(json_encode(['status' => 'error', 'error' => $e->getMessage()]));
                 }
             }
