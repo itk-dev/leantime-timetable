@@ -792,6 +792,7 @@
 #timetable td.add-new {
   padding: 0px;
   font-family: inherit !important;
+    z-index: 2 !important;
   ~ td {
     text-align: center;
   }
