@@ -9,6 +9,7 @@ Clone this repository into your Leantime plugins folder:
 ``` shell
 git clone https://github.com/ITK-Leantime/leantime-timetable.git app/Plugins/TimeTable
 ```
+
 Install the plugin through Leantime in your web browser.
 
 The install process symlinks the built file dist/timeTable.js with public/dist/js/timeTable.js in leantime.

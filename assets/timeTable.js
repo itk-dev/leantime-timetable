@@ -1,19 +1,17 @@
 import TomSelect from "tom-select";
-import flatpickr from 'flatpickr';
-import { Danish } from "flatpickr/dist/l10n/da.js"
+import flatpickr from "flatpickr";
+import { Danish } from "flatpickr/dist/l10n/da.js";
 import "tom-select/dist/css/tom-select.default.css";
-import 'flatpickr/dist/flatpickr.min.css';
+import "flatpickr/dist/flatpickr.min.css";
 import TimeTableApiHandler from "./timeTableApiHandler";
 
-
-
 jQuery(document).ready(function ($) {
-    const pluginSettings = {
-        userId: timetableSettings.settings.userId,
-    };
+  const pluginSettings = {
+    userId: timetableSettings.settings.userId,
+  };
   class TimeTable {
     constructor() {
-        this.tomselect = null;
+      this.tomselect = null;
       this.currentViewWeek = $("input[name='timetable-current-week']").val();
       this.currentViewFirstDay = $(
         "input[name='timetable-current-week-first-day']",
@@ -83,19 +81,19 @@ jQuery(document).ready(function ($) {
         this.initTicketSearch();
       });
 
-        flatpickr("#dateRange", {
-            mode: "range",
-            dateFormat: 'd-m-Y',
-            allowInput: false,
-            readonly: false,
-            weekNumbers: true,
-            locale: Danish,
-            onChange: function(selectedDates, dateStr, instance) {
-                if (selectedDates && selectedDates.length === 2) {
-                    instance.element.form.submit();
-                }
-            },
-        });
+      flatpickr("#dateRange", {
+        mode: "range",
+        dateFormat: "d-m-Y",
+        allowInput: false,
+        readonly: false,
+        weekNumbers: true,
+        locale: Danish,
+        onChange: function (selectedDates, dateStr, instance) {
+          if (selectedDates && selectedDates.length === 2) {
+            instance.element.form.submit();
+          }
+        },
+      });
     }
 
     /**
@@ -161,8 +159,10 @@ jQuery(document).ready(function ($) {
         this.clickOutsideModalHandler(e);
 
       $(this.timeEditForm).on("submit", () => {
-          this.modalSubmitButton.html('<i class="fa-solid fa-arrows-rotate fa-spin"></i>');
-          this.modalSubmitButton.attr("disabled", "disabled");
+        this.modalSubmitButton.html(
+          '<i class="fa-solid fa-arrows-rotate fa-spin"></i>',
+        );
+        this.modalSubmitButton.attr("disabled", "disabled");
       });
 
       // Delete timeentry
@@ -170,22 +170,28 @@ jQuery(document).ready(function ($) {
 
       this.syncButton.click(() => this.refreshButtonPress());
 
+      const weekNumbers = document.querySelectorAll("th.new-week");
 
-        const weekNumbers = document.querySelectorAll('th.new-week');
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const target = entry.target;
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                const target = entry.target;
+            if (entry.isIntersecting) {
+              target.classList.remove("sticky");
+            } else {
+              target.classList.add("sticky");
+            }
+          });
+        },
+        {
+          root: document.querySelector(".timetable-scroll-container"),
+          threshold: 1,
+          rootMargin: "0% 0% 0% -400px",
+        },
+      );
 
-                if (entry.isIntersecting) {
-                    target.classList.remove('sticky');
-                } else {
-                    target.classList.add('sticky');
-                }
-            });
-        }, { root: document.querySelector('.timetable-scroll-container'), threshold: 1, rootMargin: "0% 0% 0% -400px" });
-
-        weekNumbers.forEach((weekNumber) => observer.observe(weekNumber));
+      weekNumbers.forEach((weekNumber) => observer.observe(weekNumber));
     }
 
     /**
@@ -259,7 +265,8 @@ jQuery(document).ready(function ($) {
 
       // Perform search
       if (value.length > 1) {
-        const { data: tickets } = TimeTableApiHandler.readFromCache("timetable_tickets");
+        const { data: tickets } =
+          TimeTableApiHandler.readFromCache("timetable_tickets");
         this.ticketSearch(tickets, value);
       }
     }
@@ -375,18 +382,18 @@ jQuery(document).ready(function ($) {
      * @return {boolean}
      */
     refreshButtonPress() {
-        this.toggleVisualLoaders();
+      this.toggleVisualLoaders();
       this.refreshTicketSearch();
     }
 
     toggleVisualLoaders() {
-        if (this.isFetching) {
-            return false;
-        }
-        const syncButtonHtml =
-                '<i class="fa-solid fa-arrows-rotate fa-spin"></i>Syncing data';
+      if (this.isFetching) {
+        return false;
+      }
+      const syncButtonHtml =
+        '<i class="fa-solid fa-arrows-rotate fa-spin"></i>Syncing data';
 
-        $(this.syncButton).children("span").html(syncButtonHtml);
+      $(this.syncButton).children("span").html(syncButtonHtml);
     }
 
     /**
@@ -558,13 +565,12 @@ jQuery(document).ready(function ($) {
           };
         });
 
-
       if (this.tomselect) {
-          this.tomselect.destroy();
-          this.tomselect = null;
+        this.tomselect.destroy();
+        this.tomselect = null;
       }
       // Init tomselect
-        this.tomselect = new TomSelect(".timetable-tomselect", {
+      this.tomselect = new TomSelect(".timetable-tomselect", {
         options: options,
         searchField: ["text", "value", "projectName"],
         loadingClass: "ts-loading",
@@ -574,7 +580,7 @@ jQuery(document).ready(function ($) {
         },
         render: {
           item: function (item, escape) {
-              return `
+            return `
 <div>
     <span>
         ${escape(item.text)}
@@ -587,9 +593,9 @@ jQuery(document).ready(function ($) {
     </span>
 </div>`;
           },
-            option: function (item, escape) {
-                return `<div><span>${escape(item.text)} <span><i class="fa fa-angle-right fa-xs"></i> ${escape(item.projectName)} <small>(${escape(item.value)})</small> <small style="float: right;">(${escape(item.type)})</small></span></span></div>`;
-            },
+          option: function (item, escape) {
+            return `<div><span>${escape(item.text)} <span><i class="fa fa-angle-right fa-xs"></i> ${escape(item.projectName)} <small>(${escape(item.value)})</small> <small style="float: right;">(${escape(item.type)})</small></span></span></div>`;
+          },
           option_create: function (data, escape) {
             return `<option data-value="add-new-ticket" class="create">+ Create new ticket: <strong>${escape(data.input)}</strong>&hellip;</option>`;
           },
@@ -609,7 +615,7 @@ jQuery(document).ready(function ($) {
           const selectedOption = this.options[value];
 
           if (!selectedOption) {
-              return false;
+            return false;
           }
           // Check if selected option is the "create new" one
           if (

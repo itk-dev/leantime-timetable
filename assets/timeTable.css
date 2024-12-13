@@ -31,111 +31,110 @@
   --itk-spacing-lg: calc(var(--itk-spacing) * 1.5);
   --itk-spacing-xl: calc(var(--itk-spacing) * 2);
 
-    .timetable-scroll-container{
-        overflow-x: auto;
-    }
+  .timetable-scroll-container {
+    overflow-x: auto;
+  }
   #timetable {
     background-color: var(--itk-color-white);
 
-      .new-week {
-          border-left: 2px solid var(--itk-border-color) !important;
-          position: relative;
-      }
+    .new-week {
+      border-left: 2px solid var(--itk-border-color) !important;
+      position: relative;
+    }
 
-      .new-week.sticky:before {
-          display: none;
-      }
-      .new-week.sticky:after {
-          display: none;
-      }
+    .new-week.sticky:before {
+      display: none;
+    }
+    .new-week.sticky:after {
+      display: none;
+    }
 
-      td.timetable-edit-entry:has(+ .new-week) {
-          border-right: none;
-      }
+    td.timetable-edit-entry:has(+ .new-week) {
+      border-right: none;
+    }
 
+    th.new-week::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      background-color: #ccc;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
 
-      th.new-week::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 20px;
-          height: 20px;
-          background-color: #ccc;
-          border-radius: 50%;
-          transform: translate(-50%, -50%);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 1;
-      }
+    th.new-week::after {
+      content: attr(data-week);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      font-size: 11px;
+      color: #000;
+      text-align: center;
+      transform: translate(-50%, -45%);
+      z-index: 2;
+      font-family: sans-serif;
+    }
 
-      th.new-week::after {
-          content: attr(data-week);
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 20px;
-          height: 20px;
-          font-size: 11px;
-          color: #000;
-          text-align: center;
-          transform: translate(-50%, -45%);
-          z-index: 2;
-          font-family: sans-serif;
-      }
+    th:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background-color: white;
+    }
+    th:last-child {
+      position: sticky;
+      right: 0;
+      z-index: 1;
+      background-color: white;
+      border-left: 1px solid var(--itk-border-color);
+    }
 
-      th:first-child {
-          position: sticky;
-          left: 0;
-          z-index: 1;
-          background-color: white;
-      }
-      th:last-child {
-          position: sticky;
-          right: 0;
-          z-index: 1;
-          background-color: white;
-          border-left: 1px solid var(--itk-border-color);
-      }
+    th:first-child::after,
+    td:first-child::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 1px;
+      height: 100%;
+      background-color: var(--itk-border-color);
+      z-index: 2;
+    }
 
-      th:first-child::after,
-      td:first-child::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          right: 0;
-          width: 1px;
-          height: 100%;
-          background-color: var(--itk-border-color);
-          z-index: 2;
-      }
-
-      th:last-child::before,
-      td:last-child::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 1px;
-          height: 100%;
-          background-color: var(--itk-border-color);
-          z-index: 2;
-      }
+    th:last-child::before,
+    td:last-child::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1px;
+      height: 100%;
+      background-color: var(--itk-border-color);
+      z-index: 2;
+    }
 
     tbody {
-        td:first-child {
-            position: sticky;
-            left: 0;
-            z-index: 1;
-            background-color: white;
-        }
-        td:last-child {
-            position: sticky;
-            right: 0;
-            z-index: 1;
-            background-color: white;
-        }
+      td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        background-color: white;
+      }
+      td:last-child {
+        position: sticky;
+        right: 0;
+        z-index: 1;
+        background-color: white;
+      }
       tr.newly-added-tr {
         td:not(:last-child) {
           background-color: var(--itk-color-primary-50) !important;
@@ -179,13 +178,13 @@
     width: 100%;
     margin-bottom: var(--itk-spacing-md);
 
-      #dateRange {
-          margin: auto 0;
-          border-radius: 0;
-          opacity: 1;
-          border: 1px solid var(--main-border-color);
-          text-align: center;
-      }
+    #dateRange {
+      margin: auto 0;
+      border-radius: 0;
+      opacity: 1;
+      border: 1px solid var(--main-border-color);
+      text-align: center;
+    }
   }
 
   .btn {
@@ -299,12 +298,11 @@
   .table td {
     border: 1px solid var(--itk-border-color);
     padding: var(--itk-spacing-md);
-
   }
   .table .empty-row {
-        background-color: var(--itk-color-white);
-      padding: 30px 20px;
-    }
+    background-color: var(--itk-color-white);
+    padding: 30px 20px;
+  }
   .table .tr-total {
     color: var(--itk-color-gray-500);
     background-color: var(--itk-color-gray-100);
@@ -792,7 +790,7 @@
 #timetable td.add-new {
   padding: 0px;
   font-family: inherit !important;
-    z-index: 2 !important;
+  z-index: 2 !important;
   ~ td {
     text-align: center;
   }

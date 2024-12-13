@@ -2,6 +2,7 @@
 
 namespace Leantime\Plugins\TimeTable\Helpers;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Leantime\Domain\Timesheets\Repositories\Timesheets as TimesheetRepository;
 use Leantime\Plugins\TimeTable\Services\TimeTable as TimeTableService;
 use Carbon\CarbonImmutable;
@@ -24,7 +25,7 @@ class TimeTableActionHandler
     /**
      * Adjusts the period based on the provided POST data.
      *
-     * @param array $postData The POST data containing fromDate, toDate, and backward flag.
+     * @param array<string, mixed> $postData The POST data containing fromDate, toDate, and backward flag.
      * @return string The adjusted redirect URL.
      */
     public function adjustPeriod(array $postData, string $redirectUrl): string
@@ -71,7 +72,16 @@ class TimeTableActionHandler
         return $redirectUrl;
     }
 
-    public function saveTicket(array $postData, string $redirectUrl)
+    /**
+     * Processes the ticket data and updates or adds a time log entry in the system.
+     * Redirects with updated query parameters if applicable.
+     *
+     * @param array<string, mixed> $postData The data for the ticket including timesheet details, user information, and other parameters
+     * @param string $redirectUrl The URL to redirect to after processing
+     * @return string The updated redirect URL with query parameters if applicable
+     * @throws BindingResolutionException
+     */
+    public function saveTicket(array $postData, string $redirectUrl): string
     {
         $jsonPayload = json_decode(file_get_contents('php://input'), true);
 

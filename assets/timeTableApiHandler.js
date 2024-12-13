@@ -6,7 +6,9 @@
   "timetable-ticketCacheExpiration",
 ).value;*/
 const pluginSettings = {
-    ticketCacheTimeout: parseFloat(timetableSettings.settings.ticketCacheExpiration),
+  ticketCacheTimeout: parseFloat(
+    timetableSettings.settings.ticketCacheExpiration,
+  ),
 };
 export default class TimeTableApiHandler {
   static cacheTimeouts = {
@@ -28,8 +30,8 @@ export default class TimeTableApiHandler {
       projectPromise = Promise.resolve(projectCacheData);
     } else {
       projectPromise = this.getAllProjects().then((data) => {
-          const projects = data.result;
-          const projectGroup = {
+        const projects = data.result;
+        const projectGroup = {
           id: "project",
           text: "Projects",
           children: [],
