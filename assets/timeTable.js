@@ -396,6 +396,7 @@ jQuery(document).ready(function ($) {
      */
     refreshTicketSearch() {
       TimeTableApiHandler.removeFromCache("timetable_tickets");
+      TimeTableApiHandler.removeFromCache("timetable_projects");
       this.setTicketData();
     }
 
@@ -560,6 +561,7 @@ jQuery(document).ready(function ($) {
 
       if (this.tomselect) {
           this.tomselect.destroy();
+          this.tomselect = null;
       }
       // Init tomselect
         this.tomselect = new TomSelect(".timetable-tomselect", {
@@ -606,6 +608,9 @@ jQuery(document).ready(function ($) {
         onChange: function (value) {
           const selectedOption = this.options[value];
 
+          if (!selectedOption) {
+              return false;
+          }
           // Check if selected option is the "create new" one
           if (
             selectedOption.text === selectedOption.value &&
@@ -623,8 +628,10 @@ jQuery(document).ready(function ($) {
                 .map((project) => ({ value: project.id, text: project.text })),
             ];
 
+            console.log(projectOptions);
             // Destroy select and populate with projects for the new ticket to be created in
             this.destroy();
+            this.tomselect = null;
             this.tomselect = new TomSelect(".timetable-tomselect", {
               options: projectOptions,
               onItemRemove: function () {
@@ -638,7 +645,7 @@ jQuery(document).ready(function ($) {
                 if (resultArray.length === 2) {
                   const ticketName = resultArray[0];
                   const projectId = resultArray[1];
-                  const projectName = tomselect.options[projectId].text;
+                  const projectName = this.options[projectId].text;
                   let result = TimeTableApiHandler.createNewTicket(
                     ticketName,
                     projectId,
