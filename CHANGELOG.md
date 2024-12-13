@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+* [PR-31](https://github.com/ITK-Leantime/leantime-timetable/pull/31)
+  * Added date-range selector
+  * Added url params for fromDate and toDate
+  * Added week numbers
+
 ## [2.0.2] - 2024-10-24
 
 * [PR-29](https://github.com/ITK-Leantime/leantime-timetable/pull/29)
