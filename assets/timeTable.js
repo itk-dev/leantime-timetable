@@ -628,7 +628,6 @@ jQuery(document).ready(function ($) {
             this.tomselect = new TomSelect(".timetable-tomselect", {
               options: projectOptions,
               onItemRemove: function () {
-                  console.log('hallo?');
                 // Reactivate the ticket search upon item removal
                 this.destroy();
                 timeTable.initTicketSearch(true);
@@ -661,7 +660,7 @@ jQuery(document).ready(function ($) {
                 }
               },
             });
-            tomselect.open();
+            this.tomselect.open();
             return;
           }
           timeTable.addRowToTimetable(
@@ -674,8 +673,8 @@ jQuery(document).ready(function ($) {
       });
 
       if (autofocus) {
-        tomselect.focus();
-        tomselect.open();
+        this.tomselect.focus();
+        this.tomselect.open();
       }
     }
 
