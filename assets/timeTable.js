@@ -49,8 +49,6 @@ jQuery(document).ready(function ($) {
       this.modalTicketIdInput = this.timeEditModal.find(
         'input[name="timesheet-ticket-id"]',
       );
-
-      this.modalCloseButton = this.timeEditModal.find(".timetable-close-modal");
       this.modalDeleteButton = this.timeEditModal.find(
         ".timetable-modal-delete",
       );
@@ -65,9 +63,6 @@ jQuery(document).ready(function ($) {
       );
       this.modalTicketInput = this.timeEditModal.find(
         ".timetable-ticket-input",
-      );
-      this.modalTicketResults = this.timeEditModal.find(
-        ".timetable-ticket-results",
       );
 
       // Register event handlers
@@ -117,8 +112,13 @@ jQuery(document).ready(function ($) {
           this.newTimeEntry();
         }
       });
+        document.addEventListener("mousedown", function (event) {
+            if ($(this.timeEditModal).is(':visible')&& !this.timeEditModal[0].contains(event.target)) {
+                this.closeEditTimeLogModal();
+            }
+        }.bind(this));
       // Edit entry
-      $(document).on("click", "td.timetable-edit-entry", (e) => {
+      $(document).on("click", "td.timetable-edit-entry", function (e) {
         const id = e.target.dataset.id ?? null;
         const ticketId = e.target.dataset.ticketid ?? null;
         const hours = e.target.dataset.hours ?? null;
@@ -143,10 +143,20 @@ jQuery(document).ready(function ($) {
         } else {
           this.editTimeEntry(id, ticketId, hours, hoursLeft, description, date);
         }
-      });
+
+
+          const rect = e.target.getBoundingClientRect();
+
+          this.timeEditModal
+              .css({
+                  left: `${rect.left + window.scrollX - 215}px`, // Adjust horizontal position
+                  top: `${rect.top + window.scrollY + rect.height - 50}px`, // Adjust vertical position
+              })
+              .addClass('shown').find('input[name="timesheet-hours"]').focus();
+      }.bind(this)
+    );
 
       // Close modal
-      this.modalCloseButton.click(() => this.closeEditTimeLogModal());
       this.modalCancelButton.click(() => this.closeEditTimeLogModal());
       $(document).keydown((e) => {
         // Escape key
@@ -192,6 +202,9 @@ jQuery(document).ready(function ($) {
       );
 
       weekNumbers.forEach((weekNumber) => observer.observe(weekNumber));
+
+
+
     }
 
     /**
@@ -201,7 +214,6 @@ jQuery(document).ready(function ($) {
      */
     newTimeEntry() {
       this.populateLastUpdated();
-      this.openEditTimeLogModal();
 
       // Set date today
       let currentWeekNumber = new Date().getWeek();
@@ -214,7 +226,6 @@ jQuery(document).ready(function ($) {
 
       // Init ticket search
       this.modalInputTicketName.removeAttr("disabled");
-      this.modalTicketInput.focus().keyup((e) => this.filterFunction(e));
       this.modalDeleteButton.hide();
 
       // Ticket result click event
@@ -243,83 +254,6 @@ jQuery(document).ready(function ($) {
       this.modalTicketIdInput.val(taskId);
       this.modalInputHoursLeft.val(hoursLeft).attr("data-value", hoursLeft);
 
-      // Reset search
-      this.modalTicketResults.empty();
-    }
-
-    /**
-     * Filters the timetable ticket results based on the input value.
-     *
-     * @param event
-     *
-     * @returns {void}
-     */
-    filterFunction(event) {
-      const { value } = event.target;
-      const dropDownElement = $(".timetable-ticket-results");
-
-      // Reset search
-      if (value.length <= 1) {
-        dropDownElement.empty();
-      }
-
-      // Perform search
-      if (value.length > 1) {
-        const { data: tickets } =
-          TimeTableApiHandler.readFromCache("timetable_tickets");
-        this.ticketSearch(tickets, value);
-      }
-    }
-
-    /**
-     * Search for tickets in an object using a query.
-     *
-     * @param {Object} obj - The object to search in.
-     * @param {string} query - The query to search for.
-     * @return {Object} results
-     */
-    ticketSearch(obj, query) {
-      const { id, text, children } = obj;
-
-      const lowerCaseQuery = query.toLowerCase();
-
-      let results = [];
-
-      // Checks if `obj`'s `text` or `id` contains `lowerCaseQuery` and not already added to timetable.
-
-      if (
-        "text" in obj &&
-        typeof text === "string" &&
-        (text.toLowerCase().includes(lowerCaseQuery) ||
-          (id && id.toString().toLowerCase().includes(lowerCaseQuery)))
-      ) {
-        const index = text.toLowerCase().indexOf(lowerCaseQuery);
-        const relevance = index === -1 ? 0 : text.length - index;
-        results.push({ ...obj, relevance });
-      }
-
-      // If `children` is an array, searches each `child` for `query` and merges results.
-      if (Array.isArray(children)) {
-        children.forEach((child) => {
-          const childResults = this.ticketSearch(child, query);
-          results = results.concat(childResults);
-        });
-      }
-
-      results.sort((a, b) => b.relevance - a.relevance);
-
-      this.modalTicketResults.empty();
-      if (results.length === 0) {
-        this.modalTicketResults.append(
-          `<div class="timetable-ticket-result-item-no-results" data-value="">No results</div>`,
-        );
-      }
-      results.forEach(({ id, text, projectName, hoursLeft }) => {
-        this.modalTicketResults.append(
-          `<div class="timetable-ticket-result-item" data-project="${projectName}" data-hoursleft="${hoursLeft}" data-value="${id}"><span>${text}</span></div>`,
-        );
-      });
-      return results;
     }
 
     /**
@@ -331,10 +265,9 @@ jQuery(document).ready(function ($) {
      * @param {number} hoursLeft - Hours left.
      * @param {string} description - Work done.
      * @param {string} date - Work date.
-     * @param {number} offset
      * @return {boolean}
      */
-    editTimeEntry(id, ticketId, hours, hoursLeft, description, date, offset) {
+    editTimeEntry(id, ticketId, hours, hoursLeft, description, date) {
       // Find ticket in cache
       const ticket = TimeTableApiHandler.getTicketDataFromCache(
         parseInt(ticketId),
@@ -351,13 +284,10 @@ jQuery(document).ready(function ($) {
             hoursLeft,
             description,
             date,
-            offset,
           );
         });
         return false;
       }
-
-      this.openEditTimeLogModal();
 
       if (id) {
         this.modalDeleteButton.show();
@@ -369,7 +299,7 @@ jQuery(document).ready(function ($) {
       this.modalInputTicketId.val(ticket.id);
       this.modalInputTicketName.val(ticket.text).attr("disabled", "disabled");
       this.modalInputHours.val(hours);
-      this.modalInputHoursLeft.val(hoursLeft).attr("data-value", hoursLeft);
+      this.modalInputHoursLeft.val(hoursLeft > 0 ? `${hoursLeft}` : "").attr("data-value", hoursLeft);
       this.modalTextareaDescription.val(description);
       this.modalInputDate.val(date);
 
@@ -484,21 +414,11 @@ jQuery(document).ready(function ($) {
      * @returns {void}
      */
     closeEditTimeLogModal() {
-      $(this.timeEditModal).hide().find("input, textarea").val("");
-      $(this.modalTicketResults).empty();
-      $(this.modalInputHoursLeft).removeAttr("data-value");
+      this.timeEditModal.removeClass('shown').removeAttr("data-value");
+      this.timeEditModal.find("input:not([name='action']), textarea").val("");
       $(document).off("mousedown", this.boundClickOutsideModalHandler);
     }
 
-    /**
-     * Opens the edit time log modal.
-     *
-     * @returns {void}
-     */
-    openEditTimeLogModal() {
-      $(this.timeEditModal).show().css("display", "flex");
-      $(document).on("mousedown", this.boundClickOutsideModalHandler);
-    }
 
     openEditTimeSyncModal() {
       $(this.timeEditSyncModal).show().css("display", "flex");
