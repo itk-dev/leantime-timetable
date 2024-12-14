@@ -2,6 +2,7 @@
 
 namespace Leantime\Plugins\TimeTable\Services;
 
+use Carbon\CarbonInterface;
 use Leantime\Plugins\TimeTable\Repositories\TimeTable as TimeTableRepository;
 use Carbon\CarbonImmutable;
 
@@ -74,7 +75,7 @@ class TimeTable
     /**
      * @return array<array<string, string>>
      */
-    public function getUniqueTicketIds(CarbonImmutable $dateFrom, CarbonImmutable $dateTo): array
+    public function getUniqueTicketIds(CarbonInterface $dateFrom, CarbonInterface $dateTo): array
     {
         return $this->timeTableRepo->getUniqueTicketIds($dateFrom, $dateTo);
     }
@@ -82,7 +83,7 @@ class TimeTable
     /**
      * @return array<array<string, string>>
      */
-    public function getTimesheetByTicketIdAndWorkDate(string $ticketId, CarbonImmutable $workDate, ?string $searchTerm): array
+    public function getTimesheetByTicketIdAndWorkDate(string $ticketId, CarbonInterface $workDate, ?string $searchTerm): array
     {
         return $this->timeTableRepo->getTimesheetByTicketIdAndWorkDate($ticketId, $workDate, $searchTerm);
     }
