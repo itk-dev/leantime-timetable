@@ -3,6 +3,7 @@
 namespace Leantime\Plugins\TimeTable\Repositories;
 
 use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
 use Leantime\Core\Db\Db as DbCore;
 use PDO;
 
@@ -30,7 +31,7 @@ class TimeTable
     /**
      * @return array<array<string, string>>
      */
-    public function getUniqueTicketIds(CarbonImmutable $dateFrom, CarbonImmutable $dateTo): array
+    public function getUniqueTicketIds(CarbonInterface $dateFrom, CarbonInterface $dateTo): array
     {
         $sql = 'SELECT DISTINCT
         timesheet.ticketId
@@ -115,7 +116,7 @@ class TimeTable
 
         $stmn = $this->db->database->prepare($sql);
         $stmn->bindValue(':ticketId', $values['ticketId']);
-        $stmn->bindValue(':date', $values['workDate']);
+        $stmn->bindValue(':date', $values['workDate']->format('Y-m-d H:i:s'));
         $stmn->bindValue(':userId', $values['userId'], PDO::PARAM_INT);
         $stmn->execute();
 
@@ -155,11 +156,12 @@ class TimeTable
             $stmn = $this->db->database->prepare($sql);
             $stmn->bindValue(':userId', $values['userId'], PDO::PARAM_INT);
             $stmn->bindValue(':ticket', $values['ticketId']);
-            $stmn->bindValue(':date', $values['workDate']);
+            $stmn->bindValue(':date', $values['workDate']->format('Y-m-d H:i:s'));
             $stmn->bindValue(':kind', $values['kind']);
             $stmn->bindValue(':description', $values['description']);
             $stmn->bindValue(':hours', $values['hours']);
         }
+
         $stmn->execute();
         $stmn->closeCursor();
 
