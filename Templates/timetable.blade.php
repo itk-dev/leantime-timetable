@@ -63,7 +63,7 @@
                             @if (!empty($timesheetsByTicket))
                                 @foreach ($timesheetsByTicket as $ticketId => $timesheet)
                                     <tr data-ticketId="{{ $ticketId }}">
-                                        <td class="ticket-title" scope="row" style="min-width: 400px;"><a
+                                        <td class="ticket-title" scope="row"><a
                                                 href="{{ $timesheet['ticketLink'] }}">{{ $timesheet['ticketTitle'] }}</a>
                                             <span>{{ $timesheet['projectName'] }}</span>
                                             <?php if ($timesheet['ticketType'] !== "task"): ?>
@@ -81,7 +81,7 @@
                                             $hoursLeft = $timesheetDate[0]['hourRemaining'] ?? null;
                                             $description = $timesheetDate[0]['description'] ?? null;
                                             $isMissingDescription = isset($hours) && trim($description) === '';
-                                            
+
                                             // accumulate hours
                                             if ($hours) {
                                                 if (isset($totalHours[$weekDateAccessor])) {
@@ -91,7 +91,7 @@
                                                 }
                                                 $rowTotal += $hours; // add to row total
                                             }
-                                            
+
                                             $weekendClass = isset($weekDate) && $weekDate->isWeekend() ? 'weekend' : '';
                                             $todayClass = isset($weekDate) && $weekDate->isToday() ? 'today' : '';
                                             $newWeekClass = isset($weekDate) && $weekDate->isMonday() ? 'new-week' : ''; // Add new-week class for Mondays
@@ -160,38 +160,33 @@
 
     {{-- Modal for editing work logs --}}
 
-    <div id="edit-time-log-modal" class="timetable nyroModalBg edit-time-log-modal">
-        <form method="POST" class="edit-time-log-form shadow">
+    <div id="edit-time-log-modal" class="timetable edit-time-log-modal">
+        <form method="POST" class="edit-time-log-form">
             <input type="hidden" name="action" value="saveTicket">
-            <div class="timetable-close-modal">
-                <span>×</span>
-            </div>
             {{-- Hidden properties for post --}}
             <input type="hidden" name="timesheet-ticket-id" />
             <input type="hidden" name="timesheet-id" />
             <input type="hidden" name="timesheet-offset" />
 
-            <input type="date" name="timesheet-date">
+            <input type="hidden" name="timesheet-date">
 
             <input type="hidden" class="fromdate-input" name="fromDate" value="{{ $fromDate->format('Y-m-d') }}"
                 onchange="submit()" />
             <input type="hidden" class="todate-input" name="toDate" value="{{ $toDate->format('Y-m-d') }}"
                 onchange="submit()" />
 
-            {{-- copy paste from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp - also entries in timeTable.css and timeTable.js --}}
-            <div class="timetable-ticket-search">
-                <input class="timetable-ticket-input" type="text" data-placeholder="{{ __('timeTable.search_tickets') }}"
-                    data-loading="{{ __('timeTable.filtering_tickets') }}"
-                    placeholder="{{ __('timeTable.search_tickets') }}" />
-                <div class="timetable-ticket-results"></div>
-            </div>
-
-            <div class="timetable-hours-left">
-                <input type="number" name="timesheet-hours" step="0.01" placeholder="{{ __('timeTable.hours') }}"
-                    required />
-                <div>
-                    <span>{{ __('timeTable.hours_left') }} </span>
-                    <input type="number" name="timesheet-hours-left" disabled="disabled" />
+            <div class="timetable-hours">
+                <div class="timesheet-input-wrapper">
+                    <input
+                        type="number"
+                        name="timesheet-hours"
+                        step="0.01"
+                        placeholder="{{ __('timeTable.hours') }}"
+                        required
+                    />
+                    <div title="{{ __('timeTable.hours_left') }}" class="timetable-hours-left">
+                        <input type="number" name="timesheet-hours-left" disabled="disabled" />
+                    </div>
                 </div>
             </div>
 
@@ -203,7 +198,7 @@
             </div>
 
             {{-- Save or cancel buttons --}}
-            <div class="buttons flex-container gap-3">
+            <div class="buttons flex-container gap-1">
                 <button type="button" class="timetable-modal-delete btn btn-danger"
                     data-loading="{{ __('timeTable.button_modal_deleting') }}"><i class="fa fa-trash"></i></button>
                 <button type="button"
