@@ -13,7 +13,7 @@ use Leantime\Domain\Auth\Models\Roles;
 use Leantime\Domain\Auth\Services\Auth as AuthService;
 use Leantime\Domain\Setting\Repositories\Setting as SettingRepository;
 use Leantime\Domain\Timesheets\Repositories\Timesheets as TimesheetRepository;
-use Leantime\Core\UI\Template as Template;
+use Leantime\Core\UI\Template;
 
 /**
  * TimeTable controller.
@@ -51,6 +51,7 @@ class TimeTable extends Controller
      */
     public function post(): Response
     {
+        $hest = $_POST;
         if (!AuthService::userIsAtLeast(Roles::$editor)) {
             return $this->template->displayJson(['Error' => 'Not Authorized'], 403);
         }
@@ -172,7 +173,7 @@ class TimeTable extends Controller
 
             $timesheetsByTicket[$ticket['ticketId']] = $timesheetsSortedByWeekdate;
         }
-        // All tickets assignet to the template
+        // All tickets assigned to the template
         $this->template->assign('ticketIds', implode(',', $ticketIds));
         $this->template->assign('timesheetsByTicket', $timesheetsByTicket);
         $this->template->assign('weekDays', $days);
