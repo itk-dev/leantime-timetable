@@ -3,6 +3,15 @@
 .maincontentinner {
   padding-bottom: 50px;
 }
+#edit-time-log-modal {
+    position: absolute;
+    z-index: 99999;
+    display: none !important;
+
+    &.shown {
+        display: flex !important;
+    }
+}
 .timetable {
   --itk-color-primary: hsla(200, 98%, 39%, 1);
   --itk-color-primary-50: hsla(204, 100%, 97%, 1);
@@ -88,6 +97,7 @@
       position: sticky;
       left: 0;
       z-index: 1;
+        width: 500px;
       background-color: white;
     }
     th:last-child {
@@ -127,6 +137,7 @@
         position: sticky;
         left: 0;
         z-index: 1;
+          width: 500px;
         background-color: white;
       }
       td:last-child {
@@ -168,10 +179,6 @@
 
   .gap-3 {
     gap: var(--itk-spacing-md);
-  }
-
-  .shadow {
-    box-shadow: 1px 2px 16px hsla(0, 100%, 0%, 0.16);
   }
 
   .tools {
@@ -414,51 +421,29 @@
     display: none;
   }
 
-  /* Modal Content/Box */
-  &.edit-time-log-form {
-    display: flex;
-    height: 300px;
-    flex-direction: column;
-    background-color: var(--itk-color-gray-50);
-    margin: 15% auto;
-    padding: var(--itk-spacing-lg);
-    width: clamp(25vw, 450px, 100%);
-    border: 1px solid #888;
-    min-width: 300px;
-    border-radius: var(--itk-border-radius);
-    position: relative;
-
-    input,
-    textarea {
-      padding: var(--itk-spacing-sm) var(--itk-spacing-md);
-      border-radius: var(--itk-border-radius);
-
-      &:focus {
-        outline: 1px solid var(--itk-color-black);
-      }
-    }
-  }
-  .edit-time-log-form .timetable-close-modal {
-    position: absolute;
-    top: 0;
-    right: 0;
-    cursor: pointer;
-    width: 25px;
-    height: 25px;
-    display: flex;
-  }
-  .edit-time-log-form .timetable-close-modal span {
-    margin: auto;
-  }
-
   .edit-time-log-form .timetable-modal-delete.deleting > i {
     animation: spin 1.2s linear infinite;
     font-size: 13px;
   }
   .edit-time-log-form input {
-    width: 100%;
-    border-radius: 3px;
-    margin-right: 10px;
+      border-radius: 0;
+      margin-bottom: 4px;
+      box-shadow: none;
+      border: none;
+
+      &[name="timesheet-hours"] {
+          border: 1px solid #CBD5E1;
+          padding-right: 0;
+
+          &:focus {
+              box-shadow: none;
+          }
+      }
+      &[name="timesheet-hours-left"] {
+          width: 60px;
+          text-align: right;
+          padding: 0 5px;
+      }
   }
 
   .edit-time-log-form .fa-clock {
@@ -479,10 +464,7 @@
   .edit-time-log-form .buttons {
     display: flex;
     justify-content: end;
-  }
-
-  .edit-time-log-form .buttons button {
-    border-radius: 3px !important;
+    margin-top: auto;
   }
   .edit-time-log-form .buttons button:hover {
     filter: brightness(0.95);
@@ -490,29 +472,16 @@
 
   /* Modal Content/Box */
   .edit-time-log-form {
-    display: flex;
-    height: 300px;
-    flex-direction: column;
-    background-color: #fefefe;
-    margin: auto;
-    padding: 30px 20px 20px 20px;
-    border: 1px solid #888;
-    width: 25vw; /* Could be more or less, depending on screen size */
-    min-width: 300px;
-    border-radius: 3px;
-    position: relative;
-  }
-  .edit-time-log-form .timetable-close-modal {
-    position: absolute;
-    top: 0;
-    right: 0;
-    cursor: pointer;
-    width: 25px;
-    height: 25px;
-    display: flex;
-  }
-  .edit-time-log-form .timetable-close-modal span {
-    margin: auto;
+      display: flex;
+      height: 150px;
+      flex-direction: column;
+      background-color: #fefefe;
+      margin: auto;
+      padding: 8px;
+      border: 1px solid #CBD5E1;
+      width: 300px;
+      min-width: 300px;
+      position: relative;
   }
   .edit-time-log-form .timetable-modal-delete {
     margin-right: auto;
@@ -527,15 +496,11 @@
     animation: spin 1.2s linear infinite;
     font-size: 13px;
   }
-  .edit-time-log-form input {
-    width: 100%;
-    border-radius: 3px;
-  }
   .edit-time-log-form .buttons {
     display: flex;
     justify-content: end;
   }
-  .edit-time-log-form .buttons button {
+  .edit-time-log-form button, input, textarea {
     border-radius: 3px !important;
   }
   .edit-time-log-form .buttons button:hover {
@@ -544,18 +509,21 @@
   .edit-time-log-form .timetable-modal-submit {
     color: white;
     border: 1px solid #cbd5e1;
-    height: 28px;
     padding: 0 15px;
     margin: 0;
     font-weight: 400;
+    font-size: 12px;
+    background-color: #4F46E5;
+      border-radius: 0;
   }
   .edit-time-log-form .timetable-modal-cancel {
     background: white;
     border: 1px solid #cbd5e1;
     color: #334155;
-    height: 28px;
     margin-right: 5px;
     padding: 0 15px;
+    font-size: 12px;
+      border-radius: 0;
   }
   .edit-time-log-form .fa-clock {
     position: absolute;
@@ -566,6 +534,8 @@
   .edit-time-log-form {
     .description-wrapper {
       position: relative;
+      flex: 1;
+      margin-bottom: 10px;
 
       &:after {
         content: "";
@@ -594,12 +564,14 @@
   }
 
   .edit-time-log-form #modal-description {
-    position: relative;
-    width: 100%;
-    resize: none;
-    height: 85px;
-    border-radius: 0;
-    overflow-x: hidden;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      resize: none;
+      border-radius: 0;
+      overflow-x: hidden;
+      margin-bottom: 0;
+      box-shadow: none;
   }
   .edit-time-log-form input:disabled {
     opacity: 0.6;
@@ -757,10 +729,32 @@
     }
   }
 }
+.timetable-hours {
+    position: relative;
+    width: 100%;
+    max-width: 300px; /* Adjust as needed */
+}
+
+.timesheet-input-wrapper {
+    position: relative;
+    display: flex;
+    width: 100%;
+}
+
+.timesheet-input-wrapper input[name="timesheet-hours"] {
+    width: 100%;
+    box-sizing: border-box;
+}
 
 .timetable-hours-left {
-  display: flex;
-  flex-direction: row;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+    border-right: 1px solid var(--itk-border-color);
+    display: flex;
+    align-items: center;
+    gap: 5px;
 
   div {
     display: flex;
@@ -773,6 +767,9 @@
       margin: auto 0px auto 5px;
     }
     input {
+        width: 50px; /* Adjust as needed */
+        font-size: 12px;
+        text-align: center;
       margin: auto 5px;
       width: 23px !important;
       padding: 0;
