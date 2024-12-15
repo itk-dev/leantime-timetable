@@ -51,7 +51,6 @@ class TimeTable extends Controller
      */
     public function post(): Response
     {
-        $hest = $_POST;
         if (!AuthService::userIsAtLeast(Roles::$editor)) {
             return $this->template->displayJson(['Error' => 'Not Authorized'], 403);
         }
@@ -65,6 +64,9 @@ class TimeTable extends Controller
                     break;
                 case 'saveTicket':
                     $redirectUrl = $actionHandler->saveTicket($_POST, $redirectUrl);
+                    break;
+                case 'deleteTicket':
+                    $redirectUrl = $actionHandler->deleteTicket($_POST, $redirectUrl);
                     break;
             }
         }
