@@ -20,6 +20,7 @@ jQuery(document).ready(function ($) {
       this.newEntryButton = $("button.timetable-new-entry");
       this.syncButton = $("button.timetable-sync-tickets");
       this.refreshPanel = $(".timetable-sync-panel");
+      this.timeTableScrollContainer = $(".timetable-scroll-container");
 
       // Modal selectors
       this.timeEditModal = $("#edit-time-log-modal");
@@ -203,8 +204,7 @@ jQuery(document).ready(function ($) {
 
       weekNumbers.forEach((weekNumber) => observer.observe(weekNumber));
 
-
-
+        this.checkOverflow(this.timeTableScrollContainer);
     }
 
     /**
@@ -388,24 +388,25 @@ jQuery(document).ready(function ($) {
       $(this.modalDeleteButton)
         .html('<i class="fa-solid fa-arrows-rotate"></i>')
         .addClass("deleting");
+
       fetch(window.location.href, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: JSON.stringify({
-          action: "delete",
-          timesheetId: timesheetId,
-        }),
+          body: new URLSearchParams({
+              action: "deleteTicket",
+              timesheetId: timesheetId,
+          }),
       })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === "success") {
-            window.location.reload();
-          } else {
-            alert("An error has occurred");
-          }
-        });
+          .then((response) => response.json())
+          .then((data) => {
+              if (data.status === "success") {
+                  window.location.href = data.redirectUrl;
+              } else {
+                  alert("An error has occurred");
+              }
+          });
     }
 
     /**
@@ -649,6 +650,15 @@ jQuery(document).ready(function ($) {
 
       $("td.add-new").parent().before(newRow);
     }
+
+      // Function to check if the element is overflowing
+      checkOverflow($element) {
+          if ($element[0].scrollWidth > $element[0].offsetWidth || $element[0].scrollHeight > $element[0].offsetHeight) {
+              $element.addClass('overflowing');
+          } else {
+              $element.removeClass('overflowing');
+          }
+      }
   }
 
   let timeTable = new TimeTable();
