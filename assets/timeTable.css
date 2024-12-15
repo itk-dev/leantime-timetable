@@ -3,6 +3,24 @@
 .maincontentinner {
   padding-bottom: 50px;
 }
+.timetable-scroll-container:not(.overflowing) .ts-dropdown {
+    position: fixed !important;
+    top: calc(100% - 117px) !important;
+    left: 15px !important;
+    width: 600px !important;
+    height: 400px !important;
+}
+.ts-dropdown-content {
+    max-height: 100% !important;
+}
+
+.timetable-scroll-container.overflowing .ts-dropdown {
+    position: fixed !important;
+    top: calc(100% - 117px) !important;;
+    left: 15px !important;;
+    width: 214px !important;;
+    height: 500px !important;
+}
 #edit-time-log-modal {
     position: absolute;
     z-index: 99999;
@@ -33,7 +51,7 @@
 
   --itk-border-radius: 4px;
 
-  --itk-spacing: 16px;
+  --itk-spacing: 11px;
   --itk-spacing-xs: calc(var(--itk-spacing) * 0.25);
   --itk-spacing-sm: calc(var(--itk-spacing) * 0.5);
   --itk-spacing-md: var(--itk-spacing);
@@ -97,7 +115,7 @@
       position: sticky;
       left: 0;
       z-index: 1;
-        width: 500px;
+        width: 600px;
       background-color: white;
     }
     th:last-child {
@@ -798,7 +816,7 @@
     }
     div.ts-control {
       border: none !important;
-      height: 50px;
+      height: 44px;
       box-shadow: none;
 
       div.item {
