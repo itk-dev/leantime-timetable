@@ -337,16 +337,36 @@
   .table .timetable-edit-entry {
     --transition-time: 0.2s;
     --transition-easing: ease-in-out;
-
     cursor: pointer;
     position: relative;
     transition: background-color calc(var(--transition-time) * 0.5)
       var(--transition-easing);
 
+      &.highlight {
+          background-color: rgba(255, 105, 180, 0.8);
+      }
     span {
       pointer-events: none;
       user-select: none;
     }
+    div.entry-copy-button {
+        display: block;
+        position: absolute;
+        height: 100%;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: hotpink;
+        width: 50%;
+        opacity: 0;
+        transition: opacity .3s ease;
+
+        &:hover {
+            opacity: 1;
+            transition: opacity .3s ease;
+        }
+    }
+
 
     &.description-missing:after {
       content: "";
