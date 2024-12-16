@@ -80,14 +80,6 @@ class TimeTableActionHandler
      */
     public function saveTicket(array $postData, string $redirectUrl): string
     {
-        $jsonPayload = json_decode(file_get_contents('php://input'), true);
-
-        // Handle delete action separately
-        if (isset($jsonPayload['action']) && $jsonPayload['action'] === 'delete') {
-            return $this->deleteTicket($postData, $redirectUrl);
-        }
-
-        // Process ticket save logic
         $timesheetId = isset($postData['timesheet-id']) ? (int)$postData['timesheet-id'] : 0;
         $workDate = new CarbonImmutable($postData['timesheet-date'], session('usersettings.timezone'));
         $workDate = $workDate->setToDbTimezone();
@@ -145,20 +137,64 @@ class TimeTableActionHandler
     {
         $queryParams = [];
 
-        // Populate queryParams based on POST data
-        if (isset($postData['fromDate'])) {
+        // Only extract specific fields from $_POST
+        if (!empty($postData['fromDate'])) {
             $queryParams['fromDate'] = $postData['fromDate'];
         }
 
-        if (isset($postData['toDate'])) {
+        if (!empty($postData['toDate'])) {
             $queryParams['toDate'] = $postData['toDate'];
         }
 
-        // Add query parameters to the URL
+        // Add query parameters to the URL if necessary
         if (!empty($queryParams)) {
-            $redirectUrl .= '?' . http_build_query($queryParams);
+            // Merge into the existing redirect URL
+            $redirectUrl .= (strpos($redirectUrl, '?') === false ? '?' : '&') . http_build_query($queryParams);
         }
 
         return $redirectUrl;
+    }
+
+    public function copyEntryForward(array $postData, string $redirectUrl): void
+    {
+        $redirectUrl = $this->appendQueryParams($postData, $redirectUrl);
+        try {
+            $copyFromDate = CarbonImmutable::createFromFormat('Y-m-d', $postData['copyFromDate']);
+            $copyFromDate = $copyFromDate->setToDbTimezone();
+            $copyToDate = CarbonImmutable::createFromFormat('Y-m-d', $postData['copyToDate']);
+            $copyToDate = $copyToDate->setToDbTimezone();
+        } catch (\Exception $e) {
+            throw new \InvalidArgumentException('Invalid date format. Expected format: Y-m-d');
+        }
+
+        $ticketId = $postData['ticketId'];
+        $hours = $postData['hours'];
+        $description = $postData['description'];
+
+        // Move to the next day to skip the first date
+        $currentDate = $copyFromDate;
+
+        while ($currentDate <= $copyToDate) {
+            $values = [
+                'userId' => session('userdata.id'),
+                'ticketId' => $ticketId,
+                'workDate' => $currentDate,
+                'hours' => $hours,
+                'description' => $description,
+                'kind' => 'GENERAL_BILLABLE',
+            ];
+
+            try {
+                $this->timeTableService->addTimelogOnTicket($values);
+
+                $currentDate = $currentDate->addDay();
+            } catch (\Exception $e) {
+                exit(json_encode(['status' => 'error', 'error' => $e->getMessage()]));
+            }
+
+        }
+
+        exit(json_encode(['status' => 'success', 'redirectUrl' => $redirectUrl]));
+
     }
 }
