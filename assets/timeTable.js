@@ -21,6 +21,7 @@ jQuery(document).ready(function ($) {
       this.syncButton = $("button.timetable-sync-tickets");
       this.refreshPanel = $(".timetable-sync-panel");
       this.timeTableScrollContainer = $(".timetable-scroll-container");
+      this.entryCopyButton = $('div.entry-copy-button');
 
       // Modal selectors
       this.timeEditModal = $("#edit-time-log-modal");
@@ -205,6 +206,56 @@ jQuery(document).ready(function ($) {
       weekNumbers.forEach((weekNumber) => observer.observe(weekNumber));
 
         this.checkOverflow(this.timeTableScrollContainer);
+
+        this.entryCopyButton.click((e) => {
+            e.stopPropagation();
+            const parent = $(e.target).parent();
+            const ticketId = parent.data('ticketid');
+            const copyFromDate = parent.data('date');
+            const hours = parent.data('hours');
+            const description = parent.data('description');
+            const copyToDate = $('input[name="timetable-current-week-last-day"]').val();
+
+            let check = confirm('Copy this entry [' + hours + ' hours, description: ' + description + '] (' + copyFromDate + ') to and including ' + copyToDate + ' where not empty?');
+
+            if (check) {
+                // Get current URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+
+                // Add POST parameters to URL parameters
+                urlParams.set('action', 'copyEntryForward');
+                urlParams.set('copyFromDate', copyFromDate);
+                urlParams.set('copyToDate', copyToDate);
+                urlParams.set('ticketId', ticketId);
+                urlParams.set('hours', hours);
+                urlParams.set('description', description);
+
+                // POST request with combined parameters
+                fetch(window.location.href, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: urlParams.toString(), // Send combined parameters in the body
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.status === "success") {
+                            window.location.href = data.redirectUrl;
+                        } else {
+                            alert("An error has occurred");
+                        }
+                    });
+            }
+        });
+
+        this.entryCopyButton.on("mouseenter", function () {
+            $(this).parents().nextAll().addClass("highlight");
+        });
+
+        this.entryCopyButton.on("mouseleave", function () {
+            $(this).parents().nextAll().removeClass("highlight");
+        });
     }
 
     /**
@@ -616,6 +667,7 @@ jQuery(document).ready(function ($) {
       const firstDateOfWeek = new Date(
         $("input[name='timetable-current-week-first-day']").val(),
       );
+      const daysRendered = parseInt($('input[name="timetable-days-loaded"]').val());
 
       // Create a new date object to ensure the original date is preserved
       let dateIterator = new Date(firstDateOfWeek.getTime());
@@ -626,7 +678,7 @@ jQuery(document).ready(function ($) {
             <a href="?showTicketModal=${ticketId}#/tickets/showTicket/${ticketId}">${ticketText}</a>
             <span>${projectName}</span>
         </td>
-        ${Array.from({ length: 7 })
+        ${Array.from({ length: daysRendered })
           .map((_, i) => {
             // Increment date
             if (i > 0) {
