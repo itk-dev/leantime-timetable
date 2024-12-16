@@ -35,6 +35,10 @@
                                 @if (isset($weekDays, $weekDates) && count($weekDates))
                                     <input type="hidden" name="timetable-current-week-first-day"
                                         value="{{ reset($weekDates)->format('Y-m-d') }}" />
+                                    <input type="hidden" name="timetable-current-week-last-day"
+                                           value="{{ end($weekDates)->format('Y-m-d') }}" />
+                                    <input type="hidden" name="timetable-days-loaded"
+                                           value="{{ count($weekDates) }}" />
                                     <input type="hidden" name="timetable-current-week"
                                         value="{{ reset($weekDates)->format('W') }}" />
 
@@ -104,6 +108,9 @@
                                                 data-date="{{ $weekDate->format('Y-m-d') }}"
                                                 title="{{ $isMissingDescription ? __('timeTable.description_missing') : '' }}">
                                                 <span>{{ $hours }}</span>
+                                                @if (!is_null($hours))
+                                                    <div class="entry-copy-button">-></div>
+                                                @endif
                                             </td>
                                         @endforeach
                                         <td>{{ $rowTotal }}</td> <!-- Row Total Column -->
