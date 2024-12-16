@@ -68,6 +68,8 @@ class TimeTable extends Controller
                 case 'deleteTicket':
                     $redirectUrl = $actionHandler->deleteTicket($_POST, $redirectUrl);
                     break;
+                case 'copyEntryForward':
+                    $redirectUrl = $actionHandler->copyEntryForward($_POST, $redirectUrl);
             }
         }
 
