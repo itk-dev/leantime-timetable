@@ -97,4 +97,9 @@ class TimeTable
     {
         $this->timeTableRepo->updateOrAddTimelogOnTicket($values, $originalId);
     }
+
+    public function addTimelogOnTicket(array $values)
+    {
+        $this->timeTableRepo->addTimelogOnTicket($values);
+    }
 }
