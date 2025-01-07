@@ -3,6 +3,22 @@
 .maincontentinner {
   padding-bottom: 50px;
 }
+#entry-copy-modal {
+    .entry-copy-form {
+        display: flex;
+        height: 150px;
+        flex-direction: column;
+        background-color: #fefefe;
+        margin: auto;
+        padding: 8px;
+        border: 1px solid #CBD5E1;
+        width: 300px;
+        min-width: 300px;
+        position: relative;
+    }
+}
+
+
 .timetable-scroll-container:not(.overflowing) .ts-dropdown {
     position: fixed !important;
     top: calc(100% - 117px) !important;
@@ -21,7 +37,8 @@
     width: 214px !important;;
     height: 500px !important;
 }
-#edit-time-log-modal {
+#edit-time-log-modal,
+#entry-copy-modal {
     position: absolute;
     z-index: 99999;
     display: none !important;
@@ -35,6 +52,10 @@
   --itk-color-primary-50: hsla(204, 100%, 97%, 1);
   --itk-color-primary-100: hsla(204, 94%, 94%, 1);
   --itk-color-primary-800: hsla(201, 90%, 27%, 1);
+  --itk-color-secondary: hsla(241, 73%, 59%, 1);
+  --itk-color-secondary-50: hsla(241, 100%, 97%, 1);
+  --itk-color-secondary-100: hsla(241, 91%, 93%, 1);
+  --itk-color-secondary-800: hsla(241, 74%, 40%, 1);
   --itk-color-success: hsla(142, 76%, 36%, 1);
   --itk-color-success-100: hsla(141, 84%, 93%, 1);
   --itk-color-danger: hsla(0, 72%, 51%, 1);
@@ -324,10 +345,12 @@
     border: 1px solid var(--itk-border-color);
     padding: var(--itk-spacing-md);
   }
-  .table .empty-row {
+  .table td.empty-row {
     background-color: var(--itk-color-white);
-    padding: 30px 20px;
   }
+    .table tr.empty-row:has(+ tr.newly-added-tr) {
+        display: none;
+    }
   .table .tr-total {
     color: var(--itk-color-gray-500);
     background-color: var(--itk-color-gray-100);
@@ -343,25 +366,31 @@
       var(--transition-easing);
 
       &.highlight {
-          background-color: rgba(255, 105, 180, 0.8);
+          background-color: var(--itk-color-secondary-100);
       }
     span {
       pointer-events: none;
       user-select: none;
     }
     div.entry-copy-button {
-        display: block;
+        display: flex;
         position: absolute;
         height: 100%;
         right: 0;
         top: 0;
         bottom: 0;
-        background-color: hotpink;
+        background-color: var(--itk-color-secondary-100);
         width: 50%;
         opacity: 0;
         transition: opacity .3s ease;
 
-        &:hover {
+        i {
+            margin: auto;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        &.ready {
+            pointer-events: all;
             opacity: 1;
             transition: opacity .3s ease;
         }
@@ -380,6 +409,10 @@
       border-top: 10px solid var(--itk-color-danger);
     }
 
+      &.highlighting:before {
+          transition: left .3s ease;
+          left: calc(25% - 5px) !important;
+      }
     &:before {
       opacity: 0;
     }
@@ -401,7 +434,7 @@
         left: calc(50% - 5px);
         color: var(--itk-color-success);
         opacity: 0.8;
-        transition: opacity var(--transition-time) var(--transition-easing);
+        transition: left .3s ease, opacity var(--transition-time) var(--transition-easing);
       }
 
       &:not([data-hours=""]) {
@@ -411,6 +444,10 @@
       }
     }
   }
+    td.timetable-edit-entry[data-preview]:not(:has(span:not(:empty)))::after {
+        content: attr(data-preview);
+        opacity: 0.6;
+    }
   .table td select {
     all: unset;
     position: absolute;
@@ -551,7 +588,7 @@
     margin: 0;
     font-weight: 400;
     font-size: 12px;
-    background-color: #4F46E5;
+    background-color: var(--itk-color-secondary);
       border-radius: 0;
   }
   .edit-time-log-form .timetable-modal-cancel {

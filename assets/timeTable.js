@@ -25,6 +25,8 @@ jQuery(document).ready(function ($) {
 
       // Modal selectors
       this.timeEditModal = $("#edit-time-log-modal");
+      this.entryCopyModal = $("#entry-copy-modal");
+        this.entryCopyForm = this.entryCopyModal.find(".entry-copy-form");
       this.timeEditForm = this.timeEditModal.find(".edit-time-log-form");
       this.timeEditSyncModal = $("#edit-time-sync-modal");
       this.modalInputTimesheetId = this.timeEditModal.find(
@@ -197,9 +199,9 @@ jQuery(document).ready(function ($) {
           });
         },
         {
-          root: document.querySelector(".timetable-scroll-container"),
+          root: document.querySelector(".timetable-scroll-container.overflowing"),
           threshold: 1,
-          rootMargin: "0% 0% 0% -400px",
+          rootMargin: "0% 0% 0% -460px",
         },
       );
 
@@ -209,6 +211,19 @@ jQuery(document).ready(function ($) {
 
         this.entryCopyButton.click((e) => {
             e.stopPropagation();
+            if (!$(e.currentTarget).hasClass("ready")) {
+                $(e.currentTarget).parent().click();
+                return false;
+            }
+            const rect = e.target.getBoundingClientRect();
+
+            this.entryCopyModal
+                .css({
+                    left: `${rect.left + window.scrollX - 215}px`, // Adjust horizontal position
+                    top: `${rect.top + window.scrollY + rect.height - 50}px`, // Adjust vertical position
+                })
+                .addClass('shown');
+
             const parent = $(e.target).parent();
             const ticketId = parent.data('ticketid');
             const copyFromDate = parent.data('date');
@@ -216,7 +231,26 @@ jQuery(document).ready(function ($) {
             const description = parent.data('description');
             const copyToDate = $('input[name="timetable-current-week-last-day"]').val();
 
-            let check = confirm('Copy this entry [' + hours + ' hours, description: ' + description + '] (' + copyFromDate + ') to and including ' + copyToDate + ' where not empty?');
+            this.entryCopyForm.find('.entry-copy-hours').text(hours);
+            this.entryCopyForm.find('.entry-copy-description').text(description);
+            this.entryCopyForm.find('.entry-copy-text').text('Copy this entry [' + hours + ' hours, description: ' + description + '] (' + copyFromDate + ') to and including ' + copyToDate + ' where not set?');
+
+        })
+        /*this.entryCopyButton.click((e) => {
+            e.stopPropagation();
+            if (!$(e.currentTarget).hasClass("ready")) {
+                $(e.currentTarget).parent().click();
+                return false;
+            }
+            console.log(e.target);
+            const parent = $(e.target).parent();
+            const ticketId = parent.data('ticketid');
+            const copyFromDate = parent.data('date');
+            const hours = parent.data('hours');
+            const description = parent.data('description');
+            const copyToDate = $('input[name="timetable-current-week-last-day"]').val();
+
+            let check = confirm('Copy this entry [' + hours + ' hours, description: ' + description + '] (' + copyFromDate + ') to and including ' + copyToDate + ' where not set?');
 
             if (check) {
                 // Get current URL parameters
@@ -247,15 +281,33 @@ jQuery(document).ready(function ($) {
                         }
                     });
             }
-        });
+        });*/
 
-        this.entryCopyButton.on("mouseenter", function () {
-            $(this).parents().nextAll().addClass("highlight");
-        });
+        // Highlight following columns in row when hovering the copy button for 2s
+        let hoverTimer;
 
-        this.entryCopyButton.on("mouseleave", function () {
-            $(this).parents().nextAll().removeClass("highlight");
-        });
+        this.entryCopyButton
+            .on("mouseenter", function () {
+                const self = $(this);
+                const elements = self.parents().nextAll();
+                const valueToPreview = self.siblings("span").text();
+                hoverTimer = setTimeout(() => {
+                    self.addClass("ready");
+                    self.parent().addClass("highlighting");
+
+                    elements.each(function (index, element) {
+                        setTimeout(() => {
+                            $(element).addClass("highlight").attr('data-preview', valueToPreview);
+                        }, 50 * index);
+                    });
+                }, 2000);
+            })
+            .on("mouseleave", function () {
+                clearTimeout(hoverTimer);
+                $(this).removeClass("ready");
+                $(this).parent().removeClass("highlighting");
+                $(this).parents().nextAll().removeClass("highlight").removeAttr('data-preview');
+            });
     }
 
     /**
