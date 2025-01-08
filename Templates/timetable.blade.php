@@ -53,7 +53,7 @@
                                             @if ($day->isMonday())
                                             data-week="{{ $day->weekOfYear }}"
                                     @endif>
-                                    <div> <small>{{ $day->format('d/n') }}</small>
+                                    <div> <small>{{ $day->format('j/n') }}</small>
                                         <span>{{ $day->format('D') }}</span>
                                     </div>
                                     </th>
@@ -109,7 +109,7 @@
                                                 title="{{ $isMissingDescription ? __('timeTable.description_missing') : '' }}">
                                                 <span>{{ $hours }}</span>
                                                 @if (!is_null($hours))
-                                                    <div class="entry-copy-button">-></div>
+                                                    <div class="entry-copy-button"><i class="fa-solid fa-angle-right"></i></div>
                                                 @endif
                                             </td>
                                         @endforeach
@@ -126,7 +126,7 @@
                                 </tr>
                             @else
                                 <!-- A little something for when the week has no logs -->
-                                <tr>
+                                <tr class="empty-row"">
                                     <td class="empty-row" colspan="{{ count($weekDates) + 2 }}">
                                         {{ __("It seems the 'WORK-IT' fairy forgot to sprinkle her magic dust here! 🧚‍🪄✨") }}
                                     </td>
@@ -213,6 +213,29 @@
                 <button type="submit"
                     class="timetable-modal-submit btn btn-primary">{{ __('timeTable.button_modal_save') }}</button>
             </div>
+        </form>
+    </div>
+    <div id="entry-copy-modal">
+        <form method="POST" class="entry-copy-form">
+            <input type="hidden" name="action" value="copyEntryForward">
+            <input type="hidden" name="entryCopyTicketId" class="entry-copy-ticketId">
+            <input type="hidden" name="entryCopyHours" class="entry-copy-hours">
+            <input type="hidden" name="entryCopyDescription" class="entry-copy-description">
+            <input type="hidden" name="entryCopyFromDate"/>
+            <input type="hidden" name="entryCopyToDate"/>
+            <p class="entry-copy-headline"></p>
+            <p class="entry-copy-text"></p>
+            <div class="entry-copy-overwrite-checkbox">
+                <input type="checkbox" name="entryCopyOverwrite" id="entry-copy-overwrite" />
+                <label for="entry-copy-overwrite"><small>Overskriv allerede registrerede felter</small></label>
+            </div>
+            <div class="buttons flex-container gap-1">
+                <button type="button"
+                        class="entry-copy-modal-cancel btn btn-default ml-auto">{{ __('timeTable.entry_copy_button_close') }}</button>
+                <button type="submit"
+                        class="entry-copy-modal-apply btn btn-primary">{{ __('timeTable.entry_copy_button_apply') }}</button>
+            </div>
+
         </form>
     </div>
     <div id="edit-time-sync-modal" class="nyroModalBg edit-time-sync-modal">
