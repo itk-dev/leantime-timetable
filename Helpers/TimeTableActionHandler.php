@@ -167,6 +167,7 @@ class TimeTableActionHandler
         $hours = $postData['entryCopyHours'];
         $description = $postData['entryCopyDescription'];
 
+
         // Move to the next day to skip the first date
         $currentDate = $copyFromDate->addDay();
 
@@ -180,14 +181,18 @@ class TimeTableActionHandler
                 'kind' => 'GENERAL_BILLABLE',
             ];
 
+            // Use $postData (correct case)
+            if (isset($postData['entryCopyOverwrite'])) {
+                $values['entryCopyOverwrite'] = $postData['entryCopyOverwrite'];
+            }
+
+
             try {
                 $this->timeTableService->addTimelogOnTicket($values);
-
                 $currentDate = $currentDate->addDay();
             } catch (\Exception $e) {
                 exit(json_encode(['status' => 'error', 'error' => $e->getMessage()]));
             }
-
         }
 
         // Delegate query parameter addition to appendQueryParams
