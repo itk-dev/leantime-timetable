@@ -81,7 +81,7 @@ class TimeTableActionHandler
     public function saveTicket(array $postData, string $redirectUrl): string
     {
         $timesheetId = isset($postData['timesheet-id']) ? (int)$postData['timesheet-id'] : 0;
-        $workDate = new CarbonImmutable($postData['timesheet-date'], session('usersettings.timezone'));
+        $workDate = CarbonImmutable::createFromFormat('Y-m-d', $postData['timesheet-date'])->startOfDay();
         $workDate = $workDate->setToDbTimezone();
 
         $values = [
@@ -137,42 +137,38 @@ class TimeTableActionHandler
     {
         $queryParams = [];
 
-        // Only extract specific fields from $_POST
-        if (!empty($postData['fromDate'])) {
-            $queryParams['fromDate'] = $postData['fromDate'];
-        }
+        // Use fromDate and toDate from POST if set, otherwise check GET
+        $queryParams['fromDate'] = $postData['fromDate'] ?? $_GET['fromDate'] ?? null;
+        $queryParams['toDate'] = $postData['toDate'] ?? $_GET['toDate'] ?? null;
 
-        if (!empty($postData['toDate'])) {
-            $queryParams['toDate'] = $postData['toDate'];
-        }
+        // Remove null values
+        $queryParams = array_filter($queryParams);
 
         // Add query parameters to the URL if necessary
         if (!empty($queryParams)) {
-            // Merge into the existing redirect URL
-            $redirectUrl .= (strpos($redirectUrl, '?') === false ? '?' : '&') . http_build_query($queryParams);
+            $redirectUrl .= (!str_contains($redirectUrl, '?') ? '?' : '&') . http_build_query($queryParams);
         }
 
         return $redirectUrl;
     }
 
-    public function copyEntryForward(array $postData, string $redirectUrl): void
+    public function copyEntryForward(array $postData, string $redirectUrl): string
     {
-        $redirectUrl = $this->appendQueryParams($postData, $redirectUrl);
         try {
-            $copyFromDate = CarbonImmutable::createFromFormat('Y-m-d', $postData['copyFromDate']);
+            $copyFromDate = CarbonImmutable::createFromFormat('Y-m-d', $postData['entryCopyFromDate'])->startOfDay();
             $copyFromDate = $copyFromDate->setToDbTimezone();
-            $copyToDate = CarbonImmutable::createFromFormat('Y-m-d', $postData['copyToDate']);
+            $copyToDate = CarbonImmutable::createFromFormat('Y-m-d', $postData['entryCopyToDate'])->startOfDay();
             $copyToDate = $copyToDate->setToDbTimezone();
         } catch (\Exception $e) {
-            throw new \InvalidArgumentException('Invalid date format. Expected format: Y-m-d');
+            exit(json_encode(['status' => 'error', 'error' => 'Invalid date format. Expected format: Y-m-d']));
         }
 
-        $ticketId = $postData['ticketId'];
-        $hours = $postData['hours'];
-        $description = $postData['description'];
+        $ticketId = $postData['entryCopyTicketId'];
+        $hours = $postData['entryCopyHours'];
+        $description = $postData['entryCopyDescription'];
 
         // Move to the next day to skip the first date
-        $currentDate = $copyFromDate;
+        $currentDate = $copyFromDate->addDay();
 
         while ($currentDate <= $copyToDate) {
             $values = [
@@ -194,7 +190,8 @@ class TimeTableActionHandler
 
         }
 
-        exit(json_encode(['status' => 'success', 'redirectUrl' => $redirectUrl]));
+        // Delegate query parameter addition to appendQueryParams
+        return $this->appendQueryParams($postData, $redirectUrl);
 
     }
 }
