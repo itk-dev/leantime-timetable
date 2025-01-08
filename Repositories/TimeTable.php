@@ -177,6 +177,7 @@ class TimeTable
 
     public function addTimelogOnTicket(array $values)
     {
+        // Check for an existing timelog
         $sql = 'SELECT id FROM zp_timesheets WHERE ticketId = :ticketId AND workDate = :date AND userId = :userId';
         $stmn = $this->db->database->prepare($sql);
         $stmn->bindValue(':ticketId', $values['ticketId']);
@@ -187,23 +188,35 @@ class TimeTable
         $existingEntry = $stmn->fetch(PDO::FETCH_ASSOC);
         $stmn->closeCursor();
 
-        // Insert only if the entry doesn't exist
-        if (!$existingEntry) {
-            $sql = 'INSERT INTO zp_timesheets (
-                    userId, ticketId, workDate, hours, description, kind
-                ) VALUES (
-                    :userId, :ticketId, :date, :hours, :description, :kind
-                )';
-
-            $stmn = $this->db->database->prepare($sql);
-            $stmn->bindValue(':userId', $values['userId'], PDO::PARAM_INT);
-            $stmn->bindValue(':ticketId', $values['ticketId']);
-            $stmn->bindValue(':date', $values['workDate']->format('Y-m-d H:i:s'));
-            $stmn->bindValue(':hours', $values['hours']);
-            $stmn->bindValue(':description', $values['description']);
-            $stmn->bindValue(':kind', $values['kind']);
-            $stmn->execute();
-            $stmn->closeCursor();
+        // If 'entryCopyOverwrite' is set, delete the existing entry
+        if ($existingEntry) {
+            if (isset($values['entryCopyOverwrite']) && $values['entryCopyOverwrite'] === 'on') {
+                $sql = 'DELETE FROM zp_timesheets WHERE id = :id';
+                $stmn = $this->db->database->prepare($sql);
+                $stmn->bindValue(':id', $existingEntry['id'], PDO::PARAM_INT);
+                $stmn->execute();
+                $stmn->closeCursor();
+            } else {
+                // If overwrite is not set, prevent duplicate addition
+                return; // Exit without inserting
+            }
         }
+
+        // Insert the new timelog
+        $sql = 'INSERT INTO zp_timesheets (
+            userId, ticketId, workDate, hours, description, kind
+        ) VALUES (
+            :userId, :ticketId, :date, :hours, :description, :kind
+        )';
+
+        $stmn = $this->db->database->prepare($sql);
+        $stmn->bindValue(':userId', $values['userId'], PDO::PARAM_INT);
+        $stmn->bindValue(':ticketId', $values['ticketId']);
+        $stmn->bindValue(':date', $values['workDate']->format('Y-m-d H:i:s'));
+        $stmn->bindValue(':hours', $values['hours']);
+        $stmn->bindValue(':description', $values['description']);
+        $stmn->bindValue(':kind', $values['kind']);
+        $stmn->execute();
+        $stmn->closeCursor();
     }
 }
