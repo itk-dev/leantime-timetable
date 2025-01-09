@@ -3,6 +3,7 @@
 namespace Leantime\Plugins\TimeTable\Controllers;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Log;
 use Leantime\Core\Controller\Controller;
 use Leantime\Core\Controller\Frontcontroller;
 use Leantime\Plugins\TimeTable\Helpers\TimeTableActionHandler;
@@ -58,19 +59,15 @@ class TimeTable extends Controller
         $actionHandler = new TimeTableActionHandler($this->timeTableService, $this->timesheetRepository);
 
         if (isset($_POST['action'])) {
-            switch ($_POST['action']) {
-                case 'adjustPeriod':
-                    $redirectUrl = $actionHandler->adjustPeriod($_POST, $redirectUrl);
-                    break;
-                case 'saveTicket':
-                    $redirectUrl = $actionHandler->saveTicket($_POST, $redirectUrl);
-                    break;
-                case 'deleteTicket':
-                    $redirectUrl = $actionHandler->deleteTicket($_POST, $redirectUrl);
-                    break;
-                case 'copyEntryForward':
-                    $redirectUrl = $actionHandler->copyEntryForward($_POST, $redirectUrl);
-            }
+            $redirectUrl = match ($_POST['action']) {
+                'adjustPeriod' => $actionHandler->adjustPeriod($_POST, $redirectUrl),
+                'saveTicket' => $actionHandler->saveTicket($_POST, $redirectUrl),
+                'deleteTicket' => tap(function () use ($actionHandler, $redirectUrl) {
+                    $actionHandler->deleteTicket($_POST, $redirectUrl);
+                }, fn() => $redirectUrl)(),
+                'copyEntryForward' => $actionHandler->copyEntryForward($_POST, $redirectUrl),
+                default => $redirectUrl,
+            };
         }
 
         return Frontcontroller::redirect($redirectUrl);
@@ -93,7 +90,6 @@ class TimeTable extends Controller
             if (isset($_GET['fromDate']) && $_GET['fromDate'] !== '') {
                 if ($_GET['fromDate'][0] === '+' || $_GET['fromDate'][0] === '-') {
                     // If relative date format
-
                     $fromDate = CarbonImmutable::now()->startOfDay()->modify($_GET['fromDate']);
                 } else {
                     // Try specific date format
@@ -111,7 +107,6 @@ class TimeTable extends Controller
             if (isset($_GET['toDate']) && $_GET['toDate'] !== '') {
                 if ($_GET['toDate'][0] === '+' || $_GET['toDate'][0] === '-') {
                     // If relative date format
-
                     $toDate = CarbonImmutable::now()->startOfDay()->modify($_GET['toDate']);
                 } else {
                     // Try specific date format
@@ -125,9 +120,13 @@ class TimeTable extends Controller
                 // Default to end of current week
                 $toDate = CarbonImmutable::now()->endOfWeek()->startOfDay();
             }
-        } catch (InvalidArgumentException $e) {
-            // Handle exception
-            echo 'Invalid Date: ' . $e->getMessage();
+        } catch (\Exception $e) {
+            // Log error
+            Log::error($e);
+
+            // Assign fallback date span
+            $fromDate = CarbonImmutable::now()->startOfWeek()->startOfDay();
+            $toDate = CarbonImmutable::now()->endOfWeek()->startOfDay();
         }
 
         $weekStartDateDb = $fromDate->setToDbTimezone();
