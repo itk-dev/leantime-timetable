@@ -100,12 +100,12 @@ class TimeTableActionHandler
     }
 
     /**
-     * Deletes a timesheet entry based on the given post data.
+     * Deletes a ticket based on the provided POST data and redirects to the specified URL.
+     * Outputs a JSON-encoded response indicating success or failure status.
      *
-     * @param array<string, mixed> $postData The data containing timesheet details, including timesheet ID
-     * @param string $redirectUrl The URL to redirect to after processing
-     * @return string The redirect URL or a success/error JSON message
-     * @throws \Exception
+     * @param array<string, mixed> $postData Postdata
+     * @param string $redirectUrl Redirect url.
+     * @return string JSON-encoded response.
      */
     public function deleteTicket(array $postData, string $redirectUrl): string
     {
@@ -119,11 +119,9 @@ class TimeTableActionHandler
             } catch (\Exception $e) {
                 exit(json_encode(['status' => 'error', 'error' => $e->getMessage()]));
             }
-
         } else {
             exit(json_encode(['status' => 'error', 'error' => 'Missing timesheetId in POST data.']));
         }
-
     }
 
     /**
@@ -152,6 +150,13 @@ class TimeTableActionHandler
         return $redirectUrl;
     }
 
+    /**
+     * Copies time log entries forward from a specified start date to an end date for a given ticket.
+     *
+     * @param array<string, mixed> $postData Postdata
+     * @param string $redirectUrl Redirect url
+     * @return string The redirect URL with appended query parameters after processing.
+     */
     public function copyEntryForward(array $postData, string $redirectUrl): string
     {
         try {
@@ -197,6 +202,5 @@ class TimeTableActionHandler
 
         // Delegate query parameter addition to appendQueryParams
         return $this->appendQueryParams($postData, $redirectUrl);
-
     }
 }

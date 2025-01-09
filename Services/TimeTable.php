@@ -98,6 +98,12 @@ class TimeTable
         $this->timeTableRepo->updateOrAddTimelogOnTicket($values, $originalId);
     }
 
+    /**
+     * Adds a timelog to a ticket.
+     *
+     * @param array $values The data required to add the timelog on the ticket.
+     * @return void
+     */
     public function addTimelogOnTicket(array $values)
     {
         $this->timeTableRepo->addTimelogOnTicket($values);
