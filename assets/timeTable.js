@@ -210,7 +210,7 @@ jQuery(document).ready(function ($) {
                 {
                     root: document.querySelector(".timetable-scroll-container.overflowing"),
                     threshold: 1,
-                    rootMargin: "0% 0% 0% -460px",
+                    rootMargin: "0% 0% 0% -590px",
                 },
             );
 
@@ -702,7 +702,6 @@ jQuery(document).ready(function ($) {
                                 .map((project) => ({value: project.id, text: project.text})),
                         ];
 
-                        console.log(projectOptions);
                         // Destroy select and populate with projects for the new ticket to be created in
                         this.destroy();
                         this.tomselect = null;
@@ -720,11 +719,16 @@ jQuery(document).ready(function ($) {
                                     const ticketName = resultArray[0];
                                     const projectId = resultArray[1];
                                     const projectName = this.options[projectId].text;
+
+                                    this.disable();
+
                                     let result = TimeTableApiHandler.createNewTicket(
                                         ticketName,
                                         projectId,
                                         userId,
                                     );
+
+
                                     result.then((data) => {
                                         const ticketId = data.result[0];
                                         if (ticketId && ticketName && projectName) {
@@ -733,6 +737,7 @@ jQuery(document).ready(function ($) {
                                                 ticketName,
                                                 projectName,
                                             );
+                                            this.enable();
                                             this.destroy();
                                             timeTable.initTicketSearch();
                                             TimeTableApiHandler.fetchTicketDatum(ticketId);
