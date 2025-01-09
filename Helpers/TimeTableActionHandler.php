@@ -147,7 +147,18 @@ class TimeTableActionHandler
 
         // Add query parameters to the URL if necessary
         if (!empty($queryParams)) {
-            $redirectUrl .= (!str_contains($redirectUrl, '?') ? '?' : '&') . http_build_query($queryParams);
+            $urlComponents = parse_url($redirectUrl);
+            $existingQuery = $urlComponents['query'] ?? '';
+            parse_str($existingQuery, $queryArray);
+
+            // Merge existing and new query parameters
+            $queryArray = array_merge($queryArray, $queryParams);
+
+            // Rebuild the URL
+            $redirectUrl = ($urlComponents['scheme'] ?? 'https') . '://' .
+                ($urlComponents['host'] ?? '') .
+                ($urlComponents['path'] ?? '') .
+                '?' . http_build_query($queryArray);
         }
 
         return $redirectUrl;
