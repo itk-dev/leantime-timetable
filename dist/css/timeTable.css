@@ -12,6 +12,7 @@
     --itk-color-secondary: hsla(241, 73%, 59%, 1);
     --itk-color-secondary-50: hsla(241, 100%, 97%, 1);
     --itk-color-secondary-100: hsla(241, 91%, 93%, 1);
+    --itk-color-secondary-200: hsla(241, 87%, 86%, 1);
     --itk-color-secondary-800: hsla(241, 74%, 40%, 1);
     --itk-color-success: hsla(142, 76%, 36%, 1);
     --itk-color-success-100: hsla(141, 84%, 93%, 1);
@@ -353,7 +354,7 @@
         &.highlighting {
             .entry-copy-button {
                 opacity: 1;
-
+                background-color: var(--itk-color-secondary-100);
 
             }
         }
@@ -370,15 +371,19 @@
             right: 0;
             top: 0;
             bottom: 0;
-            background-color: var(--itk-color-secondary-100);
-            width: 25%;
+            background-color: var(--itk-color-secondary-50);
+            width: 20%;
             opacity: 0;
-            transition: opacity var(--transition-time) var(--transition-easing);
+            border-left: 1px solid var(--itk-color-secondary-100);
+            transition: background-color var(--transition-time), opacity var(--transition-time) var(--transition-easing);
 
             i {
                 margin: auto;
                 opacity: 0.8;
                 pointer-events: none;
+            }
+            &:hover {
+                background-color: var(--itk-color-secondary-100);
             }
             &.ready {
                 pointer-events: all;
@@ -423,7 +428,7 @@
                 width: 10px;
                 height: 18px;
                 top: calc(50% - 9px);
-                left: calc(37.5% - 5px);
+                left: calc(40% - 5px);
                 color: var(--itk-color-success);
                 opacity: 0.8;
                 transition: left .3s ease, opacity var(--transition-time) var(--transition-easing);
