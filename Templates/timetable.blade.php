@@ -36,9 +36,8 @@
                                     <input type="hidden" name="timetable-current-week-first-day"
                                         value="{{ reset($weekDates)->format('Y-m-d') }}" />
                                     <input type="hidden" name="timetable-current-week-last-day"
-                                           value="{{ end($weekDates)->format('Y-m-d') }}" />
-                                    <input type="hidden" name="timetable-days-loaded"
-                                           value="{{ count($weekDates) }}" />
+                                        value="{{ end($weekDates)->format('Y-m-d') }}" />
+                                    <input type="hidden" name="timetable-days-loaded" value="{{ count($weekDates) }}" />
                                     <input type="hidden" name="timetable-current-week"
                                         value="{{ reset($weekDates)->format('W') }}" />
 
@@ -67,8 +66,9 @@
                             @if (!empty($timesheetsByTicket))
                                 @foreach ($timesheetsByTicket as $ticketId => $timesheet)
                                     <tr data-ticketId="{{ $ticketId }}">
-                                        <td class="ticket-title" scope="row"><a
-                                                href="{{ $timesheet['ticketLink'] }}"  data-tippy-content="#{{ $timesheet['ticketId'] }} - {{ $timesheet['ticketTitle']  }}" data-tippy-placement="top">{{ $timesheet['ticketTitle'] }}</a>
+                                        <td class="ticket-title" scope="row"><a href="{{ $timesheet['ticketLink'] }}"
+                                                data-tippy-content="#{{ $timesheet['ticketId'] }} - {{ $timesheet['ticketTitle'] }}"
+                                                data-tippy-placement="top">{{ $timesheet['ticketTitle'] }}</a>
                                             <span>{{ $timesheet['projectName'] }}</span>
                                             <?php if ($timesheet['ticketType'] !== "task"): ?>
                                             <small>(<?php echo $timesheet['ticketType']; ?>)</small>
@@ -85,7 +85,7 @@
                                             $hoursLeft = $timesheetDate[0]['hourRemaining'] ?? null;
                                             $description = $timesheetDate[0]['description'] ?? null;
                                             $isMissingDescription = isset($hours) && trim($description) === '';
-
+                                            
                                             // accumulate hours
                                             if ($hours) {
                                                 if (isset($totalHours[$weekDateAccessor])) {
@@ -95,7 +95,7 @@
                                                 }
                                                 $rowTotal += $hours; // add to row total
                                             }
-
+                                            
                                             $weekendClass = isset($weekDate) && $weekDate->isWeekend() ? 'weekend' : '';
                                             $todayClass = isset($weekDate) && $weekDate->isToday() ? 'today' : '';
                                             $newWeekClass = isset($weekDate) && $weekDate->isMonday() ? 'new-week' : ''; // Add new-week class for Mondays
@@ -109,7 +109,8 @@
                                                 title="{{ $isMissingDescription ? __('timeTable.description_missing') : '' }}">
                                                 <span>{{ $hours }}</span>
                                                 @if (!is_null($hours))
-                                                    <div class="entry-copy-button"><i class="fa-solid fa-angle-right"></i></div>
+                                                    <div class="entry-copy-button"><i class="fa-solid fa-angle-right"></i>
+                                                    </div>
                                                 @endif
                                             </td>
                                         @endforeach
@@ -127,8 +128,8 @@
                             @else
                                 <!-- A little something for when the week has no logs -->
                                 <tr class="empty-row"">
-                                    <td class="empty-row" colspan="{{ count($weekDates) + 2 }}">
-                                        {{ __("It seems the 'WORK-IT' fairy forgot to sprinkle her magic dust here! 🧚‍🪄✨") }}
+                                        <td class=" empty-row" colspan="{{ count($weekDates) + 2 }}">
+                                    {{ __("It seems the 'WORK-IT' fairy forgot to sprinkle her magic dust here! 🧚‍🪄✨") }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -184,13 +185,8 @@
 
             <div class="timetable-hours">
                 <div class="timesheet-input-wrapper">
-                    <input
-                        type="number"
-                        name="timesheet-hours"
-                        step="0.01"
-                        placeholder="{{ __('timeTable.hours') }}"
-                        required
-                    />
+                    <input type="number" name="timesheet-hours" step="0.01" placeholder="{{ __('timeTable.hours') }}"
+                        required />
                     <div title="{{ __('timeTable.hours_left') }}" class="timetable-hours-left">
                         <input type="number" name="timesheet-hours-left" disabled="disabled" />
                     </div>
@@ -221,8 +217,8 @@
             <input type="hidden" name="entryCopyTicketId" class="entry-copy-ticketId">
             <input type="hidden" name="entryCopyHours" class="entry-copy-hours">
             <input type="hidden" name="entryCopyDescription" class="entry-copy-description">
-            <input type="hidden" name="entryCopyFromDate"/>
-            <input type="hidden" name="entryCopyToDate"/>
+            <input type="hidden" name="entryCopyFromDate" />
+            <input type="hidden" name="entryCopyToDate" />
             <p class="entry-copy-headline"></p>
             <p class="entry-copy-text"></p>
             <div class="entry-copy-overwrite-checkbox">
@@ -231,9 +227,9 @@
             </div>
             <div class="buttons flex-container gap-1">
                 <button type="button"
-                        class="entry-copy-modal-cancel btn btn-default ml-auto">{{ __('timeTable.entry_copy_button_close') }}</button>
+                    class="entry-copy-modal-cancel btn btn-default ml-auto">{{ __('timeTable.entry_copy_button_close') }}</button>
                 <button type="submit"
-                        class="entry-copy-modal-apply btn btn-primary">{{ __('timeTable.entry_copy_button_apply') }}</button>
+                    class="entry-copy-modal-apply btn btn-primary">{{ __('timeTable.entry_copy_button_apply') }}</button>
             </div>
 
         </form>
