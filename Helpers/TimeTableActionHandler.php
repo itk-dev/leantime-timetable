@@ -24,6 +24,9 @@ class TimeTableActionHandler
     }
     /**
      * Adjusts the period based on the provided POST data.
+     * The adjustment happens when the "previous period" or "next period" button is pressed in the UI.
+     *
+     * Depending on the date-span viewed, this will take that into consideration and shift the date-span either forwards or backwards.
      *
      * @param array<string, mixed> $postData The POST data containing fromDate, toDate, and backward flag.
      * @return string The adjusted redirect URL.
@@ -103,8 +106,8 @@ class TimeTableActionHandler
      * Deletes a ticket based on the provided POST data and redirects to the specified URL.
      * Outputs a JSON-encoded response indicating success or failure status.
      *
-     * @param array<string, mixed> $postData    Postdata
-     * @param string               $redirectUrl Redirect url.
+     * @param array<string, mixed> $postData Postdata
+     * @param string $redirectUrl Redirect url.
      * @return void Json encoded return.
      */
     public function deleteTicket(array $postData, string $redirectUrl): void
@@ -153,8 +156,8 @@ class TimeTableActionHandler
     /**
      * Copies time log entries forward from a specified start date to an end date for a given ticket.
      *
-     * @param array<string, mixed> $postData    Postdata
-     * @param string               $redirectUrl Redirect url
+     * @param array<string, mixed> $postData Postdata
+     * @param string $redirectUrl Redirect url
      * @return string The redirect URL with appended query parameters after processing.
      */
     public function copyEntryForward(array $postData, string $redirectUrl): string
