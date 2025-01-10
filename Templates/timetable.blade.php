@@ -219,9 +219,15 @@
             <input type="hidden" name="entryCopyToDate" />
             <p class="entry-copy-headline"></p>
             <p class="entry-copy-text"></p>
-            <div class="entry-copy-overwrite-checkbox">
-                <input type="checkbox" name="entryCopyOverwrite" id="entry-copy-overwrite" />
-                <label for="entry-copy-overwrite"><small>Overskriv allerede registrerede felter</small></label>
+            <div class="entry-copy-checkboxes">
+                <div class="entry-copy-overwrite-checkbox">
+                    <input type="checkbox" name="entryCopyOverwrite" id="entry-copy-overwrite" />
+                    <label for="entry-copy-overwrite"><small>Overskriv allerede registrerede felter</small></label>
+                </div>
+                <div class="entry-copy-weekend-checkbox">
+                    <input type="checkbox" name="entryCopyWeekend" id="entry-copy-weekend" />
+                    <label for="entry-copy-weekend"><small>Inkluder weekender</small></label>
+                </div>
             </div>
             <div class="buttons flex-container gap-1">
                 <button type="button"

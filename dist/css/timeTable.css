@@ -892,7 +892,6 @@
 #entry-copy-modal {
   .entry-copy-form {
     display: flex;
-    height: 150px;
     flex-direction: column;
     background-color: #fefefe;
     margin: auto;
@@ -907,16 +906,20 @@
       margin-top: 2px;
     }
     .entry-copy-headline {
-      margin-bottom: 7px;
+      margin-bottom: var(--itk-spacing-xs);
     }
 
-    .entry-copy-overwrite-checkbox {
+      .entry-copy-checkboxes {
+          display: flex;
+          flex-direction: column;
+          margin: var(--itk-spacing-xs) 0 var(--itk-spacing) 0;
+      }
+    .entry-copy-overwrite-checkbox, .entry-copy-weekend-checkbox {
       display: flex;
       align-items: center;
-      margin: 5px 0;
     }
 
-    .entry-copy-overwrite-checkbox label {
+    .entry-copy-overwrite-checkbox label, .entry-copy-weekend-checkbox label {
       margin-left: 8px;
       font-size: 0.875rem;
       color: #333;
@@ -928,7 +931,7 @@
       user-select: none;
     }
 
-    .entry-copy-overwrite-checkbox input[type="checkbox"] {
+    .entry-copy-overwrite-checkbox input[type="checkbox"], .entry-copy-weekend-checkbox input[type="checkbox"] {
       cursor: pointer;
       margin: 0;
     }
