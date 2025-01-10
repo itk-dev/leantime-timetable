@@ -1178,6 +1178,11 @@ div.ts-dropdown-content {
   }
 }
 
+i.your-task {
+  font-size: 11px;
+  margin-right: 5px;
+}
+
 /**
  * tom-select.css (v2.4.1)
  * Copyright (c) contributors

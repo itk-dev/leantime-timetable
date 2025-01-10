@@ -1177,3 +1177,8 @@ div.ts-dropdown-content {
     background-color: white;
   }
 }
+
+i.your-task {
+  font-size: 11px;
+  margin-right: 5px;
+}
