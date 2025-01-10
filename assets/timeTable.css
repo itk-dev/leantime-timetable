@@ -123,8 +123,8 @@
       z-index: 2;
     }
 
-    th:last-child::before,
-    td:last-child::before {
+    th:last-child::after,
+    td:last-child::after {
       content: "";
       position: absolute;
       top: 0;
@@ -841,7 +841,7 @@
         left: -1px;
         height: 100% !important;
         width: 1px;
-        background-color: #ccc;
+        background-color: var(--itk-border-color);
         z-index: 1;
     }
     .table > thead > tr > th:last-child::before, .table > tbody > tr > td:last-child::before {
@@ -851,7 +851,7 @@
         right: -1px;
         height: 100% !important;
         width: 1px;
-        background-color: #ccc;
+        background-color: var(--itk-border-color);
         z-index: 1;
     }
   .timetable-ticket-search.ticket-loading {

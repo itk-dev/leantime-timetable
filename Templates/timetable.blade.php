@@ -67,7 +67,7 @@
                                 @foreach ($timesheetsByTicket as $ticketId => $timesheet)
                                     <tr data-ticketId="{{ $ticketId }}">
                                         <td class="ticket-title" scope="row"><a href="{{ $timesheet['ticketLink'] }}"
-                                                data-tippy-content="#{{ $timesheet['ticketId'] }} - {{ $timesheet['ticketTitle'] }} [ {{ $timesheet['ticketType'] }} ]"
+                                                data-tippy-content="#{{ $timesheet['ticketId'] }} - {{ $timesheet['ticketTitle'] }} {{ $timesheet['ticketType'] !== 'task' ? '[ '.$timesheet['ticketType'].' ]' : '' }} "
                                                 data-tippy-placement="top">{{ $timesheet['ticketTitle'] }}</a>
                                             <span>{{ $timesheet['projectName'] }}</span>
                                         </td>
