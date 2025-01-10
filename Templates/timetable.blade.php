@@ -71,7 +71,6 @@
                                                 data-tippy-placement="top">{{ $timesheet['ticketTitle'] }}</a>
                                             <span>{{ $timesheet['projectName'] }}</span>
                                             <?php if ($timesheet['ticketType'] !== "task"): ?>
-                                            <small>(<?php echo $timesheet['ticketType']; ?>)</small>
                                             <?php endif; ?>
                                         </td>
                                         <?php $rowTotal = 0; ?>
@@ -85,7 +84,7 @@
                                             $hoursLeft = $timesheetDate[0]['hourRemaining'] ?? null;
                                             $description = $timesheetDate[0]['description'] ?? null;
                                             $isMissingDescription = isset($hours) && trim($description) === '';
-                                            
+
                                             // accumulate hours
                                             if ($hours) {
                                                 if (isset($totalHours[$weekDateAccessor])) {
@@ -95,7 +94,7 @@
                                                 }
                                                 $rowTotal += $hours; // add to row total
                                             }
-                                            
+
                                             $weekendClass = isset($weekDate) && $weekDate->isWeekend() ? 'weekend' : '';
                                             $todayClass = isset($weekDate) && $weekDate->isToday() ? 'today' : '';
                                             $newWeekClass = isset($weekDate) && $weekDate->isMonday() ? 'new-week' : ''; // Add new-week class for Mondays
