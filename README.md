@@ -10,6 +10,17 @@ Clone this repository into your Leantime plugins folder:
 git clone https://github.com/ITK-Leantime/leantime-timetable.git app/Plugins/TimeTable
 ```
 
+Install the plugin through Leantime in your web browser.
+
+The install process symlinks the built file dist/timeTable.js with public/dist/js/timeTable.js in leantime.
+
+Run this to watch files
+
+``` shell name=development-npm-install
+docker compose run --rm php npm install
+docker compose run --rm php npm run dev
+```
+
 Run composer install
 
 ```shell name=development-install

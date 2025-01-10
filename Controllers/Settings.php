@@ -2,7 +2,7 @@
 
 namespace Leantime\Plugins\TimeTable\Controllers;
 
-use Leantime\Core\Template;
+use Leantime\Core\UI\Template;
 use Leantime\Core\Controller\Controller;
 use Leantime\Core\Controller\Frontcontroller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -19,6 +19,8 @@ class Settings extends Controller
 {
     private SettingRepository $settingsRepo;
     protected Template $template;
+
+    private const DEFAULT_TICKET_EXPIRATION = 60;
 
     /**
      * constructor
@@ -41,7 +43,7 @@ class Settings extends Controller
     public function get(): Response
     {
         try {
-            $ticketCacheExpiration = (int) ($this->settingsRepo->getSetting('itk-leantime-timetable.ticketCacheExpiration') ?: 120);
+            $ticketCacheExpiration = (int) ($this->settingsRepo->getSetting('itk-leantime-timetable.ticketCacheExpiration') ?: self::DEFAULT_TICKET_EXPIRATION);
             $this->template->assign('ticketCacheExpiration', $ticketCacheExpiration);
         } catch (\Exception $e) {
             $this->template->setNotification('An error occurred while saving the settings. ' . $e, 'error');
@@ -60,7 +62,7 @@ class Settings extends Controller
     public function post(array $params): RedirectResponse
     {
         try {
-            $this->settingsRepo->saveSetting('itk-leantime-timetable.ticketCacheExpiration', (int)($params['ticketCacheExpiration'] ?? 0));
+            $this->settingsRepo->saveSetting('itk-leantime-timetable.ticketCacheExpiration', (int)($params['ticketCacheExpiration'] ?? self::DEFAULT_TICKET_EXPIRATION));
             $this->template->setNotification('The settings were successfully saved.', 'success');
         } catch (\Exception $e) {
             $this->template->setNotification('An error occurred while saving the settings. ' . $e, 'error');

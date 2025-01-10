@@ -3,6 +3,7 @@
 namespace Leantime\Plugins\TimeTable\Repositories;
 
 use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
 use Leantime\Core\Db\Db as DbCore;
 use PDO;
 
@@ -30,7 +31,7 @@ class TimeTable
     /**
      * @return array<array<string, string>>
      */
-    public function getUniqueTicketIds(CarbonImmutable $dateFrom, CarbonImmutable $dateTo): array
+    public function getUniqueTicketIds(CarbonInterface $dateFrom, CarbonInterface $dateTo): array
     {
         $sql = 'SELECT DISTINCT
         timesheet.ticketId
@@ -57,6 +58,7 @@ class TimeTable
      */
     public function getTimesheetByTicketIdAndWorkDate(string $ticketId, CarbonImmutable $workDate, ?string $searchTerm): array
     {
+
         $searchTermQuery = isset($searchTerm)
             ? " AND
         (zp_tickets.id LIKE CONCAT( '%', :searchTerm, '%') OR
@@ -71,6 +73,7 @@ class TimeTable
         timesheet.ticketId,
         zp_tickets.headline,
         zp_tickets.id as ticketId,
+        zp_tickets.type as ticketType,
         zp_tickets.hourRemaining,
         zp_projects.name
         FROM zp_timesheets AS timesheet
@@ -113,7 +116,7 @@ class TimeTable
 
         $stmn = $this->db->database->prepare($sql);
         $stmn->bindValue(':ticketId', $values['ticketId']);
-        $stmn->bindValue(':date', $values['workDate']);
+        $stmn->bindValue(':date', $values['workDate']->format('Y-m-d H:i:s'));
         $stmn->bindValue(':userId', $values['userId'], PDO::PARAM_INT);
         $stmn->execute();
 
@@ -153,11 +156,12 @@ class TimeTable
             $stmn = $this->db->database->prepare($sql);
             $stmn->bindValue(':userId', $values['userId'], PDO::PARAM_INT);
             $stmn->bindValue(':ticket', $values['ticketId']);
-            $stmn->bindValue(':date', $values['workDate']);
+            $stmn->bindValue(':date', $values['workDate']->format('Y-m-d H:i:s'));
             $stmn->bindValue(':kind', $values['kind']);
             $stmn->bindValue(':description', $values['description']);
             $stmn->bindValue(':hours', $values['hours']);
         }
+
         $stmn->execute();
         $stmn->closeCursor();
 
@@ -169,5 +173,65 @@ class TimeTable
             $stmn->execute();
             $stmn->closeCursor();
         }
+    }
+
+    /**
+     * addTimelogOnTicket - Adds a timelog entry for a specific ticket.
+     * If an entry for the same date, ticket, and user already exists, it checks
+     * whether the entry should be overwritten or prevents duplicate insertion.
+     *
+     * @param array $values An associative array containing the following keys:
+     *                      - 'userId' (int): The ID of the user creating the timelog.
+     *                      - 'ticketId' (int): The ID of the ticket associated with the timelog.
+     *                      - 'workDate' (DateTime): The date and time the timelog is being created for.
+     *                      - 'hours' (float): The number of hours being logged.
+     *                      - 'description' (string): The description of the work done.
+     *                      - 'kind' (string): The type of work being logged.
+     *                      - 'entryCopyOverwrite' (string, optional): A flag to indicate if existing entries should be overwritten.
+     * @return void
+     */
+    public function addTimelogOnTicket(array $values)
+    {
+        // Check for an existing timelog
+        $sql = 'SELECT id FROM zp_timesheets WHERE ticketId = :ticketId AND workDate = :date AND userId = :userId';
+        $stmn = $this->db->database->prepare($sql);
+        $stmn->bindValue(':ticketId', $values['ticketId']);
+        $stmn->bindValue(':date', $values['workDate']->format('Y-m-d H:i:s'));
+        $stmn->bindValue(':userId', $values['userId'], PDO::PARAM_INT);
+        $stmn->execute();
+
+        $existingEntry = $stmn->fetch(PDO::FETCH_ASSOC);
+        $stmn->closeCursor();
+
+        // If 'entryCopyOverwrite' is set, delete the existing entry
+        if ($existingEntry) {
+            if (isset($values['entryCopyOverwrite']) && $values['entryCopyOverwrite'] === 'on') {
+                $sql = 'DELETE FROM zp_timesheets WHERE id = :id';
+                $stmn = $this->db->database->prepare($sql);
+                $stmn->bindValue(':id', $existingEntry['id'], PDO::PARAM_INT);
+                $stmn->execute();
+                $stmn->closeCursor();
+            } else {
+                // If overwrite is not set, prevent duplicate addition
+                return; // Exit without inserting
+            }
+        }
+
+        // Insert the new timelog
+        $sql = 'INSERT INTO zp_timesheets (
+            userId, ticketId, workDate, hours, description, kind
+        ) VALUES (
+            :userId, :ticketId, :date, :hours, :description, :kind
+        )';
+
+        $stmn = $this->db->database->prepare($sql);
+        $stmn->bindValue(':userId', $values['userId'], PDO::PARAM_INT);
+        $stmn->bindValue(':ticketId', $values['ticketId']);
+        $stmn->bindValue(':date', $values['workDate']->format('Y-m-d H:i:s'));
+        $stmn->bindValue(':hours', $values['hours']);
+        $stmn->bindValue(':description', $values['description']);
+        $stmn->bindValue(':kind', $values['kind']);
+        $stmn->execute();
+        $stmn->closeCursor();
     }
 }

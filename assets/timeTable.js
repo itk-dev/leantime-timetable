@@ -1,27 +1,42 @@
 import TomSelect from "tom-select";
-import "tom-select";
+import flatpickr from "flatpickr";
+import { Danish } from "flatpickr/dist/l10n/da.js";
 import "tom-select/dist/css/tom-select.default.css";
+import "flatpickr/dist/flatpickr.min.css";
 import TimeTableApiHandler from "./timeTableApiHandler";
 
 jQuery(document).ready(function ($) {
+  const pluginSettings = {
+    userId: timetableSettings.settings.userId,
+  };
+
   class TimeTable {
     constructor() {
+      this.tomselect = null;
       this.currentViewWeek = $("input[name='timetable-current-week']").val();
       this.currentViewFirstDay = $(
         "input[name='timetable-current-week-first-day']",
       ).val();
       // General selectors
-      this.prevWeekButton = $("button.timetable-week-prev");
-      this.nextWeekButton = $("button.timetable-week-next");
-      this.todayButton = $("button.timetable-to-today");
-      this.searchInput = $("input.timetable-search");
       this.newEntryButton = $("button.timetable-new-entry");
-      this.editEntryCell = $("td.timetable-edit-entry");
       this.syncButton = $("button.timetable-sync-tickets");
       this.refreshPanel = $(".timetable-sync-panel");
+      this.timeTableScrollContainer = $(".timetable-scroll-container");
+      this.entryCopyButton = $("div.entry-copy-button");
 
       // Modal selectors
       this.timeEditModal = $("#edit-time-log-modal");
+      this.entryCopyModal = $("#entry-copy-modal");
+      this.entryCopyForm = this.entryCopyModal.find(".entry-copy-form");
+      this.entryCopyButtonClose = this.entryCopyModal.find(
+        ".entry-copy-modal-cancel",
+      );
+      this.entryCopyButtonApply = this.entryCopyModal.find(
+        ".entry-copy-modal-apply",
+      );
+      this.entryCopyCheckboxOverwrite = this.entryCopyModal.find(
+        "#entry-copy-overwrite",
+      );
       this.timeEditForm = this.timeEditModal.find(".edit-time-log-form");
       this.timeEditSyncModal = $("#edit-time-sync-modal");
       this.modalInputTimesheetId = this.timeEditModal.find(
@@ -48,8 +63,6 @@ jQuery(document).ready(function ($) {
       this.modalTicketIdInput = this.timeEditModal.find(
         'input[name="timesheet-ticket-id"]',
       );
-
-      this.modalCloseButton = this.timeEditModal.find(".timetable-close-modal");
       this.modalDeleteButton = this.timeEditModal.find(
         ".timetable-modal-delete",
       );
@@ -62,24 +75,33 @@ jQuery(document).ready(function ($) {
       this.modalInputDate = this.timeEditModal.find(
         'input[name="timesheet-date"]',
       );
-      this.modalTicketSearch = this.timeEditModal.find(
-        ".timetable-ticket-search",
-      );
       this.modalTicketInput = this.timeEditModal.find(
         ".timetable-ticket-input",
-      );
-      this.modalTicketResults = this.timeEditModal.find(
-        ".timetable-ticket-results",
       );
 
       // Register event handlers
       this.registerEventHandlers();
 
+      this.toggleVisualLoaders();
       this.isFetching = true;
-      TimeTableApiHandler.fetchTicketData().then((availableTags) => {
+      TimeTableApiHandler.fetchTicketData().then(() => {
         this.isFetching = false;
         this.populateLastUpdated();
         this.initTicketSearch();
+      });
+
+      flatpickr("#dateRange", {
+        mode: "range",
+        dateFormat: "d-m-Y",
+        allowInput: false,
+        readonly: false,
+        weekNumbers: true,
+        locale: Danish,
+        onChange: function (selectedDates, dateStr, instance) {
+          if (selectedDates && selectedDates.length === 2) {
+            instance.element.form.submit();
+          }
+        },
       });
     }
 
@@ -91,14 +113,6 @@ jQuery(document).ready(function ($) {
      * @returns {void}
      */
     registerEventHandlers() {
-      // Week back
-      this.prevWeekButton.click(() => this.changeWeek(-1));
-      // Week forward
-      this.nextWeekButton.click(() => this.changeWeek(1));
-      // Filter tickets
-      this.searchInput.change((e) =>
-        this.updateLocation("searchTerm", e.target.value),
-      );
       // New entry
       this.newEntryButton.click(() => {
         if (this.isFetching) {
@@ -112,36 +126,76 @@ jQuery(document).ready(function ($) {
           this.newTimeEntry();
         }
       });
-      // Edit entry
-      $(document).on("click", "td.timetable-edit-entry", (e) => {
-        const id = e.target.dataset.id ?? null;
-        const ticketId = e.target.dataset.ticketid ?? null;
-        const hours = e.target.dataset.hours ?? null;
-        const hoursLeft = e.target.dataset.hoursleft ?? null;
-        const description = e.target.dataset.description ?? null;
-        const date = e.target.dataset.date ?? null;
+      document.addEventListener(
+        "mousedown",
+        function (event) {
+          if (
+            $(this.timeEditModal).is(":visible") &&
+            !this.timeEditModal[0].contains(event.target)
+          ) {
+            this.closeEditTimeLogModal();
+          }
 
-        if (this.isFetching) {
-          let intervalId = setInterval(() => {
-            if (!this.isFetching) {
-              clearInterval(intervalId);
-              this.editTimeEntry(
-                id,
-                ticketId,
-                hours,
-                hoursLeft,
-                description,
-                date,
-              );
-            }
-          }, 500);
-        } else {
-          this.editTimeEntry(id, ticketId, hours, hoursLeft, description, date);
-        }
-      });
+          if (
+            $(this.entryCopyModal).is(":visible") &&
+            !this.entryCopyModal[0].contains(event.target)
+          ) {
+            this.closeEntryCopyModal();
+          }
+        }.bind(this),
+      );
+
+      // Edit entry
+      $(document).on(
+        "click",
+        "td.timetable-edit-entry",
+        function (e) {
+          const id = e.target.dataset.id ?? null;
+          const ticketId = e.target.dataset.ticketid ?? null;
+          const hours = e.target.dataset.hours ?? null;
+          const hoursLeft = e.target.dataset.hoursleft ?? null;
+          const description = e.target.dataset.description ?? null;
+          const date = e.target.dataset.date ?? null;
+
+          if (this.isFetching) {
+            let intervalId = setInterval(() => {
+              if (!this.isFetching) {
+                clearInterval(intervalId);
+                this.editTimeEntry(
+                  id,
+                  ticketId,
+                  hours,
+                  hoursLeft,
+                  description,
+                  date,
+                );
+              }
+            }, 500);
+          } else {
+            this.editTimeEntry(
+              id,
+              ticketId,
+              hours,
+              hoursLeft,
+              description,
+              date,
+            );
+          }
+
+          const rect = e.target.getBoundingClientRect();
+
+          this.timeEditModal
+            .css({
+              left: `${rect.left + window.scrollX - 215}px`, // Adjust horizontal position
+              top: `${rect.top + window.scrollY + rect.height - 50}px`, // Adjust vertical position
+            })
+            .addClass("shown")
+            .find('input[name="timesheet-hours"]')
+            .focus();
+        }.bind(this),
+      );
 
       // Close modal
-      this.modalCloseButton.click(() => this.closeEditTimeLogModal());
       this.modalCancelButton.click(() => this.closeEditTimeLogModal());
       $(document).keydown((e) => {
         // Escape key
@@ -153,24 +207,196 @@ jQuery(document).ready(function ($) {
       this.boundClickOutsideModalHandler = (e) =>
         this.clickOutsideModalHandler(e);
 
-      $("#modal-form").on("submit", (e) => {
+      $(this.timeEditForm).on("submit", () => {
+        this.modalSubmitButton.html(
+          '<i class="fa-solid fa-arrows-rotate fa-spin"></i>',
+        );
         this.modalSubmitButton.attr("disabled", "disabled");
       });
 
       // Delete timeentry
       this.modalDeleteButton.click(() => this.deleteTimeEntry());
 
-      // Return to current week.
-      this.todayButton.click(() => {
-        const params = new URLSearchParams(document.location.search);
-        const offset = params.get("offset");
-        if (offset) {
-          const oppositeOffset = offset * -1;
-          this.changeWeek(oppositeOffset);
+      this.syncButton.click(() => this.refreshButtonPress());
+
+      const weekNumbers = document.querySelectorAll("th.new-week");
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const target = entry.target;
+
+            if (entry.isIntersecting) {
+              target.classList.remove("sticky");
+            } else {
+              target.classList.add("sticky");
+            }
+          });
+        },
+        {
+          root: document.querySelector(
+            ".timetable-scroll-container.overflowing",
+          ),
+          threshold: 1,
+          rootMargin: "0% 0% 0% -566px",
+        },
+      );
+
+      weekNumbers.forEach((weekNumber) => observer.observe(weekNumber));
+
+      this.checkOverflow(this.timeTableScrollContainer);
+
+      this.entryCopyButton.click((e) => {
+        e.stopPropagation();
+
+        const eventTarget = e.target;
+
+        const { elementsWithoutValue, totalElements } =
+          this.handleHighlighting(eventTarget);
+
+        const rect = eventTarget.getBoundingClientRect();
+
+        this.entryCopyModal
+          .css({
+            left: `${rect.left + window.scrollX - 215}px`, // Adjust horizontal position
+            top: `${rect.top + window.scrollY + rect.height - 50}px`, // Adjust vertical position
+          })
+          .addClass("shown");
+
+        const parent = $(eventTarget).parent();
+        const ticketId = parent.data("ticketid");
+        const copyFromDate = parent.data("date");
+        const formattedCopyFromDate = new Date(copyFromDate)
+          .toLocaleDateString("da-DK", {
+            day: "numeric",
+            month: "numeric",
+          })
+          .replace(".", "/");
+
+        const dayAfterCopyFromDate = new Date(copyFromDate);
+        dayAfterCopyFromDate.setDate(dayAfterCopyFromDate.getDate() + 1);
+
+        const formattedDayAfterCopyFromDate = dayAfterCopyFromDate
+          .toLocaleDateString("da-DK", {
+            day: "numeric",
+            month: "numeric",
+          })
+          .replace(".", "/");
+        const hours = parent.data("hours");
+        const description = parent.data("description");
+        const copyToDate = $(
+          'input[name="timetable-current-week-last-day"]',
+        ).val();
+
+        const formattedCopyToDate = new Date(copyToDate)
+          .toLocaleDateString("da-DK", {
+            day: "numeric",
+            month: "numeric",
+          })
+          .replace(".", "/");
+
+        this.entryCopyForm
+          .find('input[name="entryCopyTicketId"]')
+          .val(ticketId);
+        this.entryCopyForm.find('input[name="entryCopyHours"]').val(hours);
+        this.entryCopyForm
+          .find('input[name="entryCopyDescription"]')
+          .val(description);
+        this.entryCopyForm
+          .find('input[name="entryCopyFromDate"]')
+          .val(copyFromDate);
+        this.entryCopyForm
+          .find('input[name="entryCopyToDate"]')
+          .val(copyToDate);
+
+        this.setEntryCopyText({
+          formattedCopyFromDate,
+          formattedDayAfterCopyFromDate,
+          formattedCopyToDate,
+          elementsWithoutValue,
+        });
+
+        this.entryCopyCheckboxOverwrite.off("change").change((e) => {
+          const overwrite = $(e.target).is(":checked");
+
+          const elementsCount = overwrite
+            ? totalElements
+            : elementsWithoutValue;
+
+          console.log(overwrite, elementsCount);
+          this.setEntryCopyText({
+            formattedCopyFromDate,
+            formattedDayAfterCopyFromDate,
+            formattedCopyToDate,
+            elementsWithoutValue: elementsCount,
+          });
+
+          this.handleHighlighting(eventTarget, overwrite);
+        });
+      });
+
+      this.entryCopyButtonClose.click(() => {
+        this.closeEntryCopyModal();
+      });
+
+      $(this.entryCopyForm).on("submit", () => {
+        this.entryCopyButtonApply.html(
+          '<i class="fa-solid fa-arrows-rotate fa-spin"></i>',
+        );
+        this.entryCopyButtonApply.attr("disabled", "disabled");
+      });
+    }
+
+    handleHighlighting(element, overwrite = false) {
+      this.clearHighlighting();
+      const parentElement = $(element).parent();
+      const elements = parentElement.nextAll();
+      const valueToPreview = parentElement.children("span").text();
+
+      const elementsWithoutValue = elements.filter(function () {
+        const span = $(this).children("span");
+        return span.length > 0 && span.text().trim() === "";
+      }).length;
+
+      // Do not include the clicked element in the number of elements changed.
+      const totalElements = elements.length - 1;
+
+      parentElement.addClass("highlighting");
+
+      console.log(valueToPreview);
+      elements.each(function (index, el) {
+        const span = $(el).children("span");
+        const shouldHighlight =
+          overwrite || (span.length > 0 && span.text().trim() === "");
+        if (shouldHighlight) {
+          setTimeout(() => {
+            $(el).addClass("highlight").attr("data-preview", valueToPreview);
+          }, 50 * index);
         }
       });
 
-      this.syncButton.click(() => this.refreshButtonPress());
+      return { elementsWithoutValue, totalElements };
+    }
+
+    setEntryCopyText({
+      formattedCopyFromDate,
+      formattedDayAfterCopyFromDate,
+      formattedCopyToDate,
+      elementsWithoutValue,
+    }) {
+      this.entryCopyForm
+        .find(".entry-copy-headline")
+        .html(`<b>Kopier tidslog fra d. ${formattedCopyFromDate}</b>`);
+      this.entryCopyForm
+        .find(".entry-copy-text")
+        .html(
+          `Til d. ${formattedDayAfterCopyFromDate} til og med d. ${formattedCopyToDate}<br>${elementsWithoutValue} ${elementsWithoutValue === 1 ? "dag bliver ændret" : "dage bliver ændret"}`,
+        );
+    }
+
+    clearHighlighting() {
+      $(".highlight").removeAttr("data-preview");
+      $(".timetable-edit-entry").removeClass("highlighting highlight");
     }
 
     /**
@@ -180,7 +406,6 @@ jQuery(document).ready(function ($) {
      */
     newTimeEntry() {
       this.populateLastUpdated();
-      this.openEditTimeLogModal();
 
       // Set date today
       let currentWeekNumber = new Date().getWeek();
@@ -193,7 +418,6 @@ jQuery(document).ready(function ($) {
 
       // Init ticket search
       this.modalInputTicketName.removeAttr("disabled");
-      this.modalTicketInput.focus().keyup((e) => this.filterFunction(e));
       this.modalDeleteButton.hide();
 
       // Ticket result click event
@@ -221,97 +445,20 @@ jQuery(document).ready(function ($) {
       this.modalTicketInput.val(taskName);
       this.modalTicketIdInput.val(taskId);
       this.modalInputHoursLeft.val(hoursLeft).attr("data-value", hoursLeft);
-
-      // Reset search
-      this.modalTicketResults.empty();
-    }
-
-    /**
-     * Filters the timetable ticket results based on the input value.
-     *
-     * @param event
-     *
-     * @returns {void}
-     */
-    filterFunction(event) {
-      const { value } = event.target;
-      const dropDownElement = $(".timetable-ticket-results");
-
-      // Reset search
-      if (value.length <= 1) {
-        dropDownElement.empty();
-      }
-
-      // Perform search
-      if (value.length > 1) {
-        const { data: tickets } = TimeTableApiHandler.readFromCache("tickets");
-        this.ticketSearch(tickets, value);
-      }
-    }
-
-    /**
-     * Search for tickets in an object using a query.
-     *
-     * @param {Object} obj - The object to search in.
-     * @param {string} query - The query to search for.
-     * @return {Object} results
-     */
-    ticketSearch(obj, query) {
-      const { id, text, children } = obj;
-
-      const lowerCaseQuery = query.toLowerCase();
-
-      let results = [];
-
-      // Checks if `obj`'s `text` or `id` contains `lowerCaseQuery` and not already added to timetable.
-
-      if (
-        "text" in obj &&
-        typeof text === "string" &&
-        (text.toLowerCase().includes(lowerCaseQuery) ||
-          (id && id.toString().toLowerCase().includes(lowerCaseQuery)))
-      ) {
-        const index = text.toLowerCase().indexOf(lowerCaseQuery);
-        const relevance = index === -1 ? 0 : text.length - index;
-        results.push({ ...obj, relevance });
-      }
-
-      // If `children` is an array, searches each `child` for `query` and merges results.
-      if (Array.isArray(children)) {
-        children.forEach((child) => {
-          const childResults = this.ticketSearch(child, query);
-          results = results.concat(childResults);
-        });
-      }
-
-      results.sort((a, b) => b.relevance - a.relevance);
-
-      this.modalTicketResults.empty();
-      if (results.length === 0) {
-        this.modalTicketResults.append(
-          `<div class="timetable-ticket-result-item-no-results" data-value="">No results</div>`,
-        );
-      }
-      results.forEach(({ id, text, projectName, hoursLeft }) => {
-        this.modalTicketResults.append(
-          `<div class="timetable-ticket-result-item" data-project="${projectName}" data-hoursleft="${hoursLeft}" data-value="${id}"><span>${text}</span></div>`,
-        );
-      });
-      return results;
     }
 
     /**
      * Updates a time entry.
      *
-     * @param {number} id Time entry ID.
-     * @param {string} ticketId Ticket ID.
-     * @param {number} hours Hours spent.
-     * @param {string} description Work done.
-     * @param {string} date Work date.
-     * @param {number} offset
+     * @param {number} id - Time entry ID.
+     * @param {string} ticketId - Ticket ID.
+     * @param {number} hours - Hours spent.
+     * @param {number} hoursLeft - Hours left.
+     * @param {string} description - Work done.
+     * @param {string} date - Work date.
      * @return {boolean}
      */
-    editTimeEntry(id, ticketId, hours, hoursLeft, description, date, offset) {
+    editTimeEntry(id, ticketId, hours, hoursLeft, description, date) {
       // Find ticket in cache
       const ticket = TimeTableApiHandler.getTicketDataFromCache(
         parseInt(ticketId),
@@ -319,22 +466,12 @@ jQuery(document).ready(function ($) {
 
       if (!ticket) {
         this.openEditTimeSyncModal();
-        TimeTableApiHandler.fetchTicketDatum(ticketId).then((availableTags) => {
+        TimeTableApiHandler.fetchTicketDatum(ticketId).then(() => {
           this.closeEditTimeSyncModal();
-          this.editTimeEntry(
-            id,
-            ticketId,
-            hours,
-            hoursLeft,
-            description,
-            date,
-            offset,
-          );
+          this.editTimeEntry(id, ticketId, hours, hoursLeft, description, date);
         });
         return false;
       }
-
-      this.openEditTimeLogModal();
 
       if (id) {
         this.modalDeleteButton.show();
@@ -346,45 +483,13 @@ jQuery(document).ready(function ($) {
       this.modalInputTicketId.val(ticket.id);
       this.modalInputTicketName.val(ticket.text).attr("disabled", "disabled");
       this.modalInputHours.val(hours);
-      this.modalInputHoursLeft.val(hoursLeft).attr("data-value", hoursLeft);
+      this.modalInputHoursLeft
+        .val(hoursLeft > 0 ? `${hoursLeft}` : "")
+        .attr("data-value", hoursLeft);
       this.modalTextareaDescription.val(description);
       this.modalInputDate.val(date);
 
       this.modalInputHours.focus();
-    }
-
-    /**
-     * Changes the week offset based on the provided value.
-     *
-     * @param {number} offset - The value to offset the week.
-     * @return {void}
-     */
-    changeWeek(offset) {
-      let params = new URLSearchParams(document.location.search);
-      if (params.get("offset")) {
-        offset += parseInt(params.get("offset"));
-      }
-      offset === ""
-        ? this.updateLocation("offset", "")
-        : this.updateLocation("offset", offset);
-    }
-
-    /**
-     * Update the URL location with the given key-value pair.
-     *
-     * @param {string} key - The key corresponding to the value to be updated or deleted.
-     * @param {string} value - The new value to be added or updated. Use an empty string to delete the key-value pair.
-     * @return {void}
-     */
-    updateLocation(key, value) {
-      let params = new URLSearchParams(document.location.search);
-      if (params.has(key)) {
-        params.delete(key);
-      }
-      if (value !== "") {
-        params.append(key, value);
-      }
-      window.location = `?${params.toString()}`;
     }
 
     /**
@@ -393,13 +498,18 @@ jQuery(document).ready(function ($) {
      * @return {boolean}
      */
     refreshButtonPress() {
-      const loadingHTML =
-        '<i class="fa-solid fa-arrows-rotate fa-spin"></i>Syncing data';
+      this.toggleVisualLoaders();
+      this.refreshTicketSearch();
+    }
+
+    toggleVisualLoaders() {
       if (this.isFetching) {
         return false;
       }
-      $(this.syncButton).children("span").html(loadingHTML);
-      this.refreshTicketSearch();
+      const syncButtonHtml =
+        '<i class="fa-solid fa-arrows-rotate fa-spin"></i>Syncing data';
+
+      $(this.syncButton).children("span").html(syncButtonHtml);
     }
 
     /**
@@ -408,7 +518,8 @@ jQuery(document).ready(function ($) {
      * @return {void}
      */
     refreshTicketSearch() {
-      TimeTableApiHandler.removeFromCache("tickets");
+      TimeTableApiHandler.removeFromCache("timetable_tickets");
+      TimeTableApiHandler.removeFromCache("timetable_projects");
       this.setTicketData();
     }
 
@@ -425,7 +536,7 @@ jQuery(document).ready(function ($) {
         }, 500);
       } else {
         this.isFetching = true;
-        TimeTableApiHandler.fetchTicketData().then((availableTags) => {
+        TimeTableApiHandler.fetchTicketData().then(() => {
           this.isFetching = false;
           this.populateLastUpdated();
           this.initTicketSearch();
@@ -440,7 +551,7 @@ jQuery(document).ready(function ($) {
      */
     populateLastUpdated() {
       let ticketsLastUpdated =
-        TimeTableApiHandler.readFromCache("tickets").expiration;
+        TimeTableApiHandler.readFromCache("timetable_tickets").expiration;
 
       let ticketsLastUpdatedElement =
         "<span>Tickets: " +
@@ -450,7 +561,7 @@ jQuery(document).ready(function ($) {
       $(this.syncButton)
         .children("span")
         .html(
-          '<span><i className="fa-solid fa-arrows-rotate"></i>Sync data</span>',
+          '<span><i class="fa-solid fa-arrows-rotate"></i> Sync data</span>',
         );
       $(this.refreshPanel)
         .children("div")
@@ -463,20 +574,21 @@ jQuery(document).ready(function ($) {
       $(this.modalDeleteButton)
         .html('<i class="fa-solid fa-arrows-rotate"></i>')
         .addClass("deleting");
+
       fetch(window.location.href, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: JSON.stringify({
-          action: "delete",
+        body: new URLSearchParams({
+          action: "deleteTicket",
           timesheetId: timesheetId,
         }),
       })
         .then((response) => response.json())
         .then((data) => {
           if (data.status === "success") {
-            window.location.reload();
+            window.location.href = data.redirectUrl;
           } else {
             alert("An error has occurred");
           }
@@ -489,20 +601,16 @@ jQuery(document).ready(function ($) {
      * @returns {void}
      */
     closeEditTimeLogModal() {
-      $(this.timeEditModal).hide().find("input, textarea").val("");
-      $(this.modalTicketResults).empty();
-      $(this.modalInputHoursLeft).removeAttr("data-value");
+      this.timeEditModal.removeClass("shown").removeAttr("data-value");
+      this.timeEditModal.find("input:not([name='action']), textarea").val("");
       $(document).off("mousedown", this.boundClickOutsideModalHandler);
     }
 
-    /**
-     * Opens the edit time log modal.
-     *
-     * @returns {void}
-     */
-    openEditTimeLogModal() {
-      $(this.timeEditModal).show().css("display", "flex");
-      $(document).on("mousedown", this.boundClickOutsideModalHandler);
+    closeEntryCopyModal() {
+      this.entryCopyModal.removeClass("shown");
+      console.log(this.entryCopyCheckboxOverwrite);
+      this.entryCopyCheckboxOverwrite.prop("checked", false);
+      this.clearHighlighting();
     }
 
     openEditTimeSyncModal() {
@@ -529,13 +637,13 @@ jQuery(document).ready(function ($) {
     initTicketSearch(autofocus = false) {
       let {
         data: { children: tickets },
-      } = TimeTableApiHandler.readFromCache("tickets");
+      } = TimeTableApiHandler.readFromCache("timetable_tickets");
       let {
         data: { children: projects },
-      } = TimeTableApiHandler.readFromCache("projects");
+      } = TimeTableApiHandler.readFromCache("timetable_projects");
 
       const pageSize = 50;
-      const userId = $("div.timetable").attr("data-userid");
+      const userId = pluginSettings.userId;
 
       // Sort tickets by editorId and created date.
       tickets.sort((a, b) => {
@@ -564,13 +672,18 @@ jQuery(document).ready(function ($) {
           return {
             value: child.id,
             text: child.text,
+            type: child.type,
             projectName: child.projectName,
             editorId: child.editorId,
           };
         });
 
+      if (this.tomselect) {
+        this.tomselect.destroy();
+        this.tomselect = null;
+      }
       // Init tomselect
-      let tomselect = new TomSelect(".timetable-tomselect", {
+      this.tomselect = new TomSelect(".timetable-tomselect", {
         options: options,
         searchField: ["text", "value", "projectName"],
         loadingClass: "ts-loading",
@@ -580,10 +693,21 @@ jQuery(document).ready(function ($) {
         },
         render: {
           item: function (item, escape) {
-            return `<div><span>${escape(item.text)} <span><i class="fa fa-angle-right fa-xs"></i> ${escape(item.projectName)} <small>(${escape(item.value)})</small></span></span></div>`;
+            return `
+<div>
+    <span>
+        ${escape(item.text)}
+        <span>
+            <i class="fa fa-angle-right fa-xs"></i> ${escape(item.projectName)}
+            <small>(${escape(item.value)})</small>
+
+            ${item.type !== "task" ? `<small>(${escape(item.type)})</small>` : ""}
+        </span>
+    </span>
+</div>`;
           },
           option: function (item, escape) {
-            return `<div><span>${escape(item.text)} <span><i class="fa fa-angle-right fa-xs"></i> ${escape(item.projectName)} <small>(${escape(item.value)})</small></span></span></div>`;
+            return `<div><span>${escape(item.text)} <span><i class="fa fa-angle-right fa-xs"></i> ${escape(item.projectName)} <small>(${escape(item.value)})</small> <small style="float: right;">${item.editorId === pluginSettings.userId ? '<i class="your-task far fa-user" title="To-do is assigned to you"></i>' : ""}(${escape(item.type)})</small></span></span></div>`;
           },
           option_create: function (data, escape) {
             return `<option data-value="add-new-ticket" class="create">+ Create new ticket: <strong>${escape(data.input)}</strong>&hellip;</option>`;
@@ -603,6 +727,9 @@ jQuery(document).ready(function ($) {
         onChange: function (value) {
           const selectedOption = this.options[value];
 
+          if (!selectedOption) {
+            return false;
+          }
           // Check if selected option is the "create new" one
           if (
             selectedOption.text === selectedOption.value &&
@@ -622,25 +749,30 @@ jQuery(document).ready(function ($) {
 
             // Destroy select and populate with projects for the new ticket to be created in
             this.destroy();
-            tomselect = new TomSelect(".timetable-tomselect", {
+            this.tomselect = null;
+            this.tomselect = new TomSelect(".timetable-tomselect", {
               options: projectOptions,
               onItemRemove: function () {
                 // Reactivate the ticket search upon item removal
                 this.destroy();
                 timeTable.initTicketSearch(true);
               },
-              onChange: function (value) {
+              onChange: function () {
                 const selectedValues = this.getValue();
                 const resultArray = selectedValues.split(",");
                 if (resultArray.length === 2) {
                   const ticketName = resultArray[0];
                   const projectId = resultArray[1];
-                  const projectName = tomselect.options[projectId].text;
+                  const projectName = this.options[projectId].text;
+
+                  this.disable();
+
                   let result = TimeTableApiHandler.createNewTicket(
                     ticketName,
                     projectId,
                     userId,
                   );
+
                   result.then((data) => {
                     const ticketId = data.result[0];
                     if (ticketId && ticketName && projectName) {
@@ -649,6 +781,7 @@ jQuery(document).ready(function ($) {
                         ticketName,
                         projectName,
                       );
+                      this.enable();
                       this.destroy();
                       timeTable.initTicketSearch();
                       TimeTableApiHandler.fetchTicketDatum(ticketId);
@@ -657,7 +790,7 @@ jQuery(document).ready(function ($) {
                 }
               },
             });
-            tomselect.open();
+            this.tomselect.open();
             return;
           }
           timeTable.addRowToTimetable(
@@ -670,8 +803,8 @@ jQuery(document).ready(function ($) {
       });
 
       if (autofocus) {
-        tomselect.focus();
-        tomselect.open();
+        this.tomselect.focus();
+        this.tomselect.open();
       }
     }
 
@@ -679,17 +812,20 @@ jQuery(document).ready(function ($) {
       const firstDateOfWeek = new Date(
         $("input[name='timetable-current-week-first-day']").val(),
       );
+      const daysRendered = parseInt(
+        $('input[name="timetable-days-loaded"]').val(),
+      );
 
       // Create a new date object to ensure the original date is preserved
       let dateIterator = new Date(firstDateOfWeek.getTime());
 
       const newRow = `
     <tr class="newly-added-tr">
-        <td class="ticket-title" scope="row">
+        <td class="ticket-title">
             <a href="?showTicketModal=${ticketId}#/tickets/showTicket/${ticketId}">${ticketText}</a>
             <span>${projectName}</span>
         </td>
-        ${Array.from({ length: 7 })
+        ${Array.from({ length: daysRendered })
           .map((_, i) => {
             // Increment date
             if (i > 0) {
@@ -702,7 +838,7 @@ jQuery(document).ready(function ($) {
             // Depending on the day of the week, add 'weekend' class
             const weekendClass = i === 5 || i === 6 ? "weekend" : "";
 
-            return `<td scope="row" class="timetable-edit-entry ${weekendClass}" data-ticketid=${ticketId} data-date="${formattedDate}" title="">
+            return `<td class="timetable-edit-entry ${weekendClass}" data-ticketid=${ticketId} data-date="${formattedDate}" title="">
                         <span></span>
                     </td>`;
           })
@@ -712,6 +848,18 @@ jQuery(document).ready(function ($) {
 `;
 
       $("td.add-new").parent().before(newRow);
+    }
+
+    // Function to check if the element is overflowing
+    checkOverflow($element) {
+      if (
+        $element[0].scrollWidth > $element[0].offsetWidth ||
+        $element[0].scrollHeight > $element[0].offsetHeight
+      ) {
+        $element.addClass("overflowing");
+      } else {
+        $element.removeClass("overflowing");
+      }
     }
   }
 

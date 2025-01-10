@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+* [PR-31](https://github.com/ITK-Leantime/leantime-timetable/pull/31)
+  * Introduced fromDate and toDate, enabling setting (-x day and +x day) as params for relative dynamic urls.
+  * Introduced FlatPickr for date range selection
+  * Unlocked range of displayed days at one time
+  * Overhauled post handling
+  * Added ticket type to dropdown
+  * Fixed issue where tickets were not sorted correctly
+  * Worked on better displaying that the tickets are being synced on load
+  * Removed "add timelog" button
+  * Locked save button and show spinner on click
+  * Implemented overflow-scroll behaviour when selecting many days
+  * Redesigned modal to popup at clicked cell
+  * Implemented copy forward functionality
+  * Added option to overwrite already filled fields when copying forward
+  * Fixed issue when adding new todo
+
 ## [2.0.2] - 2024-10-24
 
 * [PR-29](https://github.com/ITK-Leantime/leantime-timetable/pull/29)
