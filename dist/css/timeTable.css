@@ -70,7 +70,7 @@
       left: 0;
       width: 20px;
       height: 20px;
-      background-color: #ccc;
+      background-color: var(--itk-border-color);
       border-radius: 50%;
       transform: translate(-50%, -50%);
       display: flex;
@@ -430,7 +430,7 @@
         width: 10px;
         height: 18px;
         top: calc(50% - 9px);
-        left: calc(40% - 5px);
+        left: calc(50% - 5px);
         color: var(--itk-color-success);
         opacity: 0.8;
         transition:
@@ -441,6 +441,7 @@
       &:not([data-hours=""]) {
         &:before {
           content: "✎";
+            left: calc(40% - 5px);
         }
       }
     }
@@ -833,7 +834,26 @@
     display: block;
     font-size: 12px;
   }
-
+    .ticket-title::before, td.add-new::before, tr.tr-total > td:first-child::before, th.th-ticket-title::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -1px;
+        height: 100% !important;
+        width: 1px;
+        background-color: #ccc;
+        z-index: 1;
+    }
+    .table > thead > tr > th:last-child::before, .table > tbody > tr > td:last-child::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: -1px;
+        height: 100% !important;
+        width: 1px;
+        background-color: #ccc;
+        z-index: 1;
+    }
   .timetable-ticket-search.ticket-loading {
     pointer-events: none;
     user-select: none;
