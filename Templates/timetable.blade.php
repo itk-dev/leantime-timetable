@@ -27,7 +27,8 @@
                             class="timetable-to-today btn btn-default">{{ __('timeTable.button_show_this_week') }}</button>
                     </div>
                 </form>
-                <p class="recently-deleted-timelog-info hidden"><i class="fas fa-info-circle"></i> {{ __('timeTable.update_to_show_correct_sums') }}</p>
+                <p class="recently-deleted-timelog-info hidden"><i class="fas fa-info-circle"></i>
+                    {{ __('timeTable.update_to_show_correct_sums') }}</p>
                 <div class="timetable-scroll-container">
                     <table id="timetable" class="table">
                         <thead>
@@ -83,7 +84,7 @@
                                             $hoursLeft = $timesheetDate[0]['hourRemaining'] ?? null;
                                             $description = $timesheetDate[0]['description'] ?? null;
                                             $isMissingDescription = isset($hours) && trim($description) === '';
-
+                                            
                                             // accumulate hours
                                             if ($hours) {
                                                 if (isset($totalHours[$weekDateAccessor])) {
@@ -93,7 +94,7 @@
                                                 }
                                                 $rowTotal += $hours; // add to row total
                                             }
-
+                                            
                                             $weekendClass = isset($weekDate) && $weekDate->isWeekend() ? 'weekend' : '';
                                             $todayClass = isset($weekDate) && $weekDate->isToday() ? 'today' : '';
                                             $newWeekClass = isset($weekDate) && $weekDate->isMonday() ? 'new-week' : ''; // Add new-week class for Mondays
