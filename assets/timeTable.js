@@ -645,8 +645,8 @@ jQuery(document).ready(function ($) {
 
     closeEntryCopyModal() {
       this.entryCopyModal.removeClass("shown");
-      console.log(this.entryCopyCheckboxOverwrite);
       this.entryCopyCheckboxOverwrite.prop("checked", false);
+      this.entryCopyCheckboxWeekend.prop("checked", false);
       this.clearHighlighting();
     }
 
