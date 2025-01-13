@@ -125,7 +125,7 @@
                             @else
                                 <!-- A little something for when the week has no logs -->
                                 <tr class="empty-row"">
-                                                                <td class=" empty-row"
+                                                                    <td class=" empty-row"
                                     colspan="{{ count($weekDates) + 2 }}">
                                     {{ __("It seems the 'WORK-IT' fairy forgot to sprinkle her magic dust here! 🧚‍🪄✨") }}
                                     </td>
