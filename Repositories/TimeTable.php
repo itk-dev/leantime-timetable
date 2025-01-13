@@ -59,9 +59,9 @@ class TimeTable
      * optionally filtering by a search term.
      *
      * @access public
-     * @param string $ticketId The ticket ID to filter the timesheet data.
-     * @param CarbonInterface $workDate The specific work date to filter the timesheet data.
-     * @param string|null $searchTerm An optional search term to further filter results by ticket ID or headline.
+     * @param string          $ticketId   The ticket ID to filter the timesheet data.
+     * @param CarbonInterface $workDate   The specific work date to filter the timesheet data.
+     * @param string|null     $searchTerm An optional search term to further filter results by ticket ID or headline.
      * @return array<string, mixed> Returns an array of matching timesheet data.
      */
     public function getTimesheetByTicketIdAndWorkDate(string $ticketId, CarbonInterface $workDate, ?string $searchTerm): array
@@ -112,8 +112,8 @@ class TimeTable
     /**
      * updateOrAddTimelogOnTicket - Updates or adds a timelog entry for a ticket
      *
-     * @param array<string, mixed> $values An array containing the values for the timelog entry
-     * @param int|null $originalId (Optional) The original timelog id to check for updates or deletion
+     * @param array<string, mixed> $values     An array containing the values for the timelog entry
+     * @param int|null             $originalId (Optional) The original timelog id to check for updates or deletion
      *
      * @return void
      * @access public
