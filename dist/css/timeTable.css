@@ -41,16 +41,15 @@
 }
 
 .timetable {
-    .recently-deleted-timelog-info > i {
-        color: var(--itk-color-info);
-    }
+  .recently-deleted-timelog-info > i {
+    color: var(--itk-color-info);
+  }
   .timetable-scroll-container {
     overflow-x: auto;
   }
 
   #timetable {
     background-color: var(--itk-color-white);
-
 
     .new-week {
       border-left: 2px solid var(--itk-border-color) !important;
