@@ -53,10 +53,18 @@ class TimeTable
 
         return $values;
     }
+
     /**
-     * @return array<array<string, string>>
+     * getTimesheetByTicketIdAndWorkDate - Retrieves timesheet data based on a given ticket ID and work date,
+     * optionally filtering by a search term.
+     *
+     * @access public
+     * @param string $ticketId The ticket ID to filter the timesheet data.
+     * @param CarbonInterface $workDate The specific work date to filter the timesheet data.
+     * @param string|null $searchTerm An optional search term to further filter results by ticket ID or headline.
+     * @return array<string, mixed> Returns an array of matching timesheet data.
      */
-    public function getTimesheetByTicketIdAndWorkDate(string $ticketId, CarbonImmutable $workDate, ?string $searchTerm): array
+    public function getTimesheetByTicketIdAndWorkDate(string $ticketId, CarbonInterface $workDate, ?string $searchTerm): array
     {
 
         $searchTermQuery = isset($searchTerm)
@@ -104,13 +112,13 @@ class TimeTable
     /**
      * updateOrAddTimelogOnTicket - Updates or adds a timelog entry for a ticket
      *
-     * @param array<string, mixed> $values     An array containing the values for the timelog entry
-     * @param int|null             $originalId (Optional) The original timelog id to check for updates or deletion
+     * @param array<string, mixed> $values An array containing the values for the timelog entry
+     * @param int|null $originalId (Optional) The original timelog id to check for updates or deletion
      *
      * @return void
      * @access public
      */
-    public function updateOrAddTimelogOnTicket(array $values, int $originalId = null): void
+    public function updateOrAddTimelogOnTicket(array $values, ?int $originalId = null): void
     {
         $sql = 'SELECT * FROM zp_timesheets WHERE ticketId = :ticketId AND workDate = :date AND userId = :userId';
 
@@ -180,14 +188,15 @@ class TimeTable
      * If an entry for the same date, ticket, and user already exists, it checks
      * whether the entry should be overwritten or prevents duplicate insertion.
      *
-     * @param array $values An associative array containing the following keys:
-     *                      - 'userId' (int): The ID of the user creating the timelog.
-     *                      - 'ticketId' (int): The ID of the ticket associated with the timelog.
-     *                      - 'workDate' (DateTime): The date and time the timelog is being created for.
-     *                      - 'hours' (float): The number of hours being logged.
-     *                      - 'description' (string): The description of the work done.
-     *                      - 'kind' (string): The type of work being logged.
-     *                      - 'entryCopyOverwrite' (string, optional): A flag to indicate if existing entries should be overwritten.
+     * @param array<string, mixed> $values An associative array containing the following keys:
+     *     - 'userId' (int): The ID of the user creating the timelog.
+     *     - 'ticketId' (int): The ID of the ticket associated with the timelog.
+     *     - 'workDate' (DateTime): The date and time the timelog is being created for.
+     *     - 'hours' (float): The number of hours being logged.
+     *     - 'description' (string): The description of the work done.
+     *     - 'kind' (string): The type of work being logged.
+     *     - 'entryCopyOverwrite' (string|null, optional): A flag to indicate if existing entries should be overwritten.
+     *
      * @return void
      */
     public function addTimelogOnTicket(array $values)

@@ -85,52 +85,56 @@ class TimeTable extends Controller
         $searchTermForFilter = null;
         $now = CarbonImmutable::now();
         $ticketCacheExpiration = $this->settings->getSetting('itk-leantime-timetable.ticketCacheExpiration') ?? 1200;
+        $fromDate = CarbonImmutable::now()->startOfWeek()->startOfDay();
+        $toDate = CarbonImmutable::now()->endOfWeek()->startOfDay();
 
         try {
             if (isset($_GET['fromDate']) && $_GET['fromDate'] !== '') {
                 if ($_GET['fromDate'][0] === '+' || $_GET['fromDate'][0] === '-') {
-                    // If relative date format
                     $fromDate = CarbonImmutable::now()->startOfDay()->modify($_GET['fromDate']);
                 } else {
-                    // Try specific date format
-                    $fromDate = CarbonImmutable::createFromFormat('Y-m-d', $_GET['fromDate'])->startOfDay();
-                    if ($fromDate === false) {
-                        // If 'Y-m-d' format fails, try 'd/m/Y' format
-                        $fromDate = CarbonImmutable::createFromFormat('d/m/Y', $_GET['fromDate'])->startOfDay();
+                    $fromDate = CarbonImmutable::createFromFormat('Y-m-d', $_GET['fromDate']);
+                    if ($fromDate !== false) {
+                        $fromDate = $fromDate->startOfDay();
+                    } else {
+                        $fromDate = CarbonImmutable::createFromFormat('d/m/Y', $_GET['fromDate']);
+                        $fromDate = $fromDate !== false ? $fromDate->startOfDay() : CarbonImmutable::now()->startOfWeek()->startOfDay();
                     }
                 }
-            } else {
-                // Default to start of current week
-                $fromDate = CarbonImmutable::now()->startOfWeek()->startOfDay();
             }
 
             if (isset($_GET['toDate']) && $_GET['toDate'] !== '') {
                 if ($_GET['toDate'][0] === '+' || $_GET['toDate'][0] === '-') {
-                    // If relative date format
                     $toDate = CarbonImmutable::now()->startOfDay()->modify($_GET['toDate']);
                 } else {
-                    // Try specific date format
-                    $toDate = CarbonImmutable::createFromFormat('Y-m-d', $_GET['toDate'])->startOfDay();
-                    if ($toDate === false) {
-                        // If 'Y-m-d' format fails, try 'd/m/Y' format
-                        $toDate = CarbonImmutable::createFromFormat('d/m/Y', $_GET['toDate'])->startOfDay();
+                    $toDate = CarbonImmutable::createFromFormat('Y-m-d', $_GET['toDate']);
+                    if ($toDate !== false) {
+                        $toDate = $toDate->startOfDay();
+                    } else {
+                        $toDate = CarbonImmutable::createFromFormat('d/m/Y', $_GET['toDate']);
+                        $toDate = $toDate !== false ? $toDate->startOfDay() : CarbonImmutable::now()->endOfWeek()->startOfDay();
                     }
                 }
-            } else {
-                // Default to end of current week
-                $toDate = CarbonImmutable::now()->endOfWeek()->startOfDay();
             }
         } catch (\Exception $e) {
-            // Log error
             Log::error($e);
-
-            // Assign fallback date span
             $fromDate = CarbonImmutable::now()->startOfWeek()->startOfDay();
             $toDate = CarbonImmutable::now()->endOfWeek()->startOfDay();
         }
 
-        $weekStartDateDb = $fromDate->setToDbTimezone();
-        $weekEndDateDb = $toDate->setToDbTimezone();
+        if ($fromDate instanceof CarbonImmutable) {
+            $weekStartDateDb = $fromDate->setToDbTimezone();
+        } else {
+            // Handle invalid $fromDate gracefully
+            $weekStartDateDb = null; // Or define your fallback behavior
+        }
+
+        if ($toDate instanceof CarbonImmutable) {
+            $weekEndDateDb = $toDate->setToDbTimezone();
+        } else {
+            // Handle invalid $toDate gracefully
+            $weekEndDateDb = null; // Or define your fallback behavior
+        }
 
         $this->template->assign('currentSearchTerm', $searchTermForFilter);
 
@@ -138,7 +142,12 @@ class TimeTable extends Controller
         $days[] = array_shift($days);
 
         $weekDates = [];
-        $dateIterator = $fromDate->setToUserTimezone()->copy();
+        if ($fromDate instanceof CarbonImmutable) {
+            $dateIterator = $fromDate->setToUserTimezone()->copy();
+        } else {
+            // Handle invalid $fromDate gracefully
+            $dateIterator = null; // Or define fallback behavior
+        }
 
         while ($dateIterator <= $toDate) {
             $dayOfWeek = strtolower($dateIterator->locale(session('usersettings.language'))->dayName);
