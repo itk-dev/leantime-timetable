@@ -186,11 +186,17 @@ class TimeTableActionHandler
         $hours = $postData['entryCopyHours'];
         $description = $postData['entryCopyDescription'];
 
-
         // Move to the next day to skip the first date
-        $currentDate = $copyFromDate->addDay();
-
-        while ($currentDate <= $copyToDate) {
+        $currentDate = $copyFromDate;
+        $currentDate->addDay();
+        $copyToDateUserTimezone = $copyToDate->setToUserTimezone();
+        while ($currentDate <= $copyToDateUserTimezone) {
+            $currentDateUserTimezone = $currentDate->setToUserTimezone();
+            // Skip weekends if 'entryCopyWeekend' is not set
+            if (!isset($postData['entryCopyWeekend']) && ($currentDateUserTimezone->isSaturday() || $currentDateUserTimezone->isSunday())) {
+                $currentDate = $currentDate->addDay();
+                continue;
+            }
             $values = [
                 'userId' => session('userdata.id'),
                 'ticketId' => $ticketId,

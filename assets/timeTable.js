@@ -1,6 +1,6 @@
 import TomSelect from "tom-select";
 import flatpickr from "flatpickr";
-import { Danish } from "flatpickr/dist/l10n/da.js";
+import {Danish} from "flatpickr/dist/l10n/da.js";
 import "tom-select/dist/css/tom-select.default.css";
 import "flatpickr/dist/flatpickr.min.css";
 import TimeTableApiHandler from "./timeTableApiHandler";
@@ -37,6 +37,7 @@ jQuery(document).ready(function ($) {
       this.entryCopyCheckboxOverwrite = this.entryCopyModal.find(
         "#entry-copy-overwrite",
       );
+      this.entryCopyCheckboxWeekend = this.entryCopyModal.find('#entry-copy-weekend');
       this.timeEditForm = this.timeEditModal.find(".edit-time-log-form");
       this.timeEditSyncModal = $("#edit-time-sync-modal");
       this.modalInputTimesheetId = this.timeEditModal.find(
@@ -251,8 +252,7 @@ jQuery(document).ready(function ($) {
 
         const eventTarget = e.target;
 
-        const { elementsWithoutValue, totalElements } =
-          this.handleHighlighting(eventTarget);
+        const targetCount = this.handleHighlighting(eventTarget);
 
         const rect = eventTarget.getBoundingClientRect();
 
@@ -311,28 +311,41 @@ jQuery(document).ready(function ($) {
 
         this.setEntryCopyText({
           formattedCopyFromDate,
-          formattedDayAfterCopyFromDate,
           formattedCopyToDate,
-          elementsWithoutValue,
+            targetCount,
         });
 
         this.entryCopyCheckboxOverwrite.off("change").change((e) => {
           const overwrite = $(e.target).is(":checked");
+          const includeWeekends = this.entryCopyCheckboxWeekend.is(":checked");
 
-          const elementsCount = overwrite
-            ? totalElements
-            : elementsWithoutValue;
+            const targets = this.getEntryCopyTargets(eventTarget, overwrite, includeWeekends);
+            const targetCount = targets.length;
 
-          console.log(overwrite, elementsCount);
-          this.setEntryCopyText({
-            formattedCopyFromDate,
-            formattedDayAfterCopyFromDate,
-            formattedCopyToDate,
-            elementsWithoutValue: elementsCount,
-          });
+            this.setEntryCopyText({
+                formattedCopyFromDate,
+                formattedCopyToDate,
+                targetCount,
+            });
 
-          this.handleHighlighting(eventTarget, overwrite);
+          this.handleHighlighting(eventTarget, overwrite, includeWeekends);
         });
+
+          this.entryCopyCheckboxWeekend.off("change").change((e) => {
+              const includeWeekends = $(e.target).is(":checked");
+              const overwrite = this.entryCopyCheckboxOverwrite.is(":checked");
+
+              const targets = this.getEntryCopyTargets(eventTarget, overwrite, includeWeekends);
+              const targetCount = targets.length;
+
+              this.setEntryCopyText({
+                  formattedCopyFromDate,
+                  formattedCopyToDate,
+                  targetCount,
+              });
+
+              this.handleHighlighting(eventTarget, overwrite, includeWeekends);
+          });
       });
 
       this.entryCopyButtonClose.click(() => {
@@ -347,50 +360,50 @@ jQuery(document).ready(function ($) {
       });
     }
 
-    handleHighlighting(element, overwrite = false) {
-      this.clearHighlighting();
-      const parentElement = $(element).parent();
-      const elements = parentElement.nextAll();
-      const valueToPreview = parentElement.children("span").text();
+      handleHighlighting(element, overwrite = false, includeWeekends = false) {
+          this.clearHighlighting();
+          const parentElement = $(element).parent();
+          const valueToPreview = parentElement.children("span").text();
 
-      const elementsWithoutValue = elements.filter(function () {
-        const span = $(this).children("span");
-        return span.length > 0 && span.text().trim() === "";
-      }).length;
+          const targets = this.getEntryCopyTargets(element, overwrite, includeWeekends);
+          parentElement.addClass("highlighting");
 
-      // Do not include the clicked element in the number of elements changed.
-      const totalElements = elements.length - 1;
+          const targetCount = targets.length;
+          targets.each(function (index, el) {
+              setTimeout(() => {
+                  $(el).addClass("highlight").attr("data-preview", valueToPreview);
+              }, 50 * index);
+          });
 
-      parentElement.addClass("highlighting");
 
-      console.log(valueToPreview);
-      elements.each(function (index, el) {
-        const span = $(el).children("span");
-        const shouldHighlight =
-          overwrite || (span.length > 0 && span.text().trim() === "");
-        if (shouldHighlight) {
-          setTimeout(() => {
-            $(el).addClass("highlight").attr("data-preview", valueToPreview);
-          }, 50 * index);
-        }
-      });
 
-      return { elementsWithoutValue, totalElements };
-    }
+          return targetCount;
+      }
 
+      getEntryCopyTargets(element, overwrite, includeWeekends) {
+          const parentElement = $(element).parent();
+          const elements = parentElement.nextAll(".timetable-edit-entry");
+
+          return elements.filter(function () {
+              const isWeekend = $(this).hasClass("weekend");
+              const span = $(this).children("span");
+              const hasValue = span.length > 0 && span.text().trim() !== "";
+
+              return (includeWeekends || !isWeekend) && (overwrite || !hasValue);
+          });
+      }
     setEntryCopyText({
       formattedCopyFromDate,
-      formattedDayAfterCopyFromDate,
       formattedCopyToDate,
-      elementsWithoutValue,
+                         targetCount,
     }) {
       this.entryCopyForm
         .find(".entry-copy-headline")
-        .html(`<b>Kopier tidslog fra d. ${formattedCopyFromDate}</b>`);
+        .html(`<b>Kopier tidslog</b>`);
       this.entryCopyForm
         .find(".entry-copy-text")
         .html(
-          `Til d. ${formattedDayAfterCopyFromDate} til og med d. ${formattedCopyToDate}<br>${elementsWithoutValue} ${elementsWithoutValue === 1 ? "dag bliver ændret" : "dage bliver ændret"}`,
+          `Fra d. ${formattedCopyFromDate} til og med d. ${formattedCopyToDate}<br>${targetCount} ${targetCount === 1 ? "dag bliver ændret" : "dage bliver ændret"}`,
         );
     }
 
