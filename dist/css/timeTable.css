@@ -441,7 +441,7 @@
       &:not([data-hours=""]) {
         &:before {
           content: "✎";
-            left: calc(40% - 5px);
+          left: calc(40% - 5px);
         }
       }
     }
@@ -834,26 +834,30 @@
     display: block;
     font-size: 12px;
   }
-    .ticket-title::before, td.add-new::before, tr.tr-total > td:first-child::before, th.th-ticket-title::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -1px;
-        height: 100% !important;
-        width: 1px;
-        background-color: var(--itk-border-color);
-        z-index: 1;
-    }
-    .table > thead > tr > th:last-child::before, .table > tbody > tr > td:last-child::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: -1px;
-        height: 100% !important;
-        width: 1px;
-        background-color: var(--itk-border-color);
-        z-index: 1;
-    }
+  .ticket-title::before,
+  td.add-new::before,
+  tr.tr-total > td:first-child::before,
+  th.th-ticket-title::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -1px;
+    height: 100% !important;
+    width: 1px;
+    background-color: var(--itk-border-color);
+    z-index: 1;
+  }
+  .table > thead > tr > th:last-child::before,
+  .table > tbody > tr > td:last-child::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -1px;
+    height: 100% !important;
+    width: 1px;
+    background-color: var(--itk-border-color);
+    z-index: 1;
+  }
   .timetable-ticket-search.ticket-loading {
     pointer-events: none;
     user-select: none;
@@ -909,17 +913,19 @@
       margin-bottom: var(--itk-spacing-xs);
     }
 
-      .entry-copy-checkboxes {
-          display: flex;
-          flex-direction: column;
-          margin: var(--itk-spacing-xs) 0 var(--itk-spacing) 0;
-      }
-    .entry-copy-overwrite-checkbox, .entry-copy-weekend-checkbox {
+    .entry-copy-checkboxes {
+      display: flex;
+      flex-direction: column;
+      margin: var(--itk-spacing-xs) 0 var(--itk-spacing) 0;
+    }
+    .entry-copy-overwrite-checkbox,
+    .entry-copy-weekend-checkbox {
       display: flex;
       align-items: center;
     }
 
-    .entry-copy-overwrite-checkbox label, .entry-copy-weekend-checkbox label {
+    .entry-copy-overwrite-checkbox label,
+    .entry-copy-weekend-checkbox label {
       margin-left: 8px;
       font-size: 0.875rem;
       color: #333;
@@ -931,7 +937,8 @@
       user-select: none;
     }
 
-    .entry-copy-overwrite-checkbox input[type="checkbox"], .entry-copy-weekend-checkbox input[type="checkbox"] {
+    .entry-copy-overwrite-checkbox input[type="checkbox"],
+    .entry-copy-weekend-checkbox input[type="checkbox"] {
       cursor: pointer;
       margin: 0;
     }

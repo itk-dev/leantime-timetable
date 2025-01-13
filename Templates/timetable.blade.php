@@ -67,7 +67,7 @@
                                 @foreach ($timesheetsByTicket as $ticketId => $timesheet)
                                     <tr data-ticketId="{{ $ticketId }}">
                                         <td class="ticket-title" scope="row"><a href="{{ $timesheet['ticketLink'] }}"
-                                                data-tippy-content="#{{ $timesheet['ticketId'] }} - {{ $timesheet['ticketTitle'] }} {{ $timesheet['ticketType'] !== 'task' ? '[ '.$timesheet['ticketType'].' ]' : '' }} "
+                                                data-tippy-content="#{{ $timesheet['ticketId'] }} - {{ $timesheet['ticketTitle'] }} {{ $timesheet['ticketType'] !== 'task' ? '[ ' . $timesheet['ticketType'] . ' ]' : '' }} "
                                                 data-tippy-placement="top">{{ $timesheet['ticketTitle'] }}</a>
                                             <span>{{ $timesheet['projectName'] }}</span>
                                         </td>
@@ -82,7 +82,7 @@
                                             $hoursLeft = $timesheetDate[0]['hourRemaining'] ?? null;
                                             $description = $timesheetDate[0]['description'] ?? null;
                                             $isMissingDescription = isset($hours) && trim($description) === '';
-
+                                            
                                             // accumulate hours
                                             if ($hours) {
                                                 if (isset($totalHours[$weekDateAccessor])) {
@@ -92,7 +92,7 @@
                                                 }
                                                 $rowTotal += $hours; // add to row total
                                             }
-
+                                            
                                             $weekendClass = isset($weekDate) && $weekDate->isWeekend() ? 'weekend' : '';
                                             $todayClass = isset($weekDate) && $weekDate->isToday() ? 'today' : '';
                                             $newWeekClass = isset($weekDate) && $weekDate->isMonday() ? 'new-week' : ''; // Add new-week class for Mondays
@@ -125,7 +125,7 @@
                             @else
                                 <!-- A little something for when the week has no logs -->
                                 <tr class="empty-row"">
-                                                            <td class=" empty-row"
+                                                                <td class=" empty-row"
                                     colspan="{{ count($weekDates) + 2 }}">
                                     {{ __("It seems the 'WORK-IT' fairy forgot to sprinkle her magic dust here! 🧚‍🪄✨") }}
                                     </td>

@@ -1,6 +1,6 @@
 import TomSelect from "tom-select";
 import flatpickr from "flatpickr";
-import {Danish} from "flatpickr/dist/l10n/da.js";
+import { Danish } from "flatpickr/dist/l10n/da.js";
 import "tom-select/dist/css/tom-select.default.css";
 import "flatpickr/dist/flatpickr.min.css";
 import TimeTableApiHandler from "./timeTableApiHandler";
@@ -37,7 +37,9 @@ jQuery(document).ready(function ($) {
       this.entryCopyCheckboxOverwrite = this.entryCopyModal.find(
         "#entry-copy-overwrite",
       );
-      this.entryCopyCheckboxWeekend = this.entryCopyModal.find('#entry-copy-weekend');
+      this.entryCopyCheckboxWeekend = this.entryCopyModal.find(
+        "#entry-copy-weekend",
+      );
       this.timeEditForm = this.timeEditModal.find(".edit-time-log-form");
       this.timeEditSyncModal = $("#edit-time-sync-modal");
       this.modalInputTimesheetId = this.timeEditModal.find(
@@ -312,40 +314,48 @@ jQuery(document).ready(function ($) {
         this.setEntryCopyText({
           formattedCopyFromDate,
           formattedCopyToDate,
-            targetCount,
+          targetCount,
         });
 
         this.entryCopyCheckboxOverwrite.off("change").change((e) => {
           const overwrite = $(e.target).is(":checked");
           const includeWeekends = this.entryCopyCheckboxWeekend.is(":checked");
 
-            const targets = this.getEntryCopyTargets(eventTarget, overwrite, includeWeekends);
-            const targetCount = targets.length;
+          const targets = this.getEntryCopyTargets(
+            eventTarget,
+            overwrite,
+            includeWeekends,
+          );
+          const targetCount = targets.length;
 
-            this.setEntryCopyText({
-                formattedCopyFromDate,
-                formattedCopyToDate,
-                targetCount,
-            });
+          this.setEntryCopyText({
+            formattedCopyFromDate,
+            formattedCopyToDate,
+            targetCount,
+          });
 
           this.handleHighlighting(eventTarget, overwrite, includeWeekends);
         });
 
-          this.entryCopyCheckboxWeekend.off("change").change((e) => {
-              const includeWeekends = $(e.target).is(":checked");
-              const overwrite = this.entryCopyCheckboxOverwrite.is(":checked");
+        this.entryCopyCheckboxWeekend.off("change").change((e) => {
+          const includeWeekends = $(e.target).is(":checked");
+          const overwrite = this.entryCopyCheckboxOverwrite.is(":checked");
 
-              const targets = this.getEntryCopyTargets(eventTarget, overwrite, includeWeekends);
-              const targetCount = targets.length;
+          const targets = this.getEntryCopyTargets(
+            eventTarget,
+            overwrite,
+            includeWeekends,
+          );
+          const targetCount = targets.length;
 
-              this.setEntryCopyText({
-                  formattedCopyFromDate,
-                  formattedCopyToDate,
-                  targetCount,
-              });
-
-              this.handleHighlighting(eventTarget, overwrite, includeWeekends);
+          this.setEntryCopyText({
+            formattedCopyFromDate,
+            formattedCopyToDate,
+            targetCount,
           });
+
+          this.handleHighlighting(eventTarget, overwrite, includeWeekends);
+        });
       });
 
       this.entryCopyButtonClose.click(() => {
@@ -360,42 +370,44 @@ jQuery(document).ready(function ($) {
       });
     }
 
-      handleHighlighting(element, overwrite = false, includeWeekends = false) {
-          this.clearHighlighting();
-          const parentElement = $(element).parent();
-          const valueToPreview = parentElement.children("span").text();
+    handleHighlighting(element, overwrite = false, includeWeekends = false) {
+      this.clearHighlighting();
+      const parentElement = $(element).parent();
+      const valueToPreview = parentElement.children("span").text();
 
-          const targets = this.getEntryCopyTargets(element, overwrite, includeWeekends);
-          parentElement.addClass("highlighting");
+      const targets = this.getEntryCopyTargets(
+        element,
+        overwrite,
+        includeWeekends,
+      );
+      parentElement.addClass("highlighting");
 
-          const targetCount = targets.length;
-          targets.each(function (index, el) {
-              setTimeout(() => {
-                  $(el).addClass("highlight").attr("data-preview", valueToPreview);
-              }, 50 * index);
-          });
+      const targetCount = targets.length;
+      targets.each(function (index, el) {
+        setTimeout(() => {
+          $(el).addClass("highlight").attr("data-preview", valueToPreview);
+        }, 50 * index);
+      });
 
+      return targetCount;
+    }
 
+    getEntryCopyTargets(element, overwrite, includeWeekends) {
+      const parentElement = $(element).parent();
+      const elements = parentElement.nextAll(".timetable-edit-entry");
 
-          return targetCount;
-      }
+      return elements.filter(function () {
+        const isWeekend = $(this).hasClass("weekend");
+        const span = $(this).children("span");
+        const hasValue = span.length > 0 && span.text().trim() !== "";
 
-      getEntryCopyTargets(element, overwrite, includeWeekends) {
-          const parentElement = $(element).parent();
-          const elements = parentElement.nextAll(".timetable-edit-entry");
-
-          return elements.filter(function () {
-              const isWeekend = $(this).hasClass("weekend");
-              const span = $(this).children("span");
-              const hasValue = span.length > 0 && span.text().trim() !== "";
-
-              return (includeWeekends || !isWeekend) && (overwrite || !hasValue);
-          });
-      }
+        return (includeWeekends || !isWeekend) && (overwrite || !hasValue);
+      });
+    }
     setEntryCopyText({
       formattedCopyFromDate,
       formattedCopyToDate,
-                         targetCount,
+      targetCount,
     }) {
       this.entryCopyForm
         .find(".entry-copy-headline")
@@ -720,7 +732,7 @@ jQuery(document).ready(function ($) {
 </div>`;
           },
           option: function (item, escape) {
-            return `<div><span>${escape(item.text)} <span><i class="fa fa-angle-right fa-xs"></i> ${escape(item.projectName)} <small>(${escape(item.value)})</small> <small style="float: right;">${item.editorId === pluginSettings.userId ? '<i class="your-task far fa-user" title="To-do is assigned to you"></i>' : ""}${item.type.toLowerCase() !== 'task' ? `(${escape(item.type)})` : ''}</small></span></span></div>`;
+            return `<div><span>${escape(item.text)} <span><i class="fa fa-angle-right fa-xs"></i> ${escape(item.projectName)} <small>(${escape(item.value)})</small> <small style="float: right;">${item.editorId === pluginSettings.userId ? '<i class="your-task far fa-user" title="To-do is assigned to you"></i>' : ""}${item.type.toLowerCase() !== "task" ? `(${escape(item.type)})` : ""}</small></span></span></div>`;
           },
           option_create: function (data, escape) {
             return `<option data-value="add-new-ticket" class="create">+ Create new ticket: <strong>${escape(data.input)}</strong>&hellip;</option>`;
