@@ -18,6 +18,8 @@
   --itk-color-success-100: hsla(141, 84%, 93%, 1);
   --itk-color-danger: hsla(0, 72%, 51%, 1);
   --itk-color-danger-800: hsla(0, 70%, 35%, 1);
+  --itk-color-info: hsla(45, 90%, 51%, 1);
+  --itk-color-info-800: hsla(45, 80%, 35%, 1);
   --itk-color-white: white;
   --itk-color-gray-50: hsla(210, 40%, 98%, 1);
   --itk-color-gray-100: hsla(214, 32%, 91%, 1);
@@ -39,12 +41,16 @@
 }
 
 .timetable {
+    .recently-deleted-timelog-info > i {
+        color: var(--itk-color-info);
+    }
   .timetable-scroll-container {
     overflow-x: auto;
   }
 
   #timetable {
     background-color: var(--itk-color-white);
+
 
     .new-week {
       border-left: 2px solid var(--itk-border-color) !important;

@@ -625,7 +625,14 @@ jQuery(document).ready(function ($) {
         .then((response) => response.json())
         .then((data) => {
           if (data.status === "success") {
-            window.location.href = data.redirectUrl;
+              $('td.timetable-edit-entry[data-id="'+timesheetId+'"]')
+                  .children('span').text('')
+                  .end()
+                  .attr('data-id', '')
+                  .attr('data-hours', '')
+                  .attr('data-description', '');
+              $('.recently-deleted-timelog-info').removeClass('hidden');
+              this.closeEditTimeLogModal()
           } else {
             alert("An error has occurred");
           }
@@ -640,6 +647,9 @@ jQuery(document).ready(function ($) {
     closeEditTimeLogModal() {
       this.timeEditModal.removeClass("shown").removeAttr("data-value");
       this.timeEditModal.find("input:not([name='action']), textarea").val("");
+        $(this.modalDeleteButton)
+            .html('<i class="fa fa-trash"></i>')
+            .removeClass("deleting");
       $(document).off("mousedown", this.boundClickOutsideModalHandler);
     }
 
