@@ -755,6 +755,7 @@ jQuery(document).ready(function ($) {
 </div>`;
           },
           option: function (item, escape) {
+              // We only display to-do type if it is not "task", to reduce clutter.
             return `<div><span>${escape(item.text)} <span><i class="fa fa-angle-right fa-xs"></i> ${escape(item.projectName)} <small>(${escape(item.value)})</small> <small style="float: right;">${item.editorId === pluginSettings.userId ? '<i class="your-task far fa-user" title="To-do is assigned to you"></i>' : ""}${item.type.toLowerCase() !== "task" ? `(${escape(item.type)})` : ""}</small></span></span></div>`;
           },
           option_create: function (data, escape) {

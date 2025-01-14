@@ -84,7 +84,7 @@
                                             $hoursLeft = $timesheetDate[0]['hourRemaining'] ?? null;
                                             $description = $timesheetDate[0]['description'] ?? null;
                                             $isMissingDescription = isset($hours) && trim($description) === '';
-                                            
+
                                             // accumulate hours
                                             if ($hours) {
                                                 if (isset($totalHours[$weekDateAccessor])) {
@@ -94,7 +94,7 @@
                                                 }
                                                 $rowTotal += $hours; // add to row total
                                             }
-                                            
+
                                             $weekendClass = isset($weekDate) && $weekDate->isWeekend() ? 'weekend' : '';
                                             $todayClass = isset($weekDate) && $weekDate->isToday() ? 'today' : '';
                                             $newWeekClass = isset($weekDate) && $weekDate->isMonday() ? 'new-week' : ''; // Add new-week class for Mondays
@@ -223,11 +223,11 @@
             <div class="entry-copy-checkboxes">
                 <div class="entry-copy-overwrite-checkbox">
                     <input type="checkbox" name="entryCopyOverwrite" id="entry-copy-overwrite" />
-                    <label for="entry-copy-overwrite"><small>Overskriv allerede registrerede felter</small></label>
+                    <label for="entry-copy-overwrite"><small>{{ __("timeTable.overwrite_already_logged") }}</small></label>
                 </div>
                 <div class="entry-copy-weekend-checkbox">
                     <input type="checkbox" name="entryCopyWeekend" id="entry-copy-weekend" />
-                    <label for="entry-copy-weekend"><small>Inkluder weekender</small></label>
+                    <label for="entry-copy-weekend"><small>{{ __("timeTable.include_weekends") }}</small></label>
                 </div>
             </div>
             <div class="buttons flex-container gap-1">
