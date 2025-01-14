@@ -18,6 +18,8 @@
   --itk-color-success-100: hsla(141, 84%, 93%, 1);
   --itk-color-danger: hsla(0, 72%, 51%, 1);
   --itk-color-danger-800: hsla(0, 70%, 35%, 1);
+  --itk-color-info: hsla(45, 90%, 51%, 1);
+  --itk-color-info-800: hsla(45, 80%, 35%, 1);
   --itk-color-white: white;
   --itk-color-gray-50: hsla(210, 40%, 98%, 1);
   --itk-color-gray-100: hsla(214, 32%, 91%, 1);
@@ -39,6 +41,9 @@
 }
 
 .timetable {
+  .recently-deleted-timelog-info > i {
+    color: var(--itk-color-info);
+  }
   .timetable-scroll-container {
     overflow-x: auto;
   }
@@ -70,7 +75,7 @@
       left: 0;
       width: 20px;
       height: 20px;
-      background-color: #ccc;
+      background-color: var(--itk-border-color);
       border-radius: 50%;
       transform: translate(-50%, -50%);
       display: flex;
@@ -123,8 +128,8 @@
       z-index: 2;
     }
 
-    th:last-child::before,
-    td:last-child::before {
+    th:last-child::after,
+    td:last-child::after {
       content: "";
       position: absolute;
       top: 0;
@@ -430,7 +435,7 @@
         width: 10px;
         height: 18px;
         top: calc(50% - 9px);
-        left: calc(40% - 5px);
+        left: calc(50% - 5px);
         color: var(--itk-color-success);
         opacity: 0.8;
         transition:
@@ -441,6 +446,7 @@
       &:not([data-hours=""]) {
         &:before {
           content: "✎";
+          left: calc(40% - 5px);
         }
       }
     }
@@ -833,7 +839,30 @@
     display: block;
     font-size: 12px;
   }
-
+  .ticket-title::before,
+  td.add-new::before,
+  tr.tr-total > td:first-child::before,
+  th.th-ticket-title::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -1px;
+    height: 100% !important;
+    width: 1px;
+    background-color: var(--itk-border-color);
+    z-index: 1;
+  }
+  .table > thead > tr > th:last-child::before,
+  .table > tbody > tr > td:last-child::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -1px;
+    height: 100% !important;
+    width: 1px;
+    background-color: var(--itk-border-color);
+    z-index: 1;
+  }
   .timetable-ticket-search.ticket-loading {
     pointer-events: none;
     user-select: none;
@@ -872,7 +901,6 @@
 #entry-copy-modal {
   .entry-copy-form {
     display: flex;
-    height: 150px;
     flex-direction: column;
     background-color: #fefefe;
     margin: auto;
@@ -887,16 +915,22 @@
       margin-top: 2px;
     }
     .entry-copy-headline {
-      margin-bottom: 7px;
+      margin-bottom: var(--itk-spacing-xs);
     }
 
-    .entry-copy-overwrite-checkbox {
+    .entry-copy-checkboxes {
+      display: flex;
+      flex-direction: column;
+      margin: var(--itk-spacing-xs) 0 var(--itk-spacing) 0;
+    }
+    .entry-copy-overwrite-checkbox,
+    .entry-copy-weekend-checkbox {
       display: flex;
       align-items: center;
-      margin: 5px 0;
     }
 
-    .entry-copy-overwrite-checkbox label {
+    .entry-copy-overwrite-checkbox label,
+    .entry-copy-weekend-checkbox label {
       margin-left: 8px;
       font-size: 0.875rem;
       color: #333;
@@ -908,7 +942,8 @@
       user-select: none;
     }
 
-    .entry-copy-overwrite-checkbox input[type="checkbox"] {
+    .entry-copy-overwrite-checkbox input[type="checkbox"],
+    .entry-copy-weekend-checkbox input[type="checkbox"] {
       cursor: pointer;
       margin: 0;
     }

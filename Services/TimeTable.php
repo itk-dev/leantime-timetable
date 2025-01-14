@@ -101,7 +101,7 @@ class TimeTable
     /**
      * Adds a timelog to a ticket.
      *
-     * @param array $values The data required to add the timelog on the ticket.
+     * @param array<string, mixed> $values The data required to add the timelog on the ticket.
      * @return void
      */
     public function addTimelogOnTicket(array $values)

@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+* [PR-33](https://github.com/ITK-Leantime/leantime-timetable/pull/33)
+  * Made weekends optional when copying an entry forward
+  * Enter now submits the entry when creating or editing
+  * Now only updating frontend when deleting timelog
+
 ## [3.0.0] - 2025-01-10
 
 * [PR-31](https://github.com/ITK-Leantime/leantime-timetable/pull/31)

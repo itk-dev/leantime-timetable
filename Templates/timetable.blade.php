@@ -27,6 +27,8 @@
                             class="timetable-to-today btn btn-default">{{ __('timeTable.button_show_this_week') }}</button>
                     </div>
                 </form>
+                <p class="recently-deleted-timelog-info hidden"><i class="fas fa-info-circle"></i>
+                    {{ __('timeTable.update_to_show_correct_sums') }}</p>
                 <div class="timetable-scroll-container">
                     <table id="timetable" class="table">
                         <thead>
@@ -67,12 +69,9 @@
                                 @foreach ($timesheetsByTicket as $ticketId => $timesheet)
                                     <tr data-ticketId="{{ $ticketId }}">
                                         <td class="ticket-title" scope="row"><a href="{{ $timesheet['ticketLink'] }}"
-                                                data-tippy-content="#{{ $timesheet['ticketId'] }} - {{ $timesheet['ticketTitle'] }}"
+                                                data-tippy-content="#{{ $timesheet['ticketId'] }} - {{ $timesheet['ticketTitle'] }} {{ $timesheet['ticketType'] !== 'task' ? '[ ' . $timesheet['ticketType'] . ' ]' : '' }} "
                                                 data-tippy-placement="top">{{ $timesheet['ticketTitle'] }}</a>
                                             <span>{{ $timesheet['projectName'] }}</span>
-                                            <?php if ($timesheet['ticketType'] !== "task"): ?>
-                                            <small>(<?php echo $timesheet['ticketType']; ?>)</small>
-                                            <?php endif; ?>
                                         </td>
                                         <?php $rowTotal = 0; ?>
                                         <!-- initializing row total -->
@@ -127,10 +126,9 @@
                                 </tr>
                             @else
                                 <!-- A little something for when the week has no logs -->
-                                <tr class="empty-row"">
-                                                            <td class=" empty-row"
-                                    colspan="{{ count($weekDates) + 2 }}">
-                                    {{ __("It seems the 'WORK-IT' fairy forgot to sprinkle her magic dust here! 🧚‍🪄✨") }}
+                                <tr class="empty-row">
+                                    <td class="empty-row" colspan="{{ count($weekDates) + 2 }}">
+                                        {{ __("It seems the 'WORK-IT' fairy forgot to sprinkle her magic dust here! 🧚‍🪄✨") }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -222,9 +220,16 @@
             <input type="hidden" name="entryCopyToDate" />
             <p class="entry-copy-headline"></p>
             <p class="entry-copy-text"></p>
-            <div class="entry-copy-overwrite-checkbox">
-                <input type="checkbox" name="entryCopyOverwrite" id="entry-copy-overwrite" />
-                <label for="entry-copy-overwrite"><small>Overskriv allerede registrerede felter</small></label>
+            <div class="entry-copy-checkboxes">
+                <div class="entry-copy-overwrite-checkbox">
+                    <input type="checkbox" name="entryCopyOverwrite" id="entry-copy-overwrite" />
+                    <label
+                        for="entry-copy-overwrite"><small>{{ __('timeTable.overwrite_already_logged') }}</small></label>
+                </div>
+                <div class="entry-copy-weekend-checkbox">
+                    <input type="checkbox" name="entryCopyWeekend" id="entry-copy-weekend" />
+                    <label for="entry-copy-weekend"><small>{{ __('timeTable.include_weekends') }}</small></label>
+                </div>
             </div>
             <div class="buttons flex-container gap-1">
                 <button type="button"
