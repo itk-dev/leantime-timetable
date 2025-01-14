@@ -28,7 +28,7 @@ class TimeTable
      * constructor
      *
      * @param  TimeTableRepository $timeTableRepo
-     * @param TicketRepository $ticketRepo
+     * @param TicketRepository    $ticketRepo
      * @return void
      */
     public function __construct(TimeTableRepository $timeTableRepo, TicketRepository $ticketRepo)
@@ -116,7 +116,7 @@ class TimeTable
     /**
      * Retrieves all state labels for all projects.
      *
-     * @return array<int, array> The state labels grouped by project IDs.
+     * @return array<string, array<int|string, mixed>> The state labels grouped by project IDs.
      */
     public function getAllStateLabels(): array
     {

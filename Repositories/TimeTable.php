@@ -243,6 +243,13 @@ class TimeTable
         $stmn->execute();
         $stmn->closeCursor();
     }
+
+    /**
+     * getAllStateLabels - Retrieves all state labels for projects based on a seed list of statuses and stored settings.
+     *
+     * @param array<int|string, mixed> $statusListSeed An array of default status definitions to seed the state labels.
+     * @return array<string, array<int|string, mixed>> An associative array where keys are project IDs and values are arrays of state labels.
+     */
     public function getAllStateLabels(array $statusListSeed): array
     {
         $sql = 'SELECT `key`, `value` FROM zp_settings WHERE `key` LIKE :keyPattern';
@@ -304,7 +311,7 @@ class TimeTable
      * getAllProjectIds - Retrieve all project IDs from the database
      *
      * @access private
-     * @return array Array of project IDs
+     * @return array<string, string> Array of project IDs
      */
     private function getAllProjectIds(): array
     {

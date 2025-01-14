@@ -60,18 +60,18 @@ export default class TimeTableApiHandler {
       ticketPromise = Promise.resolve(ticketCacheData);
     } else {
       ticketPromise = this.getAllTickets().then((data) => {
-          const result = data.result;
-          let tickets = result.filter(({type, status, projectId}) => {
-              const projectLabels = allStateLabels[projectId] || {};
-              const statusInfo = projectLabels[status] || {};
-              const isDone = statusInfo.statusType === "DONE";
+        const result = data.result;
+        let tickets = result.filter(({ type, status, projectId }) => {
+          const projectLabels = allStateLabels[projectId] || {};
+          const statusInfo = projectLabels[status] || {};
+          const isDone = statusInfo.statusType === "DONE";
 
-              return (
-                  type.toLowerCase() !== "story" &&
-                  type.toLowerCase() !== "milestone" &&
-                  !isDone // Exclude tickets that are considered DONE
-              );
-          });
+          return (
+            type.toLowerCase() !== "story" &&
+            type.toLowerCase() !== "milestone" &&
+            !isDone // Exclude tickets that are considered DONE
+          );
+        });
         const ticketGroup = {
           id: "task",
           text: "Todos",
@@ -79,26 +79,23 @@ export default class TimeTableApiHandler {
           index: 2,
         };
 
-          let childrenForTicketGroup = [];
-          tickets.forEach((ticket) => {
+        let childrenForTicketGroup = [];
+        tickets.forEach((ticket) => {
+          let option = {
+            id: ticket.id,
+            text: ticket.headline,
+            type: ticket.type,
+            tags: ticket.tags,
+            sprintName: ticket.sprintName,
+            projectId: ticket.projectId,
+            projectName: ticket.projectName,
+            editorId: ticket.editorId,
+            hoursLeft: ticket.hourRemaining,
+            createdDate: ticket.date,
+          };
 
-                  let option = {
-                      id: ticket.id,
-                      text: ticket.headline,
-                      type: ticket.type,
-                      tags: ticket.tags,
-                      sprintName: ticket.sprintName,
-                      projectId: ticket.projectId,
-                      projectName: ticket.projectName,
-                      editorId: ticket.editorId,
-                      hoursLeft: ticket.hourRemaining,
-                      createdDate: ticket.date,
-                  };
-
-                  childrenForTicketGroup.push(option);
-
-
-          });
+          childrenForTicketGroup.push(option);
+        });
 
         // Sort, so the done tasks appear in the bottom of the search.
         ticketGroup.children = [...childrenForTicketGroup].sort(
