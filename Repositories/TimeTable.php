@@ -243,4 +243,78 @@ class TimeTable
         $stmn->execute();
         $stmn->closeCursor();
     }
+    public function getAllStateLabels(array $statusListSeed): array
+    {
+        $sql = 'SELECT `key`, `value` FROM zp_settings WHERE `key` LIKE :keyPattern';
+        $stmn = $this->db->database->prepare($sql);
+        $stmn->bindValue(':keyPattern', 'projectsettings.%.ticketlabels', PDO::PARAM_STR);
+        $stmn->execute();
+        $results = $stmn->fetchAll(PDO::FETCH_ASSOC);
+        $stmn->closeCursor();
+
+        $allStatusLabels = [];
+
+        foreach ($results as $row) {
+            // Extract the project ID from the key
+            $projectId = explode('.', $row['key'])[1];
+            // Unserialize the value
+            $values = @unserialize($row['value']);
+
+            if ($values !== false) {
+                $statusList = $statusListSeed;
+
+                $statusList[-1] = $statusListSeed[-1];
+
+                foreach ($values as $key => $status) {
+                    if (is_int($key)) {
+                        if (!is_array($status)) {
+                            $statusList[$key] = $statusListSeed[$key];
+                            if (is_array($statusList[$key]) && isset($statusList[$key]['name']) && $key !== -1) {
+                                $statusList[$key]['name'] = $status;
+                            }
+                        } else {
+                            $statusList[$key] = $status;
+                        }
+                    }
+                }
+
+                uasort($statusList, function ($a, $b) {
+                    return $a['sortKey'] <=> $b['sortKey'];
+                });
+
+                $allStatusLabels[$projectId] = $statusList;
+            }
+        }
+
+        // Ensure every project has a state list
+
+        // Fetch all project IDs separately
+        $projectIds = $this->getAllProjectIds();
+        foreach ($projectIds as $projectId) {
+            if (!isset($allStatusLabels[$projectId])) {
+                // Default to $statusListSeed if no state list exists
+                $allStatusLabels[$projectId] = $statusListSeed;
+            }
+        }
+
+        return $allStatusLabels;
+    }
+
+    /**
+     * getAllProjectIds - Retrieve all project IDs from the database
+     *
+     * @access private
+     * @return array Array of project IDs
+     */
+    private function getAllProjectIds(): array
+    {
+        $sql = 'SELECT id FROM zp_projects';
+        $stmn = $this->db->database->prepare($sql);
+        $stmn->execute();
+        // Fetch all project IDs as a 1-dimensional array
+        $projectIds = $stmn->fetchAll(PDO::FETCH_COLUMN, 0);
+        $stmn->closeCursor();
+
+        return $projectIds;
+    }
 }

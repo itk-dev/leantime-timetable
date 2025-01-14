@@ -8,6 +8,7 @@ import TimeTableApiHandler from "./timeTableApiHandler";
 jQuery(document).ready(function ($) {
   const pluginSettings = {
     userId: timetableSettings.settings.userId,
+    allStateLabels: $('#all-state-labels').val(),
   };
 
   class TimeTable {
@@ -87,7 +88,7 @@ jQuery(document).ready(function ($) {
 
       this.toggleVisualLoaders();
       this.isFetching = true;
-      TimeTableApiHandler.fetchTicketData().then(() => {
+      TimeTableApiHandler.fetchTicketData(pluginSettings.allStateLabels).then(() => {
         this.isFetching = false;
         this.populateLastUpdated();
         this.initTicketSearch();
@@ -573,7 +574,7 @@ jQuery(document).ready(function ($) {
         }, 500);
       } else {
         this.isFetching = true;
-        TimeTableApiHandler.fetchTicketData().then(() => {
+        TimeTableApiHandler.fetchTicketData(pluginSettings.allStateLabels).then(() => {
           this.isFetching = false;
           this.populateLastUpdated();
           this.initTicketSearch();

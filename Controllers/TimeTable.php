@@ -87,6 +87,7 @@ class TimeTable extends Controller
         $ticketCacheExpiration = $this->settings->getSetting('itk-leantime-timetable.ticketCacheExpiration') ?? 1200;
         $fromDate = CarbonImmutable::now()->startOfWeek()->startOfDay();
         $toDate = CarbonImmutable::now()->endOfWeek()->startOfDay();
+        $allStateLabels = $this->timeTableService->getAllStateLabels();
 
         try {
             if (isset($_GET['fromDate']) && $_GET['fromDate'] !== '') {
@@ -193,6 +194,7 @@ class TimeTable extends Controller
         $this->template->assign('ticketCacheExpiration', $ticketCacheExpiration);
         $this->template->assign('fromDate', $fromDate);
         $this->template->assign('toDate', $toDate);
+        $this->template->assign('allStateLabels', json_encode($allStateLabels));
         return $this->template->display('TimeTable.timetable');
     }
 }
