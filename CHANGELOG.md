@@ -2,9 +2,10 @@
 
 ## [Unreleased]
 
-## [3.1.0] - 2025-01-14
+* [PR-35](https://github.com/ITK-Leantime/leantime-timetable/pull/35)
+  * Sort away tickets with status DONE
 
-## [3.0.1] - 2025-01-14
+## [3.1.0] - 2025-01-14
 
 * [PR-33](https://github.com/ITK-Leantime/leantime-timetable/pull/33)
   * Made weekends optional when copying an entry forward
@@ -136,7 +137,6 @@
 
 [Unreleased]: https://github.com/ITK-Leantime/leantime-timetable/compare/3.1.0...HEAD
 [3.1.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/3.0.1...3.1.0
-[3.0.1]: https://github.com/ITK-Leantime/leantime-timetable/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/2.0.2...3.0.0
 [2.0.2]: https://github.com/ITK-Leantime/leantime-timetable/compare/2.0.1...2.0.2
 [2.0.1]: https://github.com/ITK-Leantime/leantime-timetable/compare/2.0.0...2.0.1

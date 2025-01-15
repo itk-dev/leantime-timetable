@@ -12,6 +12,7 @@
     <div class="maincontent">
         <div class="maincontentinner">
             <div class="timetable">
+                <input type="hidden" id="all-state-labels" value="{{ $allStateLabels }}" />
                 <form method="POST">
                     <input type="hidden" name="action" value="adjustPeriod">
                     <div class="flex-container gap-3 tools">

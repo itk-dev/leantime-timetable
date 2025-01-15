@@ -4,6 +4,7 @@ namespace Leantime\Plugins\TimeTable\Services;
 
 use Carbon\CarbonInterface;
 use Leantime\Plugins\TimeTable\Repositories\TimeTable as TimeTableRepository;
+use Leantime\Domain\Tickets\Repositories\Tickets as TicketRepository;
 use Carbon\CarbonImmutable;
 
 /**
@@ -12,6 +13,7 @@ use Carbon\CarbonImmutable;
 class TimeTable
 {
     private TimeTableRepository $timeTableRepo;
+    private TicketRepository $ticketRepo;
 
     /**
      * @var array<string, string>
@@ -26,11 +28,13 @@ class TimeTable
      * constructor
      *
      * @param  TimeTableRepository $timeTableRepo
+     * @param TicketRepository    $ticketRepo
      * @return void
      */
-    public function __construct(TimeTableRepository $timeTableRepo)
+    public function __construct(TimeTableRepository $timeTableRepo, TicketRepository $ticketRepo)
     {
         $this->timeTableRepo = $timeTableRepo;
+        $this->ticketRepo = $ticketRepo;
     }
 
     /**
@@ -107,5 +111,16 @@ class TimeTable
     public function addTimelogOnTicket(array $values)
     {
         $this->timeTableRepo->addTimelogOnTicket($values);
+    }
+
+    /**
+     * Retrieves all state labels for all projects.
+     *
+     * @return array<string, array<int|string, mixed>> The state labels grouped by project IDs.
+     */
+    public function getAllStateLabels(): array
+    {
+        $statusListSeed = $this->ticketRepo->statusListSeed;
+        return $this->timeTableRepo->getAllStateLabels($statusListSeed);
     }
 }

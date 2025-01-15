@@ -21,10 +21,10 @@ export default class TimeTableApiHandler {
    *
    * @returns {Promise<Array>} An array of ticket data.
    */
-  static async fetchTicketData(reload = false) {
+  static async fetchTicketData(allStateLabels) {
     let projectPromise;
     let ticketPromise;
-
+    allStateLabels = JSON.parse(allStateLabels);
     let projectCacheData = this.getCacheData("timetable_projects");
     if (projectCacheData) {
       projectPromise = Promise.resolve(projectCacheData);
@@ -55,16 +55,22 @@ export default class TimeTableApiHandler {
     }
 
     let ticketCacheData = this.getCacheData("timetable_tickets");
-    if (ticketCacheData && !reload) {
+    if (ticketCacheData) {
       ticketPromise = Promise.resolve(ticketCacheData);
     } else {
       ticketPromise = this.getAllTickets().then((data) => {
         const result = data.result;
-        let tickets = result.filter(
-          ({ type }) =>
+        let tickets = result.filter(({ type, status, projectId }) => {
+          const projectLabels = allStateLabels[projectId] || {};
+          const statusInfo = projectLabels[status] || {};
+          const isDone = statusInfo.statusType === "DONE";
+
+          return (
             type.toLowerCase() !== "story" &&
-            type.toLowerCase() !== "milestone",
-        );
+            type.toLowerCase() !== "milestone" &&
+            !isDone // Exclude tickets that are considered DONE
+          );
+        });
         const ticketGroup = {
           id: "task",
           text: "Todos",
@@ -75,9 +81,6 @@ export default class TimeTableApiHandler {
         let childrenForTicketGroup = [];
         tickets.forEach((ticket) => {
           let option = {
-            // status 0 is done, I found out through this commit message
-            // https://github.com/ITK-Leantime/leantime/commit/122a08ea0cc61c65aa57fd1d73f0948d46744055
-            isDone: ticket.status === 0,
             id: ticket.id,
             text: ticket.headline,
             type: ticket.type,
@@ -89,6 +92,7 @@ export default class TimeTableApiHandler {
             hoursLeft: ticket.hourRemaining,
             createdDate: ticket.date,
           };
+
           childrenForTicketGroup.push(option);
         });
 
