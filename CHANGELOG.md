@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [3.2.0] - 2025-01-15
+
 * [PR-35](https://github.com/ITK-Leantime/leantime-timetable/pull/35)
   * Sort away tickets with status DONE
 
@@ -135,7 +137,8 @@
 * [PR-1](https://github.com/ITK-Leantime/leantime-timetable/pull/1)
   * Foundation for further development
 
-[Unreleased]: https://github.com/ITK-Leantime/leantime-timetable/compare/3.1.0...HEAD
+[Unreleased]: https://github.com/ITK-Leantime/leantime-timetable/compare/3.2.0...HEAD
+[3.2.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/3.1.0...3.2.0
 [3.1.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/3.0.1...3.1.0
 [3.0.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/2.0.2...3.0.0
 [2.0.2]: https://github.com/ITK-Leantime/leantime-timetable/compare/2.0.1...2.0.2
