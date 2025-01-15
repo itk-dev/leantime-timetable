@@ -25,7 +25,6 @@ export default class TimeTableApiHandler {
     let projectPromise;
     let ticketPromise;
     allStateLabels = JSON.parse(allStateLabels);
-    console.log(allStateLabels);
     let projectCacheData = this.getCacheData("timetable_projects");
     if (projectCacheData) {
       projectPromise = Promise.resolve(projectCacheData);
