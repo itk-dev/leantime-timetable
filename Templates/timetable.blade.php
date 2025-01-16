@@ -85,7 +85,7 @@
                                             $hoursLeft = $timesheetDate[0]['hourRemaining'] ?? null;
                                             $description = $timesheetDate[0]['description'] ?? null;
                                             $isMissingDescription = isset($hours) && trim($description) === '';
-                                            
+
                                             // accumulate hours
                                             if ($hours) {
                                                 if (isset($totalHours[$weekDateAccessor])) {
@@ -95,7 +95,7 @@
                                                 }
                                                 $rowTotal += $hours; // add to row total
                                             }
-                                            
+
                                             $weekendClass = isset($weekDate) && $weekDate->isWeekend() ? 'weekend' : '';
                                             $todayClass = isset($weekDate) && $weekDate->isToday() ? 'today' : '';
                                             $newWeekClass = isset($weekDate) && $weekDate->isMonday() ? 'new-week' : ''; // Add new-week class for Mondays
@@ -187,9 +187,13 @@
                 <div class="timesheet-input-wrapper">
                     <input type="number" name="timesheet-hours" step="0.01" placeholder="{{ __('timeTable.hours') }}"
                         required />
-                    <div title="{{ __('timeTable.hours_left') }}" class="timetable-hours-left">
+                    <div title="{{ __('timeTable.hours_left') }}" class="timetable-hours-left" data-tippy-content="Resterende timer på opgaven">
                         <input type="number" name="timesheet-hours-left" disabled="disabled" />
                     </div>
+                    <div class="timesheet-date-wrapper" data-tippy-content="Flyt tidslog til en anden dato">
+                        <input type="hidden" name="timesheet-date-move" />
+                    </div>
+
                 </div>
             </div>
 
@@ -209,6 +213,7 @@
                 <button type="submit"
                     class="timetable-modal-submit btn btn-primary">{{ __('timeTable.button_modal_save') }}</button>
             </div>
+            <div class="timesheet-date-move-notifier hidden"><small><i class="fa fa-info-circle"></i> Du er ved at flytte denne tidslog</small></div>
         </form>
     </div>
     <div id="entry-copy-modal">
