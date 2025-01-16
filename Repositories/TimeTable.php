@@ -36,7 +36,7 @@ class TimeTable
         $sql = 'SELECT DISTINCT
         timesheet.ticketId
         FROM zp_timesheets AS timesheet
-        WHERE timesheet.userId = :userId AND timesheet.workDate >= :dateFrom AND timesheet.workDate < :dateTo';
+        WHERE timesheet.userId = :userId AND timesheet.workDate >= :dateFrom AND timesheet.workDate <= :dateTo';
         $stmn = $this->db->database->prepare($sql);
 
         $userId = session('userdata.id');
