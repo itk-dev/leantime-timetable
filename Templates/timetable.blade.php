@@ -203,7 +203,7 @@
                 <textarea type="text" id="modal-description" name="timesheet-description"
                     placeholder="{{ __('timeTable.description') }}" required></textarea>
             </div>
-
+            <div class="timesheet-date-move-notifier hidden"><small><i class="fa fa-exclamation-circle"></i> Du er ved at flytte denne tidslog</small></div>
             {{-- Save or cancel buttons --}}
             <div class="buttons flex-container gap-1">
                 <button type="button" class="timetable-modal-delete btn btn-danger"
@@ -213,7 +213,7 @@
                 <button type="submit"
                     class="timetable-modal-submit btn btn-primary">{{ __('timeTable.button_modal_save') }}</button>
             </div>
-            <div class="timesheet-date-move-notifier hidden"><small><i class="fa fa-info-circle"></i> Du er ved at flytte denne tidslog</small></div>
+
         </form>
     </div>
     <div id="entry-copy-modal">

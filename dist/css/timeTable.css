@@ -18,9 +18,8 @@
   --itk-color-success-100: hsla(141, 84%, 93%, 1);
   --itk-color-danger: hsla(0, 72%, 51%, 1);
   --itk-color-danger-800: hsla(0, 70%, 35%, 1);
-  --itk-color-info: hsla(45, 90%, 51%, 1);
-  --itk-color-info-800: hsla(45, 80%, 35%, 1);
-  --itk-color-white: white;
+  --itk-color-warning: hsla(38, 92%, 50%, 1);
+    --itk-color-white: white;
   --itk-color-gray-50: hsla(210, 40%, 98%, 1);
   --itk-color-gray-100: hsla(214, 32%, 91%, 1);
   --itk-color-gray-200: hsla(213, 27%, 84%, 1);
@@ -45,11 +44,25 @@
 }
 
 .timetable {
-  .recently-deleted-timelog-info > i {
-    color: var(--itk-color-info);
+
+  .recently-deleted-timelog-info {
+      text-align: right;
+      i {
+          color: var(--itk-color-primary);
+      }
   }
   .timetable-scroll-container {
     overflow-x: auto;
+
+
+      &.overflowing tbody td:first-child {
+          width: 500px !important;
+          max-width: 350px !important;
+
+          &.ticket-title a {
+              max-width: 325px;
+          }
+      }
   }
 
   #timetable {
@@ -144,6 +157,7 @@
       z-index: 2;
     }
 
+
     tbody {
       td:first-child {
         position: sticky;
@@ -166,6 +180,16 @@
           background-color: var(--itk-color-primary-100);
           animation: pulseBackground 0.85s ease-in-out 2;
         }
+          td.ticket-title:after {
+              content: "";
+              position: absolute;
+              top: 0;
+              right: 0;
+              width: 2px;
+              height: 100%;
+              background-color: var(--itk-border-color);
+              z-index: 2;
+          }
       }
     }
   }
@@ -527,8 +551,8 @@
     position: fixed !important;
     top: calc(100% - 117px) !important;
     left: 15px !important;
-    width: 600px !important;
-    height: 500px !important;
+    width: 500px !important;
+    height: 350px !important;
   }
 
   .timetable-scroll-container.overflowing .table .ticket-title {
@@ -663,18 +687,22 @@
 
   .edit-time-log-form {
       .timesheet-date-move-notifier {
-          padding: 7px 0 0 0;
+          padding: var(--itk-spacing-sm) 0;
+
           small {
               i {
-                  color: var(--itk-color-info);
+                  color: var(--itk-color-warning);
               }
           }
 
+          &.hidden + .buttons {
+              padding-top: var(--itk-spacing-sm);
+          }
       }
     .description-wrapper {
       position: relative;
       flex: 1;
-      margin-bottom: 10px;
+
 
       &:after {
         content: "";
@@ -700,6 +728,7 @@
         }
       }
     }
+
   }
 
   .edit-time-log-form #modal-description {
@@ -737,12 +766,6 @@
   /* Dropdown Button */
 
   .dropbtn {
-    /*background-color: #04aa6d;
-        color: white;
-        padding: 16px;
-        font-size: 16px;
-        border: none;
-        cursor: pointer;*/
     position: absolute;
     top: 0;
     bottom: 0;
@@ -836,7 +859,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 300px;
+    max-width: 575px;
   }
   .ticket-title span {
     color: #666;
@@ -1037,7 +1060,7 @@
     }
 
     &.modified {
-        background-color: var(--itk-color-secondary-800);
+        background-color: var(--itk-color-warning);
 
         &:after {
             color: #fff;
