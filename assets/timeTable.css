@@ -34,7 +34,7 @@
   --itk-button-padding: 0 10px;
   --itk-popup-width: 250px;
 
-  --itk-spacing: 11px;
+  --itk-spacing: 8px;
   --itk-spacing-xs: calc(var(--itk-spacing) * 0.25);
   --itk-spacing-sm: calc(var(--itk-spacing) * 0.5);
   --itk-spacing-md: var(--itk-spacing);
@@ -108,7 +108,7 @@
       left: 0;
       z-index: 1;
       width: 600px;
-      max-width: 350px;
+      max-width: 600px;
       background-color: white;
     }
 
@@ -149,8 +149,8 @@
         position: sticky;
         left: 0;
         z-index: 1;
-        width: 500px;
-        max-width: 350px;
+        width: 600px;
+        max-width: 600px;
         background-color: white;
       }
 
@@ -330,7 +330,7 @@
 
   .table td {
     border: 1px solid var(--itk-border-color);
-    padding: var(--itk-spacing-md);
+    padding: 6px 12px;
   }
 
   .table td.empty-row {
@@ -498,25 +498,25 @@
 
   /* The Modal (background) */
 
-  .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0, 0, 0); /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-  }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4);
+    }
 
   .timetable-scroll-container:not(.overflowing) .ts-dropdown {
-    position: fixed !important;
-    top: calc(100% - 117px) !important;
-    left: 15px !important;
-    width: 600px !important;
-    height: 400px !important;
+      position: fixed !important;
+      top: calc(100% - 108px) !important;
+      left: 14px !important;
+      width: 600px !important;
+      height: 400px !important;
   }
 
   .ts-dropdown-content {
