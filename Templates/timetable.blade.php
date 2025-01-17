@@ -26,10 +26,14 @@
                         </button>
                         <button type="submit" name="showThisWeek" value="1"
                             class="timetable-to-today btn btn-default">{{ __('timeTable.button_show_this_week') }}</button>
+                        <div class="recently-deleted-timelog-info hidden">
+                            <p><i class="fas fa-info-circle"></i>
+                                {{ __('timeTable.update_to_show_correct_sums') }}</p>
+                        </div>
                     </div>
+
                 </form>
-                <p class="recently-deleted-timelog-info hidden"><i class="fas fa-info-circle"></i>
-                    {{ __('timeTable.update_to_show_correct_sums') }}</p>
+
                 <div class="timetable-scroll-container">
                     <table id="timetable" class="table">
                         <thead>

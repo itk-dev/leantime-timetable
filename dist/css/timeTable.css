@@ -45,9 +45,13 @@
 
 .timetable {
   .recently-deleted-timelog-info {
-    text-align: right;
-    i {
-      color: var(--itk-color-primary);
+    display: flex;
+    margin-left: auto;
+    p {
+      margin: auto;
+      i {
+        color: var(--itk-color-primary);
+      }
     }
   }
   .timetable-scroll-container {
