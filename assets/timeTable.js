@@ -170,8 +170,7 @@ jQuery(document).ready(function ($) {
           if (
             $(this.timeEditModal).is(":visible") &&
             !this.timeEditModal[0].contains(event.target) &&
-            !event.target.closest(".flatpickr-calendar") &&
-            !event.target.closest("#test-hest")
+            !event.target.closest(".flatpickr-calendar")
           ) {
             this.closeEditTimeLogModal();
           }
