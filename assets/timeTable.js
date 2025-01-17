@@ -277,7 +277,7 @@ jQuery(document).ready(function ($) {
             ".timetable-scroll-container.overflowing",
           ),
           threshold: 1,
-          rootMargin: "0% 0% 0% -566px",
+          rootMargin: "0% 0% 0% -595px",
         },
       );
 
