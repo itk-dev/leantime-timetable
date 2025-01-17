@@ -208,8 +208,8 @@
                 <textarea type="text" id="modal-description" name="timesheet-description"
                     placeholder="{{ __('timeTable.description') }}" required></textarea>
             </div>
-            <div class="timesheet-date-move-notifier hidden"><small><i class="fa fa-exclamation-circle"></i> Du er ved at
-                    flytte denne tidslog</small></div>
+            <div class="timesheet-date-move-notifier hidden"><small><i class="fa fa-exclamation-circle"></i>
+                    {{ __('timeTable.about_to_move') }}</small></div>
             {{-- Save or cancel buttons --}}
             <div class="buttons flex-container gap-1">
                 <button type="button" class="timetable-modal-delete btn btn-danger"
