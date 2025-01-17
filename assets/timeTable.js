@@ -59,8 +59,12 @@ jQuery(document).ready(function ($) {
       this.modalInputDate = this.timeEditModal.find(
         'input[name="timesheet-date"]',
       );
-      this.modalInputDateMove = this.timeEditModal.find('input[name="timesheet-date-move"]');
-      this.modalInputDateMoveNotifier = this.timeEditModal.find('.timesheet-date-move-notifier');
+      this.modalInputDateMove = this.timeEditModal.find(
+        'input[name="timesheet-date-move"]',
+      );
+      this.modalInputDateMoveNotifier = this.timeEditModal.find(
+        ".timesheet-date-move-notifier",
+      );
       this.modalTicketIdInput = this.timeEditModal.find(
         'input[name="timesheet-ticket-id"]',
       );
@@ -107,50 +111,50 @@ jQuery(document).ready(function ($) {
         },
       });
 
-        this.timelogDateChanger = flatpickr(this.modalInputDateMove, {
-            dateFormat: "d-m-Y",
-            weekNumbers: true,
-            locale: Danish,
-            onReady: (selectedDates, dateStr, instance) => {
-                instance.calendarContainer.classList.add('flatpickr-move-timelog');
-            },
-            onChange: (selectedDates, dateStr, instance) => {
-                const $wrapper = $(instance.element).closest(".timesheet-date-wrapper");
-                $wrapper.removeClass("open");
-                if (selectedDates && selectedDates.length > 0) {
-                    instance.element.value = dateStr;
-                }
+      this.timelogDateChanger = flatpickr(this.modalInputDateMove, {
+        dateFormat: "d-m-Y",
+        weekNumbers: true,
+        locale: Danish,
+        onReady: (selectedDates, dateStr, instance) => {
+          instance.calendarContainer.classList.add("flatpickr-move-timelog");
+        },
+        onChange: (selectedDates, dateStr, instance) => {
+          const $wrapper = $(instance.element).closest(
+            ".timesheet-date-wrapper",
+          );
+          $wrapper.removeClass("open");
+          if (selectedDates && selectedDates.length > 0) {
+            instance.element.value = dateStr;
+          }
 
-                const originalDate = flatpickr.formatDate(
-                    new Date($wrapper.attr("data-original")),
-                    "d-m-Y"
-                );
-                // Add/remove a class if the current value differs from the original one
-                if (dateStr !== originalDate) {
-                    $wrapper.addClass("modified");
-                    this.modalInputDateMoveNotifier.removeClass('hidden');
-                } else {
-                    $wrapper.removeClass("modified");
-                    this.modalInputDateMoveNotifier.addClass('hidden');
-                }
-            },
+          const originalDate = flatpickr.formatDate(
+            new Date($wrapper.attr("data-original")),
+            "d-m-Y",
+          );
+          // Add/remove a class if the current value differs from the original one
+          if (dateStr !== originalDate) {
+            $wrapper.addClass("modified");
+            this.modalInputDateMoveNotifier.removeClass("hidden");
+          } else {
+            $wrapper.removeClass("modified");
+            this.modalInputDateMoveNotifier.addClass("hidden");
+          }
+        },
+      });
+      $(".timesheet-date-wrapper")
+        .off("click")
+        .on("click", (event) => {
+          const $wrapper = $(event.currentTarget);
+
+          if ($wrapper.hasClass("open")) {
+            this.timelogDateChanger.close();
+            $wrapper.removeClass("open");
+          } else {
+            this.timelogDateChanger.open();
+            $wrapper.addClass("open");
+          }
         });
-        $(".timesheet-date-wrapper").off("click").on("click", (event) => {
-            const $wrapper = $(event.currentTarget);
-
-            if ($wrapper.hasClass("open")) {
-                this.timelogDateChanger.close();
-                $wrapper.removeClass("open");
-            } else {
-                this.timelogDateChanger.open();
-                $wrapper.addClass("open");
-            }
-        });
-
-
     }
-
-
 
     /**
      * Registers event handlers for the timetable module.
@@ -163,14 +167,14 @@ jQuery(document).ready(function ($) {
       document.addEventListener(
         "mousedown",
         function (event) {
-            if (
-                $(this.timeEditModal).is(":visible") &&
-                !this.timeEditModal[0].contains(event.target) &&
-                !event.target.closest(".flatpickr-calendar") &&
-                !event.target.closest("#test-hest")
-            ) {
-                this.closeEditTimeLogModal();
-            }
+          if (
+            $(this.timeEditModal).is(":visible") &&
+            !this.timeEditModal[0].contains(event.target) &&
+            !event.target.closest(".flatpickr-calendar") &&
+            !event.target.closest("#test-hest")
+          ) {
+            this.closeEditTimeLogModal();
+          }
 
           if (
             $(this.entryCopyModal).is(":visible") &&
@@ -497,7 +501,7 @@ jQuery(document).ready(function ($) {
         this.modalInputDateMove.parent().show();
       } else {
         this.modalDeleteButton.hide();
-          this.modalInputDateMove.parent().hide();
+        this.modalInputDateMove.parent().hide();
       }
 
       this.modalInputTimesheetId.val(id);
@@ -509,8 +513,8 @@ jQuery(document).ready(function ($) {
         .attr("data-value", hoursLeft);
       this.modalTextareaDescription.val(description);
       this.modalInputDate.val(date);
-        this.timelogDateChanger.setDate(new Date(date));
-          this.modalInputDateMove.parent().attr('data-original', date);
+      this.timelogDateChanger.setDate(new Date(date));
+      this.modalInputDateMove.parent().attr("data-original", date);
       this.modalInputHours.focus();
 
       $(this.modalTextareaDescription)
@@ -647,9 +651,9 @@ jQuery(document).ready(function ($) {
     closeEditTimeLogModal() {
       this.timeEditModal.removeClass("shown").removeAttr("data-value");
       this.timeEditModal.find("input:not([name='action']), textarea").val("");
-      this.modalInputDateMove.parent().removeAttr('data-original');
-      this.modalInputDateMoveNotifier.addClass('hidden');
-        $('.timesheet-date-wrapper').removeClass('modified open');
+      this.modalInputDateMove.parent().removeAttr("data-original");
+      this.modalInputDateMoveNotifier.addClass("hidden");
+      $(".timesheet-date-wrapper").removeClass("modified open");
       $(this.modalDeleteButton)
         .html('<i class="fa fa-trash"></i>')
         .removeClass("deleting");
