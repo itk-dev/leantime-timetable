@@ -26,10 +26,14 @@
                         </button>
                         <button type="submit" name="showThisWeek" value="1"
                             class="timetable-to-today btn btn-default">{{ __('timeTable.button_show_this_week') }}</button>
+                        <div class="recently-deleted-timelog-info hidden">
+                            <p><i class="fas fa-info-circle"></i>
+                                {{ __('timeTable.update_to_show_correct_sums') }}</p>
+                        </div>
                     </div>
+
                 </form>
-                <p class="recently-deleted-timelog-info hidden"><i class="fas fa-info-circle"></i>
-                    {{ __('timeTable.update_to_show_correct_sums') }}</p>
+
                 <div class="timetable-scroll-container">
                     <table id="timetable" class="table">
                         <thead>
@@ -187,9 +191,14 @@
                 <div class="timesheet-input-wrapper">
                     <input type="number" name="timesheet-hours" step="0.01" placeholder="{{ __('timeTable.hours') }}"
                         required />
-                    <div title="{{ __('timeTable.hours_left') }}" class="timetable-hours-left">
+                    <div title="{{ __('timeTable.hours_left') }}" class="timetable-hours-left"
+                        data-tippy-content="Resterende timer på opgaven">
                         <input type="number" name="timesheet-hours-left" disabled="disabled" />
                     </div>
+                    <div class="timesheet-date-wrapper" data-tippy-content="Flyt tidslog til en anden dato">
+                        <input type="hidden" name="timesheet-date-move" />
+                    </div>
+
                 </div>
             </div>
 
@@ -199,7 +208,8 @@
                 <textarea type="text" id="modal-description" name="timesheet-description"
                     placeholder="{{ __('timeTable.description') }}" required></textarea>
             </div>
-
+            <div class="timesheet-date-move-notifier hidden"><small><i class="fa fa-exclamation-circle"></i>
+                    {{ __('timeTable.about_to_move') }}</small></div>
             {{-- Save or cancel buttons --}}
             <div class="buttons flex-container gap-1">
                 <button type="button" class="timetable-modal-delete btn btn-danger"
@@ -209,6 +219,7 @@
                 <button type="submit"
                     class="timetable-modal-submit btn btn-primary">{{ __('timeTable.button_modal_save') }}</button>
             </div>
+
         </form>
     </div>
     <div id="entry-copy-modal">

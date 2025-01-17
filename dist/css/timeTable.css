@@ -18,8 +18,7 @@
   --itk-color-success-100: hsla(141, 84%, 93%, 1);
   --itk-color-danger: hsla(0, 72%, 51%, 1);
   --itk-color-danger-800: hsla(0, 70%, 35%, 1);
-  --itk-color-info: hsla(45, 90%, 51%, 1);
-  --itk-color-info-800: hsla(45, 80%, 35%, 1);
+  --itk-color-warning: hsla(38, 92%, 50%, 1);
   --itk-color-white: white;
   --itk-color-gray-50: hsla(210, 40%, 98%, 1);
   --itk-color-gray-100: hsla(214, 32%, 91%, 1);
@@ -31,21 +30,41 @@
   --itk-border-color: var(--itk-color-gray-200);
 
   --itk-border-radius: 4px;
+  --itk-button-padding: 0 10px;
+  --itk-popup-width: 250px;
 
-  --itk-spacing: 11px;
+  --itk-spacing: 8px;
   --itk-spacing-xs: calc(var(--itk-spacing) * 0.25);
   --itk-spacing-sm: calc(var(--itk-spacing) * 0.5);
   --itk-spacing-md: var(--itk-spacing);
   --itk-spacing-lg: calc(var(--itk-spacing) * 1.5);
   --itk-spacing-xl: calc(var(--itk-spacing) * 2);
+  --itk-transition-time: 0.3s;
+  --itk-transition-easing: ease-in-out;
 }
 
 .timetable {
-  .recently-deleted-timelog-info > i {
-    color: var(--itk-color-info);
+  .recently-deleted-timelog-info {
+    display: flex;
+    margin-left: auto;
+    p {
+      margin: auto;
+      i {
+        color: var(--itk-color-primary);
+      }
+    }
   }
   .timetable-scroll-container {
     overflow-x: auto;
+
+    &.overflowing tbody td:first-child {
+      width: 500px !important;
+      max-width: 350px !important;
+
+      &.ticket-title a {
+        max-width: 325px;
+      }
+    }
   }
 
   #timetable {
@@ -104,7 +123,7 @@
       left: 0;
       z-index: 1;
       width: 600px;
-      max-width: 350px;
+      max-width: 600px;
       background-color: white;
     }
 
@@ -145,8 +164,8 @@
         position: sticky;
         left: 0;
         z-index: 1;
-        width: 500px;
-        max-width: 350px;
+        width: 600px;
+        max-width: 600px;
         background-color: white;
       }
 
@@ -161,6 +180,16 @@
         td:not(:last-child) {
           background-color: var(--itk-color-primary-100);
           animation: pulseBackground 0.85s ease-in-out 2;
+        }
+        td.ticket-title:after {
+          content: "";
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 2px;
+          height: 100%;
+          background-color: var(--itk-border-color);
+          z-index: 2;
         }
       }
     }
@@ -207,17 +236,14 @@
   }
 
   .btn {
-    --transition-time: 0.4s;
-    --transition-easing: ease-in-out;
-
     border-radius: var(--itk-border-radius) !important;
     background: none;
     padding: var(--itk-spacing-xs) var(--itk-spacing-sm);
     width: auto;
     transition:
-      border calc(var(--transition-time) * 0.5) var(--transition-easing),
-      background-color calc(var(--transition-time) * 0.5)
-        var(--transition-easing);
+      border calc(var(--itk-transition-time) * 0.5) var(--itk-transition-easing),
+      background-color calc(var(--itk-transition-time) * 0.5)
+        var(--itk-transition-easing);
 
     i {
       color: inherit;
@@ -226,8 +252,8 @@
 
     &:hover {
       transition:
-        border var(--transition-time) var(--transition-easing),
-        background-color var(--transition-time) var(--transition-easing);
+        border var(--itk-transition-time) var(--itk-transition-easing),
+        background-color var(--itk-transition-time) var(--itk-transition-easing);
     }
 
     &:focus {
@@ -327,7 +353,7 @@
 
   .table td {
     border: 1px solid var(--itk-border-color);
-    padding: var(--itk-spacing-md);
+    padding: 6px 12px;
   }
 
   .table td.empty-row {
@@ -347,12 +373,12 @@
 
   .table .timetable-edit-entry {
     min-width: 50px;
-    --transition-time: 0.2s;
-    --transition-easing: ease-in-out;
+    --itk-transition-time: 0.2s;
+    --itk-transition-easing: ease-in-out;
     cursor: pointer;
     position: relative;
-    transition: background-color calc(var(--transition-time) * 0.5)
-      var(--transition-easing);
+    transition: background-color calc(var(--itk-transition-time) * 0.5)
+      var(--itk-transition-easing);
 
     &.highlight {
       background-color: var(--itk-color-secondary-100);
@@ -383,8 +409,8 @@
       opacity: 0;
       border-left: 1px solid var(--itk-color-secondary-100);
       transition:
-        background-color var(--transition-time),
-        opacity var(--transition-time) var(--transition-easing);
+        background-color var(--itk-transition-time),
+        opacity var(--itk-transition-time) var(--itk-transition-easing);
 
       i {
         margin: auto;
@@ -421,8 +447,8 @@
       position: relative;
       background-color: var(--itk-color-success-100);
 
-      transition: background-color var(--transition-time)
-        var(--transition-easing);
+      transition: background-color var(--itk-transition-time)
+        var(--itk-transition-easing);
 
       div.entry-copy-button {
         opacity: 1;
@@ -440,7 +466,7 @@
         opacity: 0.8;
         transition:
           left 0.3s ease,
-          opacity var(--transition-time) var(--transition-easing);
+          opacity var(--itk-transition-time) var(--itk-transition-easing);
       }
 
       &:not([data-hours=""]) {
@@ -496,22 +522,22 @@
   /* The Modal (background) */
 
   .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    display: none;
+    position: fixed;
+    z-index: 1;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0, 0, 0); /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
   }
 
   .timetable-scroll-container:not(.overflowing) .ts-dropdown {
     position: fixed !important;
-    top: calc(100% - 117px) !important;
-    left: 15px !important;
+    top: calc(100% - 108px) !important;
+    left: 14px !important;
     width: 600px !important;
     height: 400px !important;
   }
@@ -524,8 +550,8 @@
     position: fixed !important;
     top: calc(100% - 117px) !important;
     left: 15px !important;
-    width: 600px !important;
-    height: 500px !important;
+    width: 500px !important;
+    height: 350px !important;
   }
 
   .timetable-scroll-container.overflowing .table .ticket-title {
@@ -561,9 +587,13 @@
     }
 
     &[name="timesheet-hours-left"] {
-      width: 60px;
-      text-align: right;
-      padding: 0 5px;
+      background-color: transparent;
+      width: 30px;
+      cursor: help;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      height: 100%;
     }
   }
 
@@ -571,16 +601,6 @@
     position: absolute;
     top: 28px;
     right: 28px;
-  }
-
-  .edit-time-log-form .timetable-modal-delete {
-    margin-right: auto;
-    border: 1px solid #cbd5e1;
-    padding: 0 15px;
-    background-color: red;
-    color: #fff;
-    font-size: 12px;
-    width: 45px;
   }
 
   .edit-time-log-form .buttons {
@@ -597,21 +617,20 @@
 
   .edit-time-log-form {
     display: flex;
-    height: 150px;
     flex-direction: column;
     background-color: #fefefe;
     margin: auto;
     padding: 8px;
     border: 1px solid #cbd5e1;
-    width: 300px;
-    min-width: 300px;
+    width: var(--itk-popup-width);
+    min-width: var(--itk-popup-width);
     position: relative;
   }
 
   .edit-time-log-form .timetable-modal-delete {
     margin-right: auto;
     border: 1px solid #cbd5e1;
-    padding: 0 15px;
+    padding: var(--itk-button-padding);
     background-color: red;
     color: #fff;
     font-size: 12px;
@@ -641,7 +660,7 @@
   .edit-time-log-form .timetable-modal-submit {
     color: white;
     border: 1px solid #cbd5e1;
-    padding: 0 15px;
+    padding: var(--itk-button-padding);
     margin: 0;
     font-weight: 400;
     font-size: 12px;
@@ -654,7 +673,7 @@
     border: 1px solid #cbd5e1;
     color: #334155;
     margin-right: 5px;
-    padding: 0 15px;
+    padding: var(--itk-button-padding);
     font-size: 12px;
     border-radius: 0;
   }
@@ -666,10 +685,22 @@
   }
 
   .edit-time-log-form {
+    .timesheet-date-move-notifier {
+      padding: var(--itk-spacing-sm) 0;
+
+      small {
+        i {
+          color: var(--itk-color-warning);
+        }
+      }
+
+      &.hidden + .buttons {
+        padding-top: var(--itk-spacing-sm);
+      }
+    }
     .description-wrapper {
       position: relative;
       flex: 1;
-      margin-bottom: 10px;
 
       &:after {
         content: "";
@@ -732,12 +763,6 @@
   /* Dropdown Button */
 
   .dropbtn {
-    /*background-color: #04aa6d;
-        color: white;
-        padding: 16px;
-        font-size: 16px;
-        border: none;
-        cursor: pointer;*/
     position: absolute;
     top: 0;
     bottom: 0;
@@ -831,7 +856,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 300px;
+    max-width: 575px;
   }
   .ticket-title span {
     color: #666;
@@ -906,8 +931,8 @@
     margin: auto;
     padding: 8px;
     border: 1px solid #cbd5e1;
-    width: 300px;
-    min-width: 300px;
+    width: var(--itk-popup-width);
+    min-width: var(--itk-popup-width);
     position: relative;
 
     .entry-copy-note {
@@ -958,7 +983,7 @@
         border: 1px solid #cbd5e1;
         color: #334155;
         margin-right: 5px;
-        padding: 0 15px;
+        padding: var(--itk-button-padding);
         font-size: 12px;
         border-radius: 0 !important;
       }
@@ -966,7 +991,7 @@
       .entry-copy-modal-apply {
         color: white;
         border: 1px solid #cbd5e1;
-        padding: 0 15px;
+        padding: var(--itk-button-padding);
         margin: 0;
         font-weight: 400;
         font-size: 12px;
@@ -1014,15 +1039,48 @@
   box-sizing: border-box;
 }
 
+.timesheet-date-wrapper {
+  position: relative;
+  width: 50px;
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+  margin-bottom: 5px;
+  border-radius: 3px;
+  margin-left: 3px;
+  cursor: pointer;
+  transition: all var(--itk-transition-time) var(--itk-transition-easing);
+
+  input {
+    opacity: 0 !important;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  &.modified {
+    background-color: var(--itk-color-warning);
+
+    &:after {
+      color: #fff;
+    }
+  }
+  &:after {
+    content: "\f783";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #64748b;
+    pointer-events: none;
+  }
+}
 .timetable-hours-left {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 0;
-  border-right: 1px solid var(--itk-border-color);
+  right: 50px;
   display: flex;
   align-items: center;
-  gap: 5px;
+  height: calc(100% - 5px);
 
   div {
     display: flex;
@@ -1216,6 +1274,16 @@ div.ts-dropdown-content {
 i.your-task {
   font-size: 11px;
   margin-right: 5px;
+}
+
+.flatpickr-calendar.flatpickr-move-timelog .flatpickr-day.today {
+  border-color: transparent;
+}
+
+.flatpickr-calendar.flatpickr-move-timelog .flatpickr-day.today:hover,
+.flatpickr-calendar.flatpickr-move-timelog .flatpickr-day.today:focus {
+  background: #e6e6e6;
+  border-color: #e6e6e6;
 }
 
 /**

@@ -84,7 +84,11 @@ class TimeTableActionHandler
     public function saveTicket(array $postData, string $redirectUrl): string
     {
         $timesheetId = isset($postData['timesheet-id']) ? (int)$postData['timesheet-id'] : 0;
-        $workDate = CarbonImmutable::createFromFormat('Y-m-d', $postData['timesheet-date'])->startOfDay();
+        if (isset($postData['timesheet-date-move'])) {
+            $workDate = CarbonImmutable::createFromFormat('d-m-Y', $postData['timesheet-date-move'])->startOfDay();
+        } else {
+            $workDate = CarbonImmutable::createFromFormat('Y-m-d', $postData['timesheet-date'])->startOfDay();
+        }
         $workDate = $workDate->setToDbTimezone();
 
         $values = [
