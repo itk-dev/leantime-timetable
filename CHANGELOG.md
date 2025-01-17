@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [3.3.0] - 2025-01-17
+
 * [PR-37](https://github.com/ITK-Leantime/leantime-timetable/pull/37)
   * Reimplement ability to move timelog to another date
 
@@ -140,7 +142,8 @@
 * [PR-1](https://github.com/ITK-Leantime/leantime-timetable/pull/1)
   * Foundation for further development
 
-[Unreleased]: https://github.com/ITK-Leantime/leantime-timetable/compare/3.2.0...HEAD
+[Unreleased]: https://github.com/ITK-Leantime/leantime-timetable/compare/3.3.0...HEAD
+[3.3.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/3.2.0...3.3.0
 [3.2.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/3.1.0...3.2.0
 [3.1.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/3.0.1...3.1.0
 [3.0.0]: https://github.com/ITK-Leantime/leantime-timetable/compare/2.0.2...3.0.0
