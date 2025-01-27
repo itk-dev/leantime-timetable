@@ -9,7 +9,8 @@ jQuery(document).ready(function ($) {
   const pluginSettings = {
     userId: timetableSettings.settings.userId,
     allStateLabels: $("#all-state-labels").val(),
-      requireTimeRegistrationComment: timetableSettings.settings.requireTimeRegistrationComment,
+    requireTimeRegistrationComment:
+      timetableSettings.settings.requireTimeRegistrationComment,
   };
 
   class TimeTable {
