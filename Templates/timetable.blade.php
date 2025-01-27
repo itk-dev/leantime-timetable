@@ -89,7 +89,8 @@
                                             $hours = $timesheetDate[0]['hours'] ?? null;
                                             $hoursLeft = $timesheetDate[0]['hourRemaining'] ?? null;
                                             $description = $timesheetDate[0]['description'] ?? null;
-                                            $isMissingDescription = isset($hours) && trim($description) === '' && $requireTimeRegistrationComment !== 0;
+                                            $requireTimeRegistrationComment = $requireTimeRegistrationComment ?? 0;
+                                            $isMissingDescription = isset($hours) & trim($description) === '' && $requireTimeRegistrationComment !== 0;
 
                                             // accumulate hours
                                             if ($hours) {
