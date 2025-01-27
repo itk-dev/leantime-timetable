@@ -26,6 +26,15 @@
                             name="ticketCacheExpiration" />
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Require timelog comment</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="checkbox" value="1" name="requireTimeRegistrationComment"
+                            {{ (int) $requireTimeRegistrationComment === 1 ? 'checked' : '' }} />
+                    </div>
+                </div>
                 <input type="submit" value="Save" id="saveBtn" />
             </form>
 

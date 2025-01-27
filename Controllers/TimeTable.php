@@ -195,6 +195,7 @@ class TimeTable extends Controller
         $this->template->assign('fromDate', $fromDate);
         $this->template->assign('toDate', $toDate);
         $this->template->assign('allStateLabels', json_encode($allStateLabels));
+        $this->template->assign('requireTimeRegistrationComment', $this->settings->getSetting('itk-leantime-timetable.requireTimeRegistrationComment') ?? 0);
         return $this->template->display('TimeTable.timetable');
     }
 }

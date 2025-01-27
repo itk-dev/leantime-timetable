@@ -59,12 +59,14 @@ if (class_exists(EventDispatcher::class)) {
                 echo '<link rel="stylesheet" href="' . htmlspecialchars($timeTableStyle) . '"></link>';
                 $userId = htmlspecialchars(session('userdata.id'), ENT_QUOTES, 'UTF-8');
                 $ticketCacheExpiration = app()->make(Setting::class)->getSetting('itk-leantime-timetable.ticketCacheExpiration') ?: '1200';
+                $requireTimeRegistrationComment = app()->make(Setting::class)->getSetting('itk-leantime-timetable.requireTimeRegistrationComment') ?: '0';
 
                 echo '<script>';
                 echo 'const timetableSettings = ' . json_encode([
                         'settings' => [
                             'userId' => $userId,
                             'ticketCacheExpiration' => $ticketCacheExpiration,
+                            'requireTimeRegistrationComment' => $requireTimeRegistrationComment,
                         ],
                     ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
                 echo '</script>';

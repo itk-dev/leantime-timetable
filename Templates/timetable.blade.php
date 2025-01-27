@@ -8,6 +8,7 @@
             <h1>{{ __('timeTable.headline') }}</h1>
         </div>
     </div>
+
     <!-- page header -->
     <div class="maincontent">
         <div class="maincontentinner">
@@ -88,8 +89,8 @@
                                             $hours = $timesheetDate[0]['hours'] ?? null;
                                             $hoursLeft = $timesheetDate[0]['hourRemaining'] ?? null;
                                             $description = $timesheetDate[0]['description'] ?? null;
-                                            $isMissingDescription = isset($hours) && trim($description) === '';
-                                            
+                                            $isMissingDescription = isset($hours) && trim($description) === '' && $requireTimeRegistrationComment !== 0;
+
                                             // accumulate hours
                                             if ($hours) {
                                                 if (isset($totalHours[$weekDateAccessor])) {
@@ -99,7 +100,7 @@
                                                 }
                                                 $rowTotal += $hours; // add to row total
                                             }
-                                            
+
                                             $weekendClass = isset($weekDate) && $weekDate->isWeekend() ? 'weekend' : '';
                                             $todayClass = isset($weekDate) && $weekDate->isToday() ? 'today' : '';
                                             $newWeekClass = isset($weekDate) && $weekDate->isMonday() ? 'new-week' : ''; // Add new-week class for Mondays
@@ -206,7 +207,7 @@
             {{-- Description input --}}
             <div class="description-wrapper">
                 <textarea type="text" id="modal-description" name="timesheet-description"
-                    placeholder="{{ __('timeTable.description') }}" required></textarea>
+                          placeholder="{{ __('timeTable.description') }}" {{ (int) $requireTimeRegistrationComment === 1 ? 'required' : '' }}></textarea>
             </div>
             <div class="timesheet-date-move-notifier hidden"><small><i class="fa fa-exclamation-circle"></i>
                     {{ __('timeTable.about_to_move') }}</small></div>
