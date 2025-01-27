@@ -4,6 +4,8 @@
 
 ## [3.3.0] - 2025-01-17
 
+* [PR-39](https://github.com/ITK-Leantime/leantime-timetable/pull/39)
+  * Require timelog comments via settings
 * [PR-37](https://github.com/ITK-Leantime/leantime-timetable/pull/37)
   * Reimplement ability to move timelog to another date
 
