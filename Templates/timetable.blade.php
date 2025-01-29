@@ -8,6 +8,7 @@
             <h1>{{ __('timeTable.headline') }}</h1>
         </div>
     </div>
+
     <!-- page header -->
     <div class="maincontent">
         <div class="maincontentinner">
@@ -88,7 +89,8 @@
                                             $hours = $timesheetDate[0]['hours'] ?? null;
                                             $hoursLeft = $timesheetDate[0]['hourRemaining'] ?? null;
                                             $description = $timesheetDate[0]['description'] ?? null;
-                                            $isMissingDescription = isset($hours) && trim($description) === '';
+                                            $requireTimeRegistrationComment = $requireTimeRegistrationComment ?? 0;
+                                            $isMissingDescription = isset($hours) & (trim($description) === '') && $requireTimeRegistrationComment !== 0;
                                             
                                             // accumulate hours
                                             if ($hours) {
@@ -206,7 +208,8 @@
             {{-- Description input --}}
             <div class="description-wrapper">
                 <textarea type="text" id="modal-description" name="timesheet-description"
-                    placeholder="{{ __('timeTable.description') }}" required></textarea>
+                    placeholder="{{ __('timeTable.description') }}"
+                    {{ $requireTimeRegistrationComment === '1' ? 'required' : '' }}></textarea>
             </div>
             <div class="timesheet-date-move-notifier hidden"><small><i class="fa fa-exclamation-circle"></i>
                     {{ __('timeTable.about_to_move') }}</small></div>
