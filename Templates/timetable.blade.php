@@ -91,7 +91,7 @@
                                             $description = $timesheetDate[0]['description'] ?? null;
                                             $requireTimeRegistrationComment = $requireTimeRegistrationComment ?? 0;
                                             $isMissingDescription = isset($hours) & (trim($description) === '') && $requireTimeRegistrationComment !== 0;
-
+                                            
                                             // accumulate hours
                                             if ($hours) {
                                                 if (isset($totalHours[$weekDateAccessor])) {
@@ -101,7 +101,7 @@
                                                 }
                                                 $rowTotal += $hours; // add to row total
                                             }
-
+                                            
                                             $weekendClass = isset($weekDate) && $weekDate->isWeekend() ? 'weekend' : '';
                                             $todayClass = isset($weekDate) && $weekDate->isToday() ? 'today' : '';
                                             $newWeekClass = isset($weekDate) && $weekDate->isMonday() ? 'new-week' : ''; // Add new-week class for Mondays
@@ -209,7 +209,7 @@
             <div class="description-wrapper">
                 <textarea type="text" id="modal-description" name="timesheet-description"
                     placeholder="{{ __('timeTable.description') }}"
-                    {{ $requireTimeRegistrationComment === "1" ? 'required' : '' }}></textarea>
+                    {{ $requireTimeRegistrationComment === '1' ? 'required' : '' }}></textarea>
             </div>
             <div class="timesheet-date-move-notifier hidden"><small><i class="fa fa-exclamation-circle"></i>
                     {{ __('timeTable.about_to_move') }}</small></div>
